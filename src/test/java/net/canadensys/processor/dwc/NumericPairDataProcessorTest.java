@@ -12,7 +12,7 @@ import org.junit.Test;
  * @author canadensys
  *
  */
-public class MinMaxDataProcessorTest {
+public class NumericPairDataProcessorTest {
 	
 	@Test
 	public void testProcessing(){		
@@ -22,7 +22,7 @@ public class MinMaxDataProcessorTest {
 		mockRawModel.setMinAltitude("125.8m");
 		mockRawModel.setMaxAltitude("1147 meters");
 		
-		MinMaxDataProcessor processor = new MinMaxDataProcessor("minAltitude", "maxAltitude");
+		NumericPairDataProcessor processor = new NumericPairDataProcessor("minAltitude", "maxAltitude");
 		processor.processBean(mockRawModel, mockModel, null);
 		
 		assertEquals(125.8, mockModel.getMinAltitude(),0);
@@ -45,7 +45,7 @@ public class MinMaxDataProcessorTest {
 		mockRawModel.setMinAltitude("125.8m");
 		mockRawModel.setMaxAltitude("meters");
 		
-		MinMaxDataProcessor processor = new MinMaxDataProcessor("minAltitude", "maxAltitude");
+		NumericPairDataProcessor processor = new NumericPairDataProcessor("minAltitude", "maxAltitude");
 		processor.processBean(mockRawModel, mockModel, null);
 		
 		assertEquals(125.8, mockModel.getMinAltitude(),0);
