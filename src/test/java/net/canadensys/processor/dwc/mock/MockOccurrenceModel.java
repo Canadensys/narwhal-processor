@@ -7,6 +7,9 @@ package net.canadensys.processor.dwc.mock;
  */
 public class MockOccurrenceModel {
 	
+	private Double decimalLatitude;
+	private Double decimalLongitude;
+	
 	private Double minAltitude;
 	private Double maxAltitude;
 	
@@ -22,5 +25,16 @@ public class MockOccurrenceModel {
 	public void setMaxAltitude(Double maxAltitude) {
 		this.maxAltitude = maxAltitude;
 	}
-
+	public Double getDecimalLatitude() {
+		return decimalLatitude;
+	}
+	public void setDecimalLatitude(Double decimalLatitude) {
+		this.decimalLatitude = decimalLatitude;
+	}
+	public Double getDecimalLongitude() {
+		return decimalLongitude;
+	}
+	public void setDecimalLongitude(Double decimalLongitude) {
+		this.decimalLongitude = decimalLongitude;
+	}
 }

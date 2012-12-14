@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.ProcessingResult;
 import net.canadensys.utils.NumberUtils;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -40,14 +41,14 @@ public class NumericPairDataProcessor implements DataProcessor{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void processBean(Object in, Object out, Map<String, Object> params) {
+	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result) {
 		
 		try {
 			Number[] output = new Number[2];
 			String val1 = (String)PropertyUtils.getSimpleProperty(in, value1Name);
 			String val2 = (String)PropertyUtils.getSimpleProperty(in, value2Name);
 			
-			process(val1,val2,output,PropertyUtils.getPropertyType(out, value1Name));
+			process(val1,val2,output,PropertyUtils.getPropertyType(out, value1Name),result);
 						
 			PropertyUtils.setSimpleProperty(out, value1Name, output[0]);
 			PropertyUtils.setSimpleProperty(out, value2Name, output[1]);
@@ -66,16 +67,30 @@ public class NumericPairDataProcessor implements DataProcessor{
 	 * @param value2
 	 * @param minMaxOutput initialized array(size==2) that will contained the parsed data or null if not parsable
 	 * @param clazz Class wanted for element of the minMaxOutput
+	 * @param result optional processing result
 	 */
-	public void process(String value1, String value2, Number[] output, Class<? extends Number> clazz){
-		if(!StringUtils.isBlank(value1)){
-			value1 = KEEP_NUMERIC_PATTERN.matcher(value1).replaceAll("");
+	public void process(String value1, String value2, Number[] output, Class<? extends Number> clazz, ProcessingResult result){
+		String originalValue1 = value1;
+		String originalValue2 = value2;
+		if(!StringUtils.isBlank(originalValue1)){
+			value1 = KEEP_NUMERIC_PATTERN.matcher(originalValue1).replaceAll("");
 		}
-		if(!StringUtils.isBlank(value2)){
-			value2 = KEEP_NUMERIC_PATTERN.matcher(value2).replaceAll("");
-		}		
+		if(!StringUtils.isBlank(originalValue2)){
+			value2 = KEEP_NUMERIC_PATTERN.matcher(originalValue2).replaceAll("");
+		}
 		output[0] = NumberUtils.parseNumber(value1, clazz);
 		output[1] = NumberUtils.parseNumber(value2, clazz);
+		
+		//Do we need to log the result?
+		if(result != null){
+			//It's an error only if the original value was not null
+			if(output[0] == null && !StringUtils.isBlank(originalValue1)){
+				result.addError("Value ["+originalValue1+"] could not be processed.");
+			}
+			if(output[1] == null && !StringUtils.isBlank(originalValue2)){
+				result.addError("Value ["+originalValue2+"] could not be processed.");
+			}
+		}
 	}
 
 	@Override

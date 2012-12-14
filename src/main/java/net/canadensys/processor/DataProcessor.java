@@ -25,7 +25,8 @@ public interface DataProcessor {
 	 * @param in in Java bean
 	 * @param out out Java bean (specified property(ies) will be overwritten).
 	 * @param params additional parameters (optional for some processor)
+	 * @param optional result variable, use only if you plan to log what happened
 	 */
-	public void processBean(Object in, Object out, Map<String, Object> params);
-	
+	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result);
+
 }

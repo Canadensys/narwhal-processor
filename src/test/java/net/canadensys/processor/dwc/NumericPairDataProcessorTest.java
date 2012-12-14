@@ -8,7 +8,7 @@ import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
 import org.junit.Test;
 
 /**
- * Test for basic MinMaxDataProcessor
+ * Test for the basic NumericPairDataProcessor
  * @author canadensys
  *
  */
@@ -23,7 +23,7 @@ public class NumericPairDataProcessorTest {
 		mockRawModel.setMaxAltitude("1147 meters");
 		
 		NumericPairDataProcessor processor = new NumericPairDataProcessor("minAltitude", "maxAltitude");
-		processor.processBean(mockRawModel, mockModel, null);
+		processor.processBean(mockRawModel, mockModel, null, null);
 		
 		assertEquals(125.8, mockModel.getMinAltitude(),0);
 		assertEquals(1147, mockModel.getMaxAltitude(),0);
@@ -31,7 +31,7 @@ public class NumericPairDataProcessorTest {
 		//Test negative and single dot
 		mockRawModel.setMinAltitude("-125.8m");
 		mockRawModel.setMaxAltitude("-1147. meters");
-		processor.processBean(mockRawModel, mockModel, null);
+		processor.processBean(mockRawModel, mockModel, null, null);
 		
 		assertEquals(-125.8, mockModel.getMinAltitude(),0);
 		assertEquals(-1147, mockModel.getMaxAltitude(),0);
@@ -46,7 +46,7 @@ public class NumericPairDataProcessorTest {
 		mockRawModel.setMaxAltitude("meters");
 		
 		NumericPairDataProcessor processor = new NumericPairDataProcessor("minAltitude", "maxAltitude");
-		processor.processBean(mockRawModel, mockModel, null);
+		processor.processBean(mockRawModel, mockModel, null, null);
 		
 		assertEquals(125.8, mockModel.getMinAltitude(),0);
 		assertNull( mockModel.getMaxAltitude());
@@ -54,7 +54,7 @@ public class NumericPairDataProcessorTest {
 		//test double dot
 		mockRawModel.setMinAltitude("125.8.1m");
 		mockRawModel.setMaxAltitude("-1147..meters");
-		processor.processBean(mockRawModel, mockModel, null);
+		processor.processBean(mockRawModel, mockModel, null, null);
 		
 		assertNull(mockModel.getMinAltitude());
 		assertNull(mockModel.getMaxAltitude());
