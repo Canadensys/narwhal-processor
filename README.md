@@ -5,6 +5,10 @@ Basic data processing library aiming to normalize similar values ​​in a know
 
 Comments, contributions, reviews and help are welcomed.
 
+Documentation
+-------------
+See [wiki](https://github.com/Canadensys/narwhal-processor/wiki)
+
 Build
 -----
 ```
