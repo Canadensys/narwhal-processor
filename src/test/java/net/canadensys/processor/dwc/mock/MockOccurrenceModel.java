@@ -13,6 +13,10 @@ public class MockOccurrenceModel {
 	private Double minAltitude;
 	private Double maxAltitude;
 	
+	private Integer eventStartYear;
+	private Integer eventStartMonth;
+	private Integer eventStartDay;
+	
 	public Double getMinAltitude() {
 		return minAltitude;
 	}
@@ -36,5 +40,23 @@ public class MockOccurrenceModel {
 	}
 	public void setDecimalLongitude(Double decimalLongitude) {
 		this.decimalLongitude = decimalLongitude;
+	}
+	public Integer getEventStartYear() {
+		return eventStartYear;
+	}
+	public void setEventStartYear(Integer eventStartYear) {
+		this.eventStartYear = eventStartYear;
+	}
+	public Integer getEventStartMonth() {
+		return eventStartMonth;
+	}
+	public void setEventStartMonth(Integer eventStartMonth) {
+		this.eventStartMonth = eventStartMonth;
+	}
+	public Integer getEventStartDay() {
+		return eventStartDay;
+	}
+	public void setEventStartDay(Integer eventStartDay) {
+		this.eventStartDay = eventStartDay;
 	}
 }

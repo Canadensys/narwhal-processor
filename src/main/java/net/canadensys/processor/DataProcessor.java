@@ -2,6 +2,7 @@ package net.canadensys.processor;
 
 import java.util.Map;
 
+
 /**
  * All implementations shall be Thread-Safe once created.
  * Considering this, setters should be avoided.

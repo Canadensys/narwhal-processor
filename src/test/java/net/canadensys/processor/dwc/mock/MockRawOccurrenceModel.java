@@ -13,6 +13,8 @@ public class MockRawOccurrenceModel {
 	private String minAltitude;
 	private String maxAltitude;
 	
+	private String eventDate;
+	
 	public String getMinAltitude() {
 		return minAltitude;
 	}
@@ -36,5 +38,11 @@ public class MockRawOccurrenceModel {
 	}
 	public void setDecimalLongitude(String decimalLongitude) {
 		this.decimalLongitude = decimalLongitude;
+	}
+	public String getEventDate() {
+		return eventDate;
+	}
+	public void setEventDate(String eventDate) {
+		this.eventDate = eventDate;
 	}
 }

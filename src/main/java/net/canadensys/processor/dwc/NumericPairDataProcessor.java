@@ -65,7 +65,7 @@ public class NumericPairDataProcessor implements DataProcessor{
 	 * Numeric pair processing function
 	 * @param value1 
 	 * @param value2
-	 * @param minMaxOutput initialized array(size==2) that will contained the parsed data or null if not parsable
+	 * @param minMaxOutput initialized array(size==2) that will contain the parsed data or null if not parsable
 	 * @param clazz Class wanted for element of the minMaxOutput
 	 * @param result optional processing result
 	 */

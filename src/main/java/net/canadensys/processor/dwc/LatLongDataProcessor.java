@@ -26,6 +26,9 @@ public class LatLongDataProcessor extends NumericPairDataProcessor{
 		super(latitudePropertyName, longitudePropertyName);
 	}
 	
+	/**
+	 * Default constructor, property name will be assigned to the matching DarwinCore property name.
+	 */
 	public LatLongDataProcessor() {
 		super(DWC_DECIMAL_LATITUDE, DWC_DECIMAL_LONGITUDE);
 	}

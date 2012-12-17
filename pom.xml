@@ -7,8 +7,14 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>narwhal-processor</name>
 	<url>http://canadensys.net</url>
-
+	
 	<dependencies>
+		<dependency>
+		    <groupId>threeten</groupId>
+		    <artifactId>threeten</artifactId>
+		    <version>0.6.3</version>
+		</dependency>
+
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils-core</artifactId>

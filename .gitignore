@@ -1,5 +1,4 @@
 .gradle
-*.jar
 *.war
 *.class
 *.classpath
