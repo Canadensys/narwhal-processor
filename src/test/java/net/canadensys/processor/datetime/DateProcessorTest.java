@@ -1,10 +1,17 @@
 package net.canadensys.processor.datetime;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
+
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
+import net.canadensys.utils.NumberUtils;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 /**
@@ -15,78 +22,57 @@ import org.junit.Test;
 public class DateProcessorTest {
 	
 	@Test
-	public void testISO8601Date(){
+	public void testFromFile(){
+		File csvDateFile;
 		DateProcessor dateProcessor = new DateProcessor("eventDate", "eventStartYear", "eventStartMonth", "eventStartDay");
 		
 		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		
-		//Test 1987-06-03
-		mockRawModel.setEventDate("1987-06-03");
-		dateProcessor.processBean(mockRawModel, mockModel, null, null);
-		
-		assertEquals(1987, mockModel.getEventStartYear().intValue());
-		assertEquals(06, mockModel.getEventStartMonth().intValue());
-		assertEquals(03, mockModel.getEventStartDay().intValue());
-		
-		//Test 1987-07
-		mockRawModel.setEventDate("1987-07");
-		dateProcessor.processBean(mockRawModel, mockModel, null, null);
-		
-		assertEquals(1987, mockModel.getEventStartYear().intValue());
-		assertEquals(07, mockModel.getEventStartMonth().intValue());
-		assertNull( mockModel.getEventStartDay());
-		
-		//Test 1987
-		mockRawModel.setEventDate("1987");
-		dateProcessor.processBean(mockRawModel, mockModel, null, null);
-		
-		assertEquals(1987, mockModel.getEventStartYear().intValue());
-		assertNull(mockModel.getEventStartMonth());
-		assertNull(mockModel.getEventStartDay());
+		try {
+			csvDateFile = new File(getClass().getResource("/dateFormat.csv").toURI());
+			List<String> fileLines = FileUtils.readLines(csvDateFile);
+			String[] splittedLine;
+			Integer year,month,day;
+			for(String currLine : fileLines){
+				if(!currLine.startsWith("#")){
+					splittedLine = currLine.split(";");
+					if(splittedLine.length == 4){
+						mockRawModel.setEventDate(splittedLine[0]);
+						dateProcessor.processBean(mockRawModel, mockModel, null, null);
+						
+						year = NumberUtils.parseNumber(splittedLine[1], Integer.class);
+						month = NumberUtils.parseNumber(splittedLine[2], Integer.class);
+						day = NumberUtils.parseNumber(splittedLine[3], Integer.class);
+						
+						assertEquals(year, mockModel.getEventStartYear());
+						assertEquals(month, mockModel.getEventStartMonth());
+						assertEquals(day, mockModel.getEventStartDay());
+						System.out.println("Testing date : " + splittedLine[0]);
+					}
+				}
+			}
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
-	public void testEnglishLanguageDate(){
+	public void testStandardizeDatePunctuation(){
 		DateProcessor dateProcessor = new DateProcessor("eventDate", "eventStartYear", "eventStartMonth", "eventStartDay");
 		
-		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
-		MockOccurrenceModel mockModel = new MockOccurrenceModel();
-
-		mockRawModel.setEventDate("Jun 3 1987");
-		dateProcessor.processBean(mockRawModel, mockModel, null, null);
-		assertEquals(1987, mockModel.getEventStartYear().intValue());
-		assertEquals(06, mockModel.getEventStartMonth().intValue());
-		assertEquals(03, mockModel.getEventStartDay().intValue());
+		assertEquals("8-11-2003",dateProcessor.standardizeDatePunctuation("8/11/2003"));
+		assertEquals("08-11-2003",dateProcessor.standardizeDatePunctuation("08.11.2003"));
+		assertEquals("08-11-2003",dateProcessor.standardizeDatePunctuation("08-11-2003"));
+		assertEquals("08-11 2003",dateProcessor.standardizeDatePunctuation("08.11 2003"));
 		
-		mockRawModel.setEventDate("Jun 03 1987");
-		dateProcessor.processBean(mockRawModel, mockModel, null, null);
-		assertEquals(1987, mockModel.getEventStartYear().intValue());
-		assertEquals(06, mockModel.getEventStartMonth().intValue());
-		assertEquals(03, mockModel.getEventStartDay().intValue());
-		
-		mockRawModel.setEventDate("Jun 1987");
-		dateProcessor.processBean(mockRawModel, mockModel, null, null);
-		assertEquals(1987, mockModel.getEventStartYear().intValue());
-		assertEquals(06, mockModel.getEventStartMonth().intValue());
-		assertNull(mockModel.getEventStartDay());
-		
-		mockRawModel.setEventDate("Jun");
-		dateProcessor.processBean(mockRawModel, mockModel, null, null);
-		assertNull(mockModel.getEventStartYear());
-		assertEquals(06, mockModel.getEventStartMonth().intValue());
-		assertNull(mockModel.getEventStartDay());
-		
-		mockRawModel.setEventDate("3 Jun 1987");
-		dateProcessor.processBean(mockRawModel, mockModel, null, null);
-		assertEquals(1987, mockModel.getEventStartYear().intValue());
-		assertEquals(06, mockModel.getEventStartMonth().intValue());
-		assertEquals(03, mockModel.getEventStartDay().intValue());
-		
-		mockRawModel.setEventDate("03 Jun 1987");
-		dateProcessor.processBean(mockRawModel, mockModel, null, null);
-		assertEquals(1987, mockModel.getEventStartYear().intValue());
-		assertEquals(06, mockModel.getEventStartMonth().intValue());
-		assertEquals(03, mockModel.getEventStartDay().intValue());		
+		//Should remain the same
+		assertEquals("10/Oct/2000",dateProcessor.standardizeDatePunctuation("10/Oct/2000"));
+		assertEquals("10.Oct.2000",dateProcessor.standardizeDatePunctuation("10.Oct.2000"));
+		assertEquals("10-Oct-2000",dateProcessor.standardizeDatePunctuation("10-Oct-2000"));
+		assertEquals("10 Oct 2000",dateProcessor.standardizeDatePunctuation("10 Oct 2000"));
+		assertEquals("10 10 2000",dateProcessor.standardizeDatePunctuation("10 10 2000"));
 	}
 }

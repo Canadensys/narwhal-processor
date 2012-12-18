@@ -21,7 +21,10 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Data processor to handle dates including partial dates.
- * TODO : Test non-US locals.
+ * Some DateTimeFormatter/pattern documentation : 
+ * - http://threeten.sourceforge.net/apidocs-2012-10-25/javax/time/format/DateTimeFormatter.html#parseBest(java.lang.CharSequence,%20java.lang.Class...)
+ * - http://threeten.sourceforge.net/apidocs-2012-10-25/javax/time/format/DateTimeFormatters.html#pattern(java.lang.String)
+ * TODO : Test non-US locale.
  * @author canadensys
  *
  */
@@ -39,13 +42,29 @@ public class DateProcessor implements DataProcessor{
 	//Only USE_NULL make sense here
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
 	
-	private static final DateTimeFormatter MMM_DD_YYYY_PATTERN = DateTimeFormatters.pattern("MMM d[d] yyyy", Locale.US);
-	private static final DateTimeFormatter YYYY_MMM_DD_PATTERN = DateTimeFormatters.pattern("yyyy MMM d[d]", Locale.US);
-	private static final DateTimeFormatter DD_MMM_YYYY_PATTERN = DateTimeFormatters.pattern("d[d] MMM yyyy", Locale.US);
+	//Gregorian little-endian, starting with day 
+	private static final DateTimeFormatter LE_DD_MMM_YYYY_PATTERN = DateTimeFormatters.pattern("d[d] MMM yyyy", Locale.US);
+	//Not implemented yet, those could bring conflicts with middle-endian like in 13-10-2012
+	//private static final DateTimeFormatter LE_DD_MM_YYYY_PATTERN = DateTimeFormatters.pattern("[d]d-[M]M-yyyy", Locale.US);
 	
-	private static final DateTimeFormatter PARTIAL_DATE_PATTERN = DateTimeFormatters.pattern("yyyy[-MM[-dd]]", Locale.US);
+	//Gregorian big-endian, starting with year
+	//ISO 8601
+	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = DateTimeFormatters.pattern("yyyyMMdd", Locale.US);
+	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = DateTimeFormatters.pattern("yyyy[-MM[-dd]]", Locale.US);
+	private static final DateTimeFormatter BE_YYYY_MMM_DD_PATTERN = DateTimeFormatters.pattern("yyyy MMM d[d]", Locale.US);
+	
+	//Middle-endian, starting with month
+	//11-9-2003, 11.9.2003, 11.09.03, or 11/09/03
+	private static final DateTimeFormatter ME_MMM_DD_YYYY_PATTERN = DateTimeFormatters.pattern("MMM d[d] yyyy", Locale.US);
+	//Not implemented yet, those could bring conflicts with little-endian like in 13-10-2012
+	//private static final DateTimeFormatter ME_MM_DD_YYYY_PATTERN = DateTimeFormatters.pattern("M[M]-d[d] yyyy", Locale.US);
+	//private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M[M]/d[d]/yy", Locale.US);
+	
+	//Partial date
 	private static final DateTimeFormatter PARTIAL_MONTH_YEAR_PATTERN = DateTimeFormatters.pattern("MMM yyyy", Locale.US);
 	private static final DateTimeFormatter PARTIAL_MONTH_PATTERN = DateTimeFormatters.pattern("MMM", Locale.US);
+	
+	protected static final String STANDARDIZE_PUNCT_PATTERN = "(?<=\\d+)[.|/](?=\\d+)";
 	
 	public DateProcessor(String dateName, String yearName, String monthName, String dayName){
 		this.dateName = dateName;
@@ -91,34 +110,43 @@ public class DateProcessor implements DataProcessor{
 			return;
 		}
 		
+		dateText = standardizeDatePunctuation(dateText);
+		
 		try{
 			//try ISO 8601 (with partial date like 2008 or 2008-12)
-			setPartialDate(output,PARTIAL_DATE_PATTERN.parseBest(dateText, LocalDate.rule(),YearMonth.rule(),Year.rule()));
+			setPartialDate(output,BE_ISO8601_PARTIAL_DATE_PATTERN.parseBest(dateText, LocalDate.rule(),YearMonth.rule(),Year.rule()));
+			return;
+		}
+		catch(CalendricalParseException cpe){}
+		
+		try{
+			//try ISO 8601 (with partial date like 20081227)
+			setPartialDate(output,BE_ISO8601_BASIC_PATTERN.parse(dateText, LocalDate.rule()));
 			return;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try format like Jul 6 1987
-			setPartialDate(output,MMM_DD_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
+			setPartialDate(output,ME_MMM_DD_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
 			return;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try format like 1987 Jul 6
-			setPartialDate(output,YYYY_MMM_DD_PATTERN.parse(dateText, LocalDate.rule()));
+			setPartialDate(output,BE_YYYY_MMM_DD_PATTERN.parse(dateText, LocalDate.rule()));
 			return;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try format like 6 Jul 1986
-			setPartialDate(output,DD_MMM_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
+			setPartialDate(output,LE_DD_MMM_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
 			return;
 		}
 		catch(CalendricalParseException cpe){}
-
+		
 		//PARTIAL DATE
 		try{
 			//try format like Jun 1895
@@ -166,6 +194,17 @@ public class DateProcessor implements DataProcessor{
 		else{
 			throw new UnsupportedOperationException();
 		}
+	}
+	
+	/**
+	 * This function will replace all dots (.) and slashes(/) characters by a dash(-).
+	 * This will be applied only if a number is found ahead of the punctuation.
+	 * 2007.07.31 => 2007-07-31, 3/27/2002 => 3-27-2002, 7 Nov 2012 => 7 Nov 2012 (not changed)
+	 * @param date
+	 * @return
+	 */
+	public String standardizeDatePunctuation(String date){
+		return date.replaceAll(STANDARDIZE_PUNCT_PATTERN, "-");
 	}
 	
 	@Override
