@@ -43,21 +43,21 @@ public class DateProcessor implements DataProcessor{
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
 	
 	//Gregorian little-endian, starting with day 
-	private static final DateTimeFormatter LE_DD_MMM_YYYY_PATTERN = DateTimeFormatters.pattern("d[d] MMM yyyy", Locale.US);
-	//Not implemented yet, those could bring conflicts with middle-endian like in 13-10-2012
-	//private static final DateTimeFormatter LE_DD_MM_YYYY_PATTERN = DateTimeFormatters.pattern("[d]d-[M]M-yyyy", Locale.US);
+	private static final DateTimeFormatter LE_D_MMM_YYYY_PATTERN = DateTimeFormatters.pattern("d MMM yyyy", Locale.US);
+	//Could bring conflicts with middle-endian like in 13-10-2012
+	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = DateTimeFormatters.pattern("d-M-yyyy", Locale.US);
 	
 	//Gregorian big-endian, starting with year
 	//ISO 8601
 	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = DateTimeFormatters.pattern("yyyyMMdd", Locale.US);
-	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = DateTimeFormatters.pattern("yyyy[-MM[-dd]]", Locale.US);
-	private static final DateTimeFormatter BE_YYYY_MMM_DD_PATTERN = DateTimeFormatters.pattern("yyyy MMM d[d]", Locale.US);
+	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = DateTimeFormatters.pattern("yyyy[-M[-d]]", Locale.US);
+	private static final DateTimeFormatter BE_YYYY_MMM_D_PATTERN = DateTimeFormatters.pattern("yyyy MMM d", Locale.US);
 	
 	//Middle-endian, starting with month
 	//11-9-2003, 11.9.2003, 11.09.03, or 11/09/03
-	private static final DateTimeFormatter ME_MMM_DD_YYYY_PATTERN = DateTimeFormatters.pattern("MMM d[d] yyyy", Locale.US);
+	private static final DateTimeFormatter ME_MMM_D_YYYY_PATTERN = DateTimeFormatters.pattern("MMM d yyyy", Locale.US);
 	//Not implemented yet, those could bring conflicts with little-endian like in 13-10-2012
-	//private static final DateTimeFormatter ME_MM_DD_YYYY_PATTERN = DateTimeFormatters.pattern("M[M]-d[d] yyyy", Locale.US);
+	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = DateTimeFormatters.pattern("M-d-yyyy", Locale.US);
 	//private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M[M]/d[d]/yy", Locale.US);
 	
 	//Partial date
@@ -128,21 +128,21 @@ public class DateProcessor implements DataProcessor{
 		
 		try{
 			//try format like Jul 6 1987
-			setPartialDate(output,ME_MMM_DD_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
+			setPartialDate(output,ME_MMM_D_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
 			return;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try format like 1987 Jul 6
-			setPartialDate(output,BE_YYYY_MMM_DD_PATTERN.parse(dateText, LocalDate.rule()));
+			setPartialDate(output,BE_YYYY_MMM_D_PATTERN.parse(dateText, LocalDate.rule()));
 			return;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try format like 6 Jul 1986
-			setPartialDate(output,LE_DD_MMM_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
+			setPartialDate(output,LE_D_MMM_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
 			return;
 		}
 		catch(CalendricalParseException cpe){}
@@ -161,6 +161,35 @@ public class DateProcessor implements DataProcessor{
 			return;
 		}
 		catch(CalendricalParseException cpe){}
+		
+		//Warning - Fuzzy dates handling
+		LocalDate le_d_m_yyyy_date = null;
+		LocalDate me_m_d_yyyy_date = null;
+		try{
+			le_d_m_yyyy_date = LE_D_M_YYYY_PATTERN.parse(dateText, LocalDate.rule());
+		}
+		catch(CalendricalParseException cpe){}
+		
+		try{
+			me_m_d_yyyy_date = ME_M_D_YYYY_PATTERN.parse(dateText, LocalDate.rule());
+		}
+		catch(CalendricalParseException cpe){}
+		
+		//make sure the date can't be parsed into the 2 different patterns
+		if(le_d_m_yyyy_date != null && me_m_d_yyyy_date != null){
+			if(result != null){
+				result.addError("The date ["+dateText+"] could not be precisely determined.");
+			}
+			return;
+		}
+		if(le_d_m_yyyy_date != null){
+			setPartialDate(output,le_d_m_yyyy_date);
+			return;
+		}
+		if(me_m_d_yyyy_date != null){
+			setPartialDate(output,me_m_d_yyyy_date);
+			return;
+		}
 		
 		if(result != null){
 			result.addError("The date ["+dateText+"] could not be processed.");

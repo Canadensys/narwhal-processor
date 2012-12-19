@@ -1,12 +1,13 @@
 package net.canadensys.processor.datetime;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
 import net.canadensys.utils.NumberUtils;
@@ -21,6 +22,9 @@ import org.junit.Test;
  */
 public class DateProcessorTest {
 	
+	private static final String COMMENT_LINE_CHAR = "#";
+	private static final String ELEMENT_SEPARATOR = ";";
+	
 	@Test
 	public void testFromFile(){
 		File csvDateFile;
@@ -30,13 +34,13 @@ public class DateProcessorTest {
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		
 		try {
-			csvDateFile = new File(getClass().getResource("/dateFormat.csv").toURI());
+			csvDateFile = new File(getClass().getResource("/dateFormat.txt").toURI());
 			List<String> fileLines = FileUtils.readLines(csvDateFile);
 			String[] splittedLine;
 			Integer year,month,day;
 			for(String currLine : fileLines){
-				if(!currLine.startsWith("#")){
-					splittedLine = currLine.split(";");
+				if(!currLine.startsWith(COMMENT_LINE_CHAR)){
+					splittedLine = currLine.split(ELEMENT_SEPARATOR);
 					if(splittedLine.length == 4){
 						mockRawModel.setEventDate(splittedLine[0]);
 						dateProcessor.processBean(mockRawModel, mockModel, null, null);
@@ -57,6 +61,24 @@ public class DateProcessorTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	@Test
+	public void testFuzyDates(){
+		DateProcessor dateProcessor = new DateProcessor("eventDate", "eventStartYear", "eventStartMonth", "eventStartDay");
+		
+		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
+		MockOccurrenceModel mockModel = new MockOccurrenceModel();
+
+		mockRawModel.setEventDate("10-11-2010");
+		ProcessingResult pr = new ProcessingResult();
+		dateProcessor.processBean(mockRawModel, mockModel, null, pr);
+		
+		assertNull(mockModel.getEventStartYear());
+		assertNull(mockModel.getEventStartMonth());
+		assertNull(mockModel.getEventStartDay());
+		assertTrue(pr.getErrorList().size() >=1);
 	}
 	
 	@Test
