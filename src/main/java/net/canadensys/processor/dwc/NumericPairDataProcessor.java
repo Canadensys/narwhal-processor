@@ -23,10 +23,20 @@ public class NumericPairDataProcessor implements DataProcessor{
 	
 	protected static final Pattern KEEP_NUMERIC_PATTERN = Pattern.compile("[^\\d\\.-]");
 	
-	private String value1Name = "min";
-	private String value2Name = "max";
+	private static final String DEFAULT_VALUE1_NAME = "min";
+	private static final String DEFAULT_VALUE2_NAME = "max";
+	
+	private String value1Name,value2Name;
+	
 	//Only USE_NULL make sense here
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
+	
+	/**
+	 * Default constructor, default field names will be used
+	 */
+	public NumericPairDataProcessor(){
+		this(DEFAULT_VALUE1_NAME,DEFAULT_VALUE2_NAME);
+	}
 	
 	public NumericPairDataProcessor(String value1Name, String value2Name){
 		this.value1Name = value1Name;

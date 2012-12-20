@@ -35,10 +35,13 @@ public class DateProcessor implements DataProcessor{
 	public static final int MONTH_IDX = 1;
 	public static final int DAY_IDX = 2;
 	
-	private String dateName = "date";
-	private String yearName = "year";
-	private String monthName = "month";
-	private String dayName = "day";
+	//default field names
+	private static final String DEFAULT_DATE_NAME = "date";
+	private static final String DEFAULT_YEAR_NAME = "year";
+	private static final String DEFAULT_MONTH_NAME = "month";
+	private static final String DEFAULT_DAY_NAME = "day";
+	
+	private String dateName, yearName, monthName, dayName;
 	
 	//Only USE_NULL make sense here
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -68,6 +71,19 @@ public class DateProcessor implements DataProcessor{
 	
 	protected static final String STANDARDIZE_PUNCT_PATTERN = "(?<=\\d+)[.|/](?=\\d+)";
 	
+	/**
+	 * Default constructor, default field names will be used
+	 */
+	public DateProcessor(){
+		this(DEFAULT_DATE_NAME,DEFAULT_YEAR_NAME,DEFAULT_MONTH_NAME,DEFAULT_DAY_NAME);
+	}
+	
+	/**
+	 * @param dateName name of the field containing the date string
+	 * @param yearName name of the field where the year will be stored
+	 * @param monthName name of the field where the month will be stored
+	 * @param dayName name of the field where the day will be stored
+	 */
 	public DateProcessor(String dateName, String yearName, String monthName, String dayName){
 		this.dateName = dateName;
 		this.yearName = yearName;

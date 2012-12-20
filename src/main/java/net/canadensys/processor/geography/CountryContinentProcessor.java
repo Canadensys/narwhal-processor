@@ -38,7 +38,7 @@ public class CountryContinentProcessor implements DataProcessor{
 	protected String continentName = null;
 	
 	/**
-	 * Default constructor using default field names
+	 * Default constructor, default field names will be used
 	 */
 	public CountryContinentProcessor(){
 		this(DEFAULT_COUNTRY_ISO_LETTER_CODE_NAME, DEFAULT_CONTINENT_NAME);
@@ -102,6 +102,7 @@ public class CountryContinentProcessor implements DataProcessor{
 				continent =  output.getValue().getTitle();
 			}
 			else{
+				//should it be done in process(...) function?
 				continent = (errorHandlingMode == ErrorHandlingModeEnum.USE_NULL ? null : "");
 			}
 			PropertyUtils.setSimpleProperty(out, continentName, continent);
