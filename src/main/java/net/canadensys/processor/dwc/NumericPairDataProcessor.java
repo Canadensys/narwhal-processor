@@ -36,8 +36,9 @@ public class NumericPairDataProcessor implements DataProcessor{
 	/**
 	 * Numeric pair Bean processing function.
 	 * @param in Java bean containing the 2 properties as String
-	 * @param max Java bean containing  the 2 properties as class extending Number (primitive type NOT supported)
+	 * @param out Java bean containing the 2 properties as class extending Number (primitive type NOT supported)
 	 * @param params Will be ignored so use null
+	 * @param result Optional ProcessingResult
 	 */
 	@SuppressWarnings("unchecked")
 	@Override

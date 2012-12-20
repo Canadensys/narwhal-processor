@@ -1,9 +1,13 @@
 narwhal-processor
 =================
 
-Basic data processing library aiming to normalize similar values ​​in a known format.
+Basic data processing library aiming to normalize similar values ​​in a known format. The value can be standardized or discovered from another value.
 
 Comments, contributions, reviews and help are welcomed.
+
+Note
+----
+This library is still young and under active development. Some parts may change based on the reviews, comments and usage. Do not hesitate to enter an [Issue](https://github.com/Canadensys/narwhal-processor/issues) if you have any problems or questions.
 
 Documentation
 -------------

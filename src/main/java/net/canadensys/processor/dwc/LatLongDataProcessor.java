@@ -22,15 +22,15 @@ public class LatLongDataProcessor extends NumericPairDataProcessor{
 	protected static final String DWC_DECIMAL_LATITUDE = "decimalLatitude";
 	protected static final String DWC_DECIMAL_LONGITUDE = "decimalLongitude";
 	
-	public LatLongDataProcessor(String latitudePropertyName, String longitudePropertyName) {
-		super(latitudePropertyName, longitudePropertyName);
-	}
-	
 	/**
 	 * Default constructor, property name will be assigned to the matching DarwinCore property name.
 	 */
 	public LatLongDataProcessor() {
 		super(DWC_DECIMAL_LATITUDE, DWC_DECIMAL_LONGITUDE);
+	}
+	
+	public LatLongDataProcessor(String latitudePropertyName, String longitudePropertyName) {
+		super(latitudePropertyName, longitudePropertyName);
 	}
 	
 	@Override

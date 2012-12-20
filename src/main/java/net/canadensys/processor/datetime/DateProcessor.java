@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
  * - http://threeten.sourceforge.net/apidocs-2012-10-25/javax/time/format/DateTimeFormatter.html#parseBest(java.lang.CharSequence,%20java.lang.Class...)
  * - http://threeten.sourceforge.net/apidocs-2012-10-25/javax/time/format/DateTimeFormatters.html#pattern(java.lang.String)
  * TODO : Test non-US locale.
+ * TODO : Build formatter with DateTimeFormatterBuilder.parseCaseInsensitive
  * @author canadensys
  *
  */
@@ -56,9 +57,10 @@ public class DateProcessor implements DataProcessor{
 	//Middle-endian, starting with month
 	//11-9-2003, 11.9.2003, 11.09.03, or 11/09/03
 	private static final DateTimeFormatter ME_MMM_D_YYYY_PATTERN = DateTimeFormatters.pattern("MMM d yyyy", Locale.US);
-	//Not implemented yet, those could bring conflicts with little-endian like in 13-10-2012
+	//Could bring conflicts with little-endian like in 13-10-2012
 	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = DateTimeFormatters.pattern("M-d-yyyy", Locale.US);
-	//private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M[M]/d[d]/yy", Locale.US);
+	//Not sure this one is safe to implement
+	//private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M-d-yy", Locale.US);
 	
 	//Partial date
 	private static final DateTimeFormatter PARTIAL_MONTH_YEAR_PATTERN = DateTimeFormatters.pattern("MMM yyyy", Locale.US);

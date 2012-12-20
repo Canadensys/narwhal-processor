@@ -17,6 +17,8 @@ public class MockOccurrenceModel {
 	private Integer eventStartMonth;
 	private Integer eventStartDay;
 	
+	private String continent;
+	
 	public Double getMinAltitude() {
 		return minAltitude;
 	}
@@ -58,5 +60,11 @@ public class MockOccurrenceModel {
 	}
 	public void setEventStartDay(Integer eventStartDay) {
 		this.eventStartDay = eventStartDay;
+	}
+	public String getContinent() {
+		return continent;
+	}
+	public void setContinent(String continent) {
+		this.continent = continent;
 	}
 }
