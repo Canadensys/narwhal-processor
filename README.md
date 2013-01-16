@@ -1,7 +1,7 @@
 narwhal-processor
 =================
 
-narwhal-processor is a processing library that normalizes data of a known type. Current and proposed data types that can be normalized include date, country name, continent, state and provinces, coordinates, numeric ranges (altitude, depth) and scientific name.
+narwhal-processor is a processing library that normalizes data of a known type. Current and proposed data types that can be normalized include date, country name, continent, state and province, coordinates, numeric range (altitude, depth) and scientific name.
 
 Comments, contributions, reviews and help are welcomed.
 
@@ -15,11 +15,12 @@ The goal of this library is to provide a set of processing functions trough a co
 
 Documentation and Usage
 -----------------------
-See [wiki](https://github.com/Canadensys/narwhal-processor/wiki)
+See our [wiki](https://github.com/Canadensys/narwhal-processor/wiki) for all the information.
 
 Dependencies
 ------------
  * [GBIF Parsers](http://code.google.com/p/gbif-common-resources/) 0.2 (included by Maven)
+ * [Apache Commons BeanUtils](http://commons.apache.org/beanutils/) 1.8.3 (included by Maven)
  * [JSR-310](http://threeten.sourceforge.net/) 0.6.3
 
 To include JSR-310 into your Maven local repo
