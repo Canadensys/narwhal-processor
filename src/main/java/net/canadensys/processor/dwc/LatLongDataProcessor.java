@@ -58,5 +58,5 @@ public class LatLongDataProcessor extends NumericPairDataProcessor{
 				}
 			}
 		}
-	}	
+	}
 }

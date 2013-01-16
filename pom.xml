@@ -8,11 +8,29 @@
 	<name>narwhal-processor</name>
 	<url>http://canadensys.net</url>
 	
+	<repositories>
+	  	<repository>
+	      <id>gbif-all</id>
+	      <url>http://repository.gbif.org/content/groups/gbif</url>
+	    </repository>
+ 	</repositories>
+	
 	<dependencies>
 		<dependency>
 		    <groupId>threeten</groupId>
 		    <artifactId>threeten</artifactId>
 		    <version>0.6.3</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.gbif</groupId>
+		    <artifactId>gbif-common-api</artifactId>
+		    <version>0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gbif</groupId>
+			<artifactId>gbif-parsers</artifactId>
+			<version>0.2</version>
 		</dependency>
 
 		<dependency>
