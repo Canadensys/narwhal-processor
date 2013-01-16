@@ -15,7 +15,7 @@ import org.gbif.common.parsers.ParseResult.CONFIDENCE;
 import org.gbif.common.parsers.countryname.CountryNameParser;
 
 /**
- * Country processor to handle country data.
+ * Country processor to handle country names.
  * Parsing a country string into a controlled vocabulary (org.gbif.api.model.vocabulary.Country).
  * You should reuse the same instance to save resources.
  * @author canadensys
