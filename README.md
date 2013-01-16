@@ -1,7 +1,7 @@
 narwhal-processor
 =================
 
-Basic data processing library aiming to normalize similar values ​​in a known format. The value can be standardized or discovered from another value.
+narwhal-processor is a processing library that normalizes data of a known type. Current and proposed data types that can be normalized include date, country name, continent, state and provinces, coordinates, numeric ranges (altitude, depth) and scientific name.
 
 Comments, contributions, reviews and help are welcomed.
 
