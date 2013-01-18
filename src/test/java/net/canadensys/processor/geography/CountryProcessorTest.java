@@ -1,6 +1,7 @@
 package net.canadensys.processor.geography;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import net.canadensys.processor.DataProcessor;
 import net.canadensys.processor.DataProcessor.ErrorHandlingModeEnum;
 import net.canadensys.processor.ProcessingResult;
@@ -9,14 +10,14 @@ import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import org.junit.Test;
 
 /**
- * Test for the CountryProcessor
+ * Tests for the CountryProcessor
  * @author canadensys
  *
  */
 public class CountryProcessorTest {
 	
 	@Test
-	public void testCountryContinent(){
+	public void testCountryProcessor(){
 		DataProcessor dateProcessor = new CountryProcessor();
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();

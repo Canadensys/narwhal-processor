@@ -8,6 +8,7 @@ package net.canadensys.processor.dwc.mock;
 public class MockOccurrenceModel {
 	
 	private String country;
+	private String stateprovince;
 	
 	private Double decimalLatitude;
 	private Double decimalLongitude;
@@ -75,5 +76,11 @@ public class MockOccurrenceModel {
 	}
 	public void setCountry(String country) {
 		this.country = country;
+	}
+	public String getStateprovince() {
+		return stateprovince;
+	}
+	public void setStateprovince(String stateprovince) {
+		this.stateprovince = stateprovince;
 	}
 }

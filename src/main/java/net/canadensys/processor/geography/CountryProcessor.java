@@ -30,7 +30,7 @@ public class CountryProcessor implements DataProcessor {
 	protected ErrorHandlingModeEnum errorHandlingMode;
 	
 	/**
-	 * Default constructor, default field names will be used.
+	 * Default constructor, default field names and ErrorHandlingModeEnum.USE_ORIGINAL will be used.
 	 */
 	public CountryProcessor(){
 		this(DEFAULT_COUNTRY_NAME,ErrorHandlingModeEnum.USE_ORIGINAL);
