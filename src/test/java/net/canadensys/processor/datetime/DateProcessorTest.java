@@ -1,6 +1,9 @@
 package net.canadensys.processor.datetime;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +66,19 @@ public class DateProcessorTest {
 		}
 	}
 	
+	@Test
+	public void testDateValidation(){
+		DateProcessor dateProcessor = new DateProcessor("eventDate", "eventStartYear", "eventStartMonth", "eventStartDay");
+		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
+		mockRawModel.setEventDate("2010-01-02");
+		
+		assertTrue(dateProcessor.validateBean(mockRawModel, false, null, null));
+		
+		//test mandatory flag
+		mockRawModel.setEventDate(null);
+		assertFalse(dateProcessor.validateBean(mockRawModel, true, null, null));
+		assertTrue(dateProcessor.validateBean(mockRawModel, false, null, null));
+	}
 	
 	@Test
 	public void testFuzyDates(){

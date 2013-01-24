@@ -1,7 +1,9 @@
 package net.canadensys.processor.geography;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.NoSuchElementException;
 
@@ -27,12 +29,25 @@ public class StateProvinceProcessorTest {
 		StateProvinceProcessor<CanadaProvince> spProcessor = new StateProvinceProcessor<CanadaProvince>(Country.CANADA, CanadaProvince.class);
 		StateProvinceEnum spe = spProcessor.process("LABRADOR", null);
 		assertEquals(CanadaProvince.NEWFOUNDLAND_AND_LABRADOR, spe);
-		
+
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		mockRawModel.setStateprovince("The Northwest Territories");
 		spProcessor.processBean(mockRawModel, mockModel, null, null);
 		assertEquals(CanadaProvince.NORTHWEST_TERRITORIES.getName(), mockModel.getStateprovince());
+	}
+	
+	@Test
+	public void testProvinceStateValidation(){
+		DataProcessor dataProcessor = new StateProvinceProcessor<CanadaProvince>(Country.CANADA, CanadaProvince.class);
+		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
+		mockRawModel.setStateprovince("The Northwest Territories");
+		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
+		
+		//test mandatory flag
+		mockRawModel.setStateprovince(null);
+		assertFalse(dataProcessor.validateBean(mockRawModel, true, null, null));
+		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
 	}
 	
 	@Test

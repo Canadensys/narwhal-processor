@@ -29,5 +29,15 @@ public interface DataProcessor {
 	 * @param optional result variable, use only if you plan to log what happened
 	 */
 	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result);
+	
+	/**
+	 * Validates a Java Bean. The validation is not context related. It means that it will only ensure
+	 * that the data can be process without errors.
+	 * @param in
+	 * @param isMandatory is a missing value valid or not?
+	 * @param params additional parameters (optional for some processor)
+	 * @param result
+	 */
+	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result);
 
 }

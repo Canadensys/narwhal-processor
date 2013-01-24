@@ -132,6 +132,29 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 		}
 	}
 	
+	@Override
+	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
+		String textStateProvince = null;
+		try {
+			textStateProvince = (String)PropertyUtils.getSimpleProperty(in, stateProvinceName);
+			if(process(textStateProvince,result) != null){
+				return true;
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		
+		//no valid country was found, check if this value was mandatory
+		if(!isMandatory && StringUtils.isBlank(textStateProvince)){
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * State/province processing function.
 	 * This function will ignore errorHandlingMode since the return type is StateProvinceEnum.

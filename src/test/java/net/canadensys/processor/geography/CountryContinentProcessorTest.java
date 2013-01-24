@@ -18,28 +18,41 @@ public class CountryContinentProcessorTest {
 
 	@Test
 	public void testCountryContinent(){
-		DataProcessor dateProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
+		DataProcessor dataProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
 		
 		MockCountryCodeHolder mockRawModel = new MockCountryCodeHolder();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 
 		mockRawModel.setCountryISOLetterCode("CA");
 		ProcessingResult pr = new ProcessingResult();
-		dateProcessor.processBean(mockRawModel, mockModel, null, pr);
+		dataProcessor.processBean(mockRawModel, mockModel, null, pr);
 		
 		assertEquals(Continent.NORTH_AMERICA.getTitle(), mockModel.getContinent());
 	}
 	
 	@Test
+	public void testCountryContinentValidation(){
+		DataProcessor dataProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
+		MockCountryCodeHolder mockRawModel = new MockCountryCodeHolder();
+		mockRawModel.setCountryISOLetterCode("CA");
+		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
+		
+		//test mandatory flag
+		mockRawModel.setCountryISOLetterCode(null);
+		assertFalse(dataProcessor.validateBean(mockRawModel, true, null, null));
+		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
+	}
+	
+	@Test
 	public void testWrongCountryContinent(){
-		DataProcessor dateProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
+		DataProcessor dataProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
 		
 		MockCountryCodeHolder mockRawModel = new MockCountryCodeHolder();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 
 		mockRawModel.setCountryISOLetterCode("test");
 		ProcessingResult pr = new ProcessingResult();
-		dateProcessor.processBean(mockRawModel, mockModel, null, pr);
+		dataProcessor.processBean(mockRawModel, mockModel, null, pr);
 		assertNull(mockModel.getContinent());
 	}
 	

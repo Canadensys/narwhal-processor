@@ -92,14 +92,12 @@ public class CountryContinentProcessor implements DataProcessor{
 	@Override
 	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result) {
 		try {
-			MutableObject<Continent> output = new MutableObject<Continent>();
-			String textDate = (String)PropertyUtils.getSimpleProperty(in, countryISOLetterCodeName);
-			
-			process(textDate,output,result);
+			String textCountryISOCode = (String)PropertyUtils.getSimpleProperty(in, countryISOLetterCodeName);
+			Continent resultContinent = process(textCountryISOCode,result);
 			
 			String continent;
-			if(output.getValue() != null){
-				continent =  output.getValue().getTitle();
+			if(resultContinent != null){
+				continent =  resultContinent.getTitle();
 			}
 			else{
 				//should it be done in process(...) function?
@@ -115,25 +113,50 @@ public class CountryContinentProcessor implements DataProcessor{
 		}	
 	}
 	
+	@Override
+	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
+		String textCountryISOCode = null;
+		try {
+			textCountryISOCode = (String)PropertyUtils.getSimpleProperty(in, countryISOLetterCodeName);
+			if(process(textCountryISOCode,result) != null){
+				return true;
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		
+		//no valid Continent was found for that country, check if it was mandatory
+		if(!isMandatory && StringUtils.isBlank(textCountryISOCode)){
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Country->Continent processing function
+	 * Note that the errorHandlingMode will be ignored by this function.
 	 * @param countryISOLetterCode (ISO 3166-1 alpha-2)
-	 * @param continent MutableObject to allow to set content
 	 * @param result optional ProcessingResult
+	 * @return matching Continent or null
 	 */
-	public void process(String countryISOLetterCode, MutableObject<Continent> continent, ProcessingResult result){
+	public Continent process(String countryISOLetterCode, ProcessingResult result){
 		if(StringUtils.isBlank(countryISOLetterCode)){
-			return;
+			return null;
 		}
 		String continentCode = countryContinentMap.get(countryISOLetterCode);
 		if(continentCode != null){
-			continent.setValue(Continent.fromCode(continentCode));
+			return Continent.fromCode(continentCode);
 		}
 		else{
 			if(result != null){
 				result.addError("Couldn't find a matching continent for country ISO Letter Code [" + countryISOLetterCode +"]");
 			}
 		}
+		return null;
 	}
 	
 	/**

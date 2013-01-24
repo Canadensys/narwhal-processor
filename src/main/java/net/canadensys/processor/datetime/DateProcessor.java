@@ -118,6 +118,36 @@ public class DateProcessor implements DataProcessor{
 	}
 	
 	/**
+	 * Validates a date with partial date support. It means that if only one field can be parsed, this is
+	 * considered valid.
+	 */
+	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
+		Integer[] output = new Integer[3];
+		String textDate = null;
+
+		try {
+			textDate = (String)PropertyUtils.getSimpleProperty(in, dateName);
+			process(textDate,output,result);
+			//we support partial date so if we have only one part, it's valid
+			if(output[0] != null || output[1] != null || output[2] != null){
+				return true;
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		
+		//no valid date was found, check if this value was mandatory
+		if(!isMandatory && StringUtils.isBlank(textDate)){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Date processing function
 	 * @param dateText a test representing the date or partial-date
 	 * @param output initialized array(size==3) that will contain the parsed data(year,month,day) or null.

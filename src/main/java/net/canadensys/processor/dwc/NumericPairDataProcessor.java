@@ -26,6 +26,9 @@ public class NumericPairDataProcessor implements DataProcessor{
 	private static final String DEFAULT_VALUE1_NAME = "min";
 	private static final String DEFAULT_VALUE2_NAME = "max";
 	
+	//Tag to get the Class to use for validation purpose
+	public static final String VALIDATE_CLASS_TAG = "Class";
+	
 	private String value1Name,value2Name;
 	
 	//Only USE_NULL make sense here
@@ -70,6 +73,46 @@ public class NumericPairDataProcessor implements DataProcessor{
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}		
+	}
+	
+	/**
+	 * A numeric pair is valid if the 2 elements are valid.
+	 * @param in
+	 * @param isMandatory
+	 * @param params you must provide the class to use to validate the date using the VALIDATE_CLASS_TAG tag.
+	 * @param result
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
+		Number[] output = new Number[2];
+		String val1 = null, val2 = null;
+		//Get the class in which the result should be casted
+		Class<? extends Number> clazz = null;
+		if(params != null){
+			clazz = (Class<? extends Number>)params.get(VALIDATE_CLASS_TAG);
+		}
+		
+		try {
+			val1 = (String)PropertyUtils.getSimpleProperty(in, value1Name);
+			val2 = (String)PropertyUtils.getSimpleProperty(in, value2Name);
+			process(val1,val2,output,clazz,result);
+			if(output[0] != null && output[1] != null){
+				return true;
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		
+		//no valid numeric pair was found, check if this value was mandatory
+		if(!isMandatory && StringUtils.isBlank(val1) && StringUtils.isBlank(val2)){
+			return true;
+		}
+		return false;
 	}
 	
 	/**

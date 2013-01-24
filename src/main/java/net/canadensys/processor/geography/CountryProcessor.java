@@ -56,14 +56,12 @@ public class CountryProcessor implements DataProcessor {
 	@Override
 	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result) {
 		try {
-			MutableObject<Country> output = new MutableObject<Country>();
 			String textCountry = (String)PropertyUtils.getSimpleProperty(in, countryName);
-			
-			process(textCountry,output,result);
+			Country resultCountry = process(textCountry,result);
 			
 			String country=null;
-			if(output.getValue() != null){
-				country =  output.getValue().getTitle();
+			if(resultCountry != null){
+				country =  resultCountry.getTitle();
 			}
 			else{
 				//should it be done in process(...) function?
@@ -88,25 +86,51 @@ public class CountryProcessor implements DataProcessor {
 		}
 	}
 	
+	@Override
+	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
+		String textCountry = null;
+		try {
+			textCountry = (String)PropertyUtils.getSimpleProperty(in, countryName);
+			if(process(textCountry,result) != null){
+				return true;
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		
+		//no valid country was found, check if this value was mandatory
+		if(!isMandatory && StringUtils.isBlank(textCountry)){
+			return true;
+		}
+		return false;
+	}
+	
 	/**
-	 * Country processing function
+	 * Country processing function.
+	 * Note that the errorHandlingMode will be ignored by this function.
 	 * @param countryStr country string to be processed
-	 * @param country MutableObject to allow to set country
 	 * @param result optional ProcessingResult
+	 * @return matching Country.
 	 */
-	public void process(String countryStr, MutableObject<Country> country, ProcessingResult result){
+	public Country process(String countryStr, ProcessingResult result){
 		if(StringUtils.isBlank(countryStr)){
-			return;
+			return null;
 		}
 		
 		ParseResult<String> parsingResult = COUNTRY_NAME_PARSER.parse(countryStr);
 		if(parsingResult.isSuccessful() && parsingResult.getConfidence().equals(CONFIDENCE.DEFINITE)){
-			country.setValue(Country.fromIsoCode(parsingResult.getPayload()));
+			//country.setValue(Country.fromIsoCode(parsingResult.getPayload()));
+			return Country.fromIsoCode(parsingResult.getPayload());
 		}
 		else{
 			if(result != null){
 				result.addError("Couldn't find a matching country for [" + countryStr +"]");
 			}
 		}
+		return null;
 	}
 }
