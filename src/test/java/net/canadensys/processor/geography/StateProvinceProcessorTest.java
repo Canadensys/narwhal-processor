@@ -11,8 +11,8 @@ import net.canadensys.processor.DataProcessor;
 import net.canadensys.processor.DataProcessor.ErrorHandlingModeEnum;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
-import net.canadensys.vocabulary.stateprovince.CanadaProvince;
 import net.canadensys.vocabulary.stateprovince.StateProvinceEnum;
+import net.canadensys.vocabulary.stateprovince.CAProvince;
 
 import org.gbif.api.model.vocabulary.Country;
 import org.junit.Test;
@@ -26,20 +26,20 @@ public class StateProvinceProcessorTest {
 	
 	@Test
 	public void testProvinceState(){
-		StateProvinceProcessor<CanadaProvince> spProcessor = new StateProvinceProcessor<CanadaProvince>(Country.CANADA, CanadaProvince.class);
+		StateProvinceProcessor<CAProvince> spProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class);
 		StateProvinceEnum spe = spProcessor.process("LABRADOR", null);
-		assertEquals(CanadaProvince.NEWFOUNDLAND_AND_LABRADOR, spe);
+		assertEquals(CAProvince.NEWFOUNDLAND_AND_LABRADOR, spe);
 
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		mockRawModel.setStateprovince("The Northwest Territories");
 		spProcessor.processBean(mockRawModel, mockModel, null, null);
-		assertEquals(CanadaProvince.NORTHWEST_TERRITORIES.getName(), mockModel.getStateprovince());
+		assertEquals(CAProvince.NORTHWEST_TERRITORIES.getName(), mockModel.getStateprovince());
 	}
 	
 	@Test
 	public void testProvinceStateValidation(){
-		DataProcessor dataProcessor = new StateProvinceProcessor<CanadaProvince>(Country.CANADA, CanadaProvince.class);
+		DataProcessor dataProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class);
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		mockRawModel.setStateprovince("The Northwest Territories");
 		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
@@ -52,7 +52,7 @@ public class StateProvinceProcessorTest {
 	
 	@Test
 	public void testWrongProvinceState(){
-		DataProcessor spProcessor = new StateProvinceProcessor<CanadaProvince>(Country.CANADA, CanadaProvince.class);
+		DataProcessor spProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class);
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		
@@ -69,7 +69,7 @@ public class StateProvinceProcessorTest {
 	
 	@Test
 	public void testWrongProvinceStateOtherErrorHandling(){
-		DataProcessor spProcessor = new StateProvinceProcessor<CanadaProvince>(Country.CANADA, CanadaProvince.class,"stateprovince",ErrorHandlingModeEnum.USE_NULL);
+		DataProcessor spProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class,"stateprovince",ErrorHandlingModeEnum.USE_NULL);
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		
@@ -80,7 +80,7 @@ public class StateProvinceProcessorTest {
 		assertNull(mockModel.getStateprovince());
 		
 		//test empty value
-		spProcessor = new StateProvinceProcessor<CanadaProvince>(Country.CANADA, CanadaProvince.class,"stateprovince",ErrorHandlingModeEnum.USE_EMPTY);
+		spProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class,"stateprovince",ErrorHandlingModeEnum.USE_EMPTY);
 		spProcessor.processBean(mockRawModel, mockModel, null, pr);
 		assertEquals("",mockModel.getStateprovince());
 	}
