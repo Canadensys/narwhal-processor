@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>net.canadensys</groupId>
 			<artifactId>canadensys-core</artifactId>
-			<version>1.3</version>
+			<version>1.4</version>
 		</dependency>
 
 		<dependency>

@@ -1,9 +1,9 @@
 package net.canadensys.processor.geography;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import net.canadensys.processor.DataProcessor;
 import net.canadensys.processor.DataProcessor.ErrorHandlingModeEnum;
 import net.canadensys.processor.ProcessingResult;
@@ -55,6 +55,7 @@ public class CountryProcessorTest {
 		assertEquals("xyz",mockModel.getCountry());
 	}
 	
+	@Test
 	public void testWrongCountryOtherErrorHandling(){
 		DataProcessor dataProcessor = new CountryProcessor("country",ErrorHandlingModeEnum.USE_NULL);
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();

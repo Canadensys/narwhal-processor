@@ -198,6 +198,7 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 		if (value != null){
 			String stateProvince = LETTER_MATCHER.retainFrom(value);
 			stateProvince = WHITESPACE_MATCHER.trimAndCollapseFrom(stateProvince, ' ');
+			stateProvince = StringUtils.stripAccents(stateProvince);
 			stateProvince = Strings.emptyToNull(stateProvince);
 			return super.normalize(stateProvince);
 		}

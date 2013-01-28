@@ -15,6 +15,9 @@ public class MockRawOccurrenceModel {
 	
 	private String eventDate;
 	
+	private String country;
+	private String stateprovince;
+	
 	public String getMinAltitude() {
 		return minAltitude;
 	}
@@ -44,5 +47,17 @@ public class MockRawOccurrenceModel {
 	}
 	public void setEventDate(String eventDate) {
 		this.eventDate = eventDate;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getStateprovince() {
+		return stateprovince;
+	}
+	public void setStateprovince(String stateprovince) {
+		this.stateprovince = stateprovince;
 	}
 }

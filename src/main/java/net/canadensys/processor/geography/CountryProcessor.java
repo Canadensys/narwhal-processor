@@ -8,7 +8,6 @@ import net.canadensys.processor.ProcessingResult;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.mutable.MutableObject;
 import org.gbif.api.model.vocabulary.Country;
 import org.gbif.common.parsers.ParseResult;
 import org.gbif.common.parsers.ParseResult.CONFIDENCE;

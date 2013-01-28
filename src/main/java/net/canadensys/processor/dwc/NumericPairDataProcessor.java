@@ -72,7 +72,7 @@ public class NumericPairDataProcessor implements DataProcessor{
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 	
 	/**
