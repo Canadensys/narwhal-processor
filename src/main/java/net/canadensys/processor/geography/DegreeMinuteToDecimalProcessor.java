@@ -32,7 +32,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	protected static int MINUTE_IDX = 1;
 	protected static int SECOND_IDX = 2;
 	
-	protected static Pattern CHECK_CARDINAL_DIRECTION_PATTERN = Pattern.compile("[NESW]", Pattern.CASE_INSENSITIVE);
+	protected static Pattern CHECK_CARDINAL_DIRECTION_PATTERN = Pattern.compile("[NESW]\\s*$", Pattern.CASE_INSENSITIVE);
 	protected static Pattern CHECK_SOUTH_WEST_PATTERN = Pattern.compile("[SW]", Pattern.CASE_INSENSITIVE);
 	
 	//negative sign(and whitespace) and NSEW letters and whitespace //\s*$
@@ -49,9 +49,11 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	//[\"s″ ]? :followed by an optional "s″
 	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d{1,3})(?:[°d: ]+)(\\d*\\.?\\d+)(?:[\'m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
 	
-	protected static final String DEFAULT_COORDINATE_NAME = "coordinates";
+	protected static final String DEFAULT_COORDINATE_NAME = "coordinate";
 	
-	protected String coordinateName = null;
+	//Those field names will only be used with JavaBean
+	protected String coordinateInName = null;
+	protected String coordinateOutName = null;
 	
 	//Only USE_NULL makes sense here
 	protected ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -60,11 +62,17 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	 * Default constructor, default field names will be used.
 	 */
 	public DegreeMinuteToDecimalProcessor(){
-		this(DEFAULT_COORDINATE_NAME);
+		this(DEFAULT_COORDINATE_NAME,DEFAULT_COORDINATE_NAME);
 	}
 	
-	public DegreeMinuteToDecimalProcessor(String coordinateName){
-		this.coordinateName = coordinateName;
+	/**
+	 * 
+	 * @param coordinateInName name of the String field in the input JavaBean
+	 * @param coordinateOutName name of the Float field in the output JavaBean
+	 */
+	public DegreeMinuteToDecimalProcessor(String coordinateInName, String coordinateOutName){
+		this.coordinateInName = coordinateInName;
+		this.coordinateOutName = coordinateOutName;
 	}
 	
 	/**
@@ -77,9 +85,9 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	@Override
 	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result) {
 		try {
-			String val1 = (String)PropertyUtils.getSimpleProperty(in, coordinateName);
+			String val1 = (String)PropertyUtils.getSimpleProperty(in, coordinateInName);
 			Float coord = process(val1,result);
-			PropertyUtils.setSimpleProperty(out, coordinateName, coord);
+			PropertyUtils.setSimpleProperty(out, coordinateOutName, coord);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -93,7 +101,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
 		String textCoordinate = null;
 		try {
-			textCoordinate = (String)PropertyUtils.getSimpleProperty(in, coordinateName);
+			textCoordinate = (String)PropertyUtils.getSimpleProperty(in, coordinateInName);
 			if(process(textCoordinate,result) != null){
 				return true;
 			}
@@ -114,6 +122,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 		
 	/**
 	 * Degree/minute/second to decimal processing function.
+	 * Note : Could move to Double if Float precision is not enough
 	 * @param dms degree/minute/second string
 	 * @param result optional
 	 * @return decimal value of the dms coordinate or null
@@ -124,7 +133,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 			return null;
 		}
 		
-		//make sure we have a cardinal direction
+		//make sure we have a cardinal direction at the end
 		if(!CHECK_CARDINAL_DIRECTION_PATTERN.matcher(dms).find()){
 			if(result != null){
 				result.addError("No cardinal direction provided in [" + dms +"]");
