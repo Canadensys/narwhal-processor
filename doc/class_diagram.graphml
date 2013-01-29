@@ -14,11 +14,139 @@
   <key for="edge" id="d10" yfiles.type="edgegraphics"/>
   <graph edgedefault="directed" id="G">
     <data key="d7"/>
-    <node id="n0">
+    <node id="n0" yfiles.foldertype="group">
+      <data key="d4"/>
+      <data key="d5"/>
+      <data key="d6">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Geometry height="564.4161079367701" width="1022.9305055023526" x="884.5373007044864" y="321.18458951786715"/>
+              <y:Fill color="#F2F0D8" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#B7B69E" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="21.666015625" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="1022.9305055023526" x="0.0" y="0.0">processor.geography</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+              <y:DropShadow color="#D2D2D2" offsetX="4" offsetY="4"/>
+              <y:State closed="false" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="16" leftF="16.444938820912057" right="37" rightF="36.82153256946435" top="23" topF="23.306645135219583"/>
+            </y:GroupNode>
+            <y:GroupNode>
+              <y:Geometry height="50.0" width="50.0" x="1265.0" y="-7.327225806451565"/>
+              <y:Fill color="#F2F0D8" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#B7B69E" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="21.666015625" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="50.0" x="0.0" y="0.0">3</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+              <y:DropShadow color="#D2D2D2" offsetX="4" offsetY="4"/>
+              <y:State closed="false" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="n0:">
+        <node id="n0::n0">
+          <data key="d4"/>
+          <data key="d6">
+            <y:UMLClassNode>
+              <y:Geometry height="118.44000000000005" width="752.2276603633666" x="973.8861698183168" y="381.15725027808674"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="188.58984375" x="281.8189083066833" y="3.0">CountryContinentProcessor<y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
+                <y:AttributeLabel>#countryContinentMap:Map&lt;String,String&gt;</y:AttributeLabel>
+                <y:MethodLabel>+CountryContinentProcessor(countryISOLetterCodeName:String,continentName:String, InputStream, ErrorHandlingModeEnum)
++process(countryISOLetterCode:String, continent:MutableObject&lt;Continent&gt;, ProcessingResult)
+#setErrorHandlingMode(ErrorHandlingModeEnum)
+...</y:MethodLabel>
+              </y:UML>
+            </y:UMLClassNode>
+          </data>
+        </node>
+        <node id="n0::n1">
+          <data key="d4"/>
+          <data key="d6">
+            <y:UMLClassNode>
+              <y:Geometry height="118.44000000000005" width="376.27497219132385" x="915.9822395253984" y="750.78"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="123.03125" x="126.62186109566193" y="3.0">CountryProcessor<y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
+                <y:AttributeLabel>-COUNTRY_NAME_PARSER:CountryNameParser</y:AttributeLabel>
+                <y:MethodLabel>+CountryProcessor(countryName, ErrorHandlingModeEnum)
++process(countryStr:String, ProcessingResult):Country
+...</y:MethodLabel>
+              </y:UML>
+            </y:UMLClassNode>
+          </data>
+        </node>
+        <node id="n0::n2">
+          <data key="d4"/>
+          <data key="d5"/>
+          <data key="d6">
+            <y:UMLClassNode>
+              <y:Geometry height="121.20139490927443" width="476.17797552836464" x="1379.46829810901" y="749.3993025453628"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="160.05712890625" x="158.06042331105732" y="3.0">StateProvinceProcessor<y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
+                <y:AttributeLabel/>
+                <y:MethodLabel>+StateProvinceProcessor(targetCountry:Country, stateProvinceClass:Class&lt;T&gt;)
++process(stateProvinceStr:String, ProcessingResult):StateProvinceEnum
+...</y:MethodLabel>
+              </y:UML>
+            </y:UMLClassNode>
+          </data>
+        </node>
+        <node id="n0::n3">
+          <data key="d4"/>
+          <data key="d5"/>
+          <data key="d6">
+            <y:UMLClassNode>
+              <y:Geometry height="98.71323692992223" width="330.2291434927697" x="1214.8854282536151" y="582.5418804161742"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="234.08984375" x="48.069649871384854" y="3.0">DegreeMinuteToDecimalProcessor<y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
+                <y:AttributeLabel>...</y:AttributeLabel>
+                <y:MethodLabel>+process(dms:String, ProcessingResult):Float
+...</y:MethodLabel>
+              </y:UML>
+            </y:UMLClassNode>
+          </data>
+        </node>
+      </graph>
+    </node>
+    <node id="n1">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="118.44000000000003" width="463.84000000000003" x="171.0" y="32.5"/>
+          <y:Geometry height="127.50199777530591" width="463.84000000000003" x="171.0" y="10.398002224694096"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="100.4970703125" x="181.67146484375002" y="26.1328125">DataProcessor<y:LabelModel>
@@ -31,19 +159,20 @@
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="interface" use3DEffect="true">
             <y:AttributeLabel>+ErrorHandlingModeEnum:enum{USE_NULL,USE_EMPTY,USE_ORIGINAL}</y:AttributeLabel>
             <y:MethodLabel>+getErrorHandlingMode():ErrorHandlingModeEnum
-+processBean(in:Object,out:Object,param:Map,ProcessingResult):void</y:MethodLabel>
++processBean(in:Object,out:Object,param:Map,ProcessingResult):void
++validateBean(in:Object,isMandatory,params:Map, ProcessingResult):boolean</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n1">
+    <node id="n2">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="95.80000000000001" width="244.33333333333337" x="717.8333333333333" y="42.099999999999994"/>
+          <y:Geometry height="111.65099888765295" width="220.30415276232873" x="717.8333333333333" y="18.323501668520578"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="118.73388671875" x="62.799723307291686" y="3.0">ProcessingResult<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="118.73388671875" x="50.78513302178936" y="3.0">ProcessingResult<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -53,12 +182,13 @@
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel>-errorList:List&lt;String&gt;</y:AttributeLabel>
             <y:MethodLabel>+addError(errorDescription):String
-+getErrorList():List&lt;String&gt;</y:MethodLabel>
++getErrorList():List&lt;String&gt;
++getErrorString():String</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n2">
+    <node id="n3">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
@@ -81,7 +211,7 @@
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n3">
+    <node id="n4">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
@@ -103,7 +233,7 @@
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n4">
+    <node id="n5">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
@@ -127,39 +257,15 @@
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n5">
-      <data key="d4"/>
-      <data key="d6">
-        <y:UMLClassNode>
-          <y:Geometry height="118.44000000000005" width="752.2276603633666" x="763.8861698183167" y="404.4"/>
-          <y:Fill color="#FFCC00" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="188.58984375" x="281.8189083066833" y="3.0">CountryContinentProcessor<y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
-          <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>#countryContinentMap:Map&lt;String,String&gt;</y:AttributeLabel>
-            <y:MethodLabel>+CountryContinentProcessor()
-+CountryContinentProcessor(countryISOLetterCodeName:String,continentName:String, InputStream, ErrorHandlingModeEnum)
-+process(countryISOLetterCode:String, continent:MutableObject&lt;Continent&gt;, ProcessingResult)
-#setErrorHandlingMode(ErrorHandlingModeEnum)</y:MethodLabel>
-          </y:UML>
-        </y:UMLClassNode>
-      </data>
-    </node>
     <node id="n6">
       <data key="d4"/>
       <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="49.378420467185606" width="376.27497219132385" x="561.8625139043381" y="575.3107897664072"/>
-          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:Geometry height="83.91279199110124" width="376.27497219132374" x="1431.8625139043381" y="948.0436040044494"/>
+          <y:Fill color="#00CCFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="123.03125" x="126.62186109566193" y="3.0">CountryProcessor<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="348.3857421875" x="13.94461500191187" y="3.0">org.gbif.common.parsers.FileBasedDictionaryParser<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -167,17 +273,58 @@
             </y:ModelParameter>
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel/>
-            <y:MethodLabel/>
+            <y:AttributeLabel>...</y:AttributeLabel>
+            <y:MethodLabel>...</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
-    <edge id="e0" source="n2" target="n0">
+    <node id="n7">
+      <data key="d4"/>
+      <data key="d5"/>
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="85.95639599555068" width="409.16484983314785" x="899.5373007044864" y="946.0"/>
+          <y:Fill color="#00CCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="custom" textColor="#000000" visible="true" width="398.43701171875" x="5.3639190571989275" y="3.0">org.gbif.common.parsers.countryname.CountryNameParser<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
+            <y:AttributeLabel>...</y:AttributeLabel>
+            <y:MethodLabel>...</y:MethodLabel>
+          </y:UML>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    <node id="n8">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="95.80000000000001" width="255.22988209121243" x="-254.99999999999977" y="-74.99999999999999"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="16" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="41.6875" modelName="custom" textColor="#000000" visible="true" width="202.3984375" x="26.4157222956062" y="27.056250000000006">To ensure visibility some 
+details are not displayed.<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <edge id="e0" source="n3" target="n1">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="-132.92000000000002" ty="1.1952391546164023">
+          <y:Path sx="0.0" sy="0.0" tx="-132.92000000000002" ty="1.286688450125456">
             <y:Point x="30.0" y="180.0"/>
             <y:Point x="270.0" y="180.0"/>
           </y:Path>
@@ -195,7 +342,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e1" source="n3" target="n2">
+    <edge id="e1" source="n4" target="n3">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
@@ -214,14 +361,14 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e2" source="n4" target="n0">
+    <edge id="e2" source="n5" target="n1">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="94.6799999999999" ty="5.1663181312571425"/>
+          <y:Path sx="0.0" sy="0.0" tx="94.6799999999999" ty="5.561599821665575"/>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="0.7887244085694078" y="-155.26850437877934">
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="0.7887244085694078" y="-163.27203284488564">
             <y:LabelModel>
               <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
             </y:LabelModel>
@@ -233,13 +380,13 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e3" source="n0" target="n1">
+    <edge id="e3" source="n1" target="n2">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="short"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="39.51134928385409" y="1.8445313258692124">
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="39.50384195963534" y="1.9999990371517384">
             <y:LabelModel>
               <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
             </y:LabelModel>
@@ -251,43 +398,56 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e4" source="n5" target="n0">
+    <edge id="e4" source="n0" target="n1">
+      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="231.93345482596447" ty="53.07462360272409">
-            <y:Point x="1140.0" y="300.0"/>
-            <y:Point x="810.0" y="300.0"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="dashed" width="1.0"/>
-          <y:Arrows source="none" target="white_delta"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="-324.5144178238411" y="-112.75688366059671">
-            <y:LabelModel>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="156.42578125" x="-182.49171071165244" y="-121.64456947189504">&lt;all classes implement&gt;<y:LabelModel>
               <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
             </y:LabelModel>
             <y:ModelParameter>
-              <y:SmartEdgeLabelModelParameter angle="6.283185307179586" distance="4.377244988721794" distanceToCenter="false" position="right" ratio="0.9773164176480033" segment="1"/>
+              <y:SmartEdgeLabelModelParameter angle="6.283185307179586" distance="50.30680164969557" distanceToCenter="true" position="right" ratio="0.5071011314754483" segment="-1"/>
             </y:ModelParameter>
           </y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e5" source="n6" target="n0">
+    <edge id="e5" source="n0::n2" target="n6">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="197.04507307324246" ty="59.20444714446505">
-            <y:Point x="750.0" y="360.0"/>
-            <y:Point x="600.0" y="360.0"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="dashed" width="1.0"/>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="3.724720345441483" y="-113.388681197356">
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="-5.501813660988319" y="36.72156479204341">
             <y:LabelModel>
               <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
             </y:LabelModel>
             <y:ModelParameter>
-              <y:SmartEdgeLabelModelParameter angle="6.283185307179586" distance="3.724720345441352" distanceToCenter="false" position="right" ratio="0.5011585655540466" segment="0"/>
+              <y:SmartEdgeLabelModelParameter angle="6.283185307179586" distance="2.0" distanceToCenter="false" position="right" ratio="0.5" segment="-1"/>
+            </y:ModelParameter>
+          </y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e6" source="n0::n1" target="n7">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed" width="1.0"/>
+          <y:Arrows source="none" target="short"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="-6.000025355502203" y="36.402114257812514">
+            <y:LabelModel>
+              <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartEdgeLabelModelParameter angle="6.283185307179586" distance="2.0" distanceToCenter="false" position="right" ratio="0.5" segment="-1"/>
             </y:ModelParameter>
           </y:EdgeLabel>
           <y:BendStyle smoothed="false"/>

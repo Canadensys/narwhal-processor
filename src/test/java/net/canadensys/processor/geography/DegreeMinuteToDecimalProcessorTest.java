@@ -25,6 +25,9 @@ public class DegreeMinuteToDecimalProcessorTest {
 		assertEquals(40.44639f,dmtdProcessor.process("40:26:47N ", null).floatValue(),0);
 		assertEquals(40.44639f,dmtdProcessor.process("40°26'47\"N", null).floatValue(),0);
 		assertEquals(40.44639f,dmtdProcessor.process("40d 26' 47\" N", null).floatValue(),0);
+		assertEquals(40.44639f,dmtdProcessor.process("40d 26m 47N ", null).floatValue(),0);
+		assertEquals(40.44639f,dmtdProcessor.process("40d 26m 47sN ", null).floatValue(),0);
+		assertEquals(-74.0059731f,dmtdProcessor.process("74° 0' 21.5022\"W",null).floatValue(),0);
 		
 		//no seconds
 		assertEquals(40.433334f,dmtdProcessor.process("40d 26'N", null).floatValue(),0);

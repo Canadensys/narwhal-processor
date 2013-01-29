@@ -33,7 +33,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	protected static int SECOND_IDX = 2;
 	
 	protected static Pattern CHECK_CARDINAL_DIRECTION_PATTERN = Pattern.compile("[NESW]\\s*$", Pattern.CASE_INSENSITIVE);
-	protected static Pattern CHECK_SOUTH_WEST_PATTERN = Pattern.compile("[SW]", Pattern.CASE_INSENSITIVE);
+	protected static Pattern CHECK_SOUTH_WEST_PATTERN = Pattern.compile("[SW]\\s*$", Pattern.CASE_INSENSITIVE);
 	
 	//negative sign(and whitespace) and NSEW letters and whitespace //\s*$
 	protected static Pattern REMOVE_CARDINAL_DIRECTION_PATTERN = Pattern.compile("(^\\s?-\\s?)|(\\s?[NSEW]\\s*$)", Pattern.CASE_INSENSITIVE);
