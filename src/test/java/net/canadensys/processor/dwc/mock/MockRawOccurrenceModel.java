@@ -10,6 +10,8 @@ public class MockRawOccurrenceModel {
 	private String decimalLatitude;
 	private String decimalLongitude;
 	
+	private String verbatimCoordinates;
+	
 	private String verbatimLatitude;
 	private String verbatimLongitude;
 	
@@ -74,5 +76,11 @@ public class MockRawOccurrenceModel {
 	}
 	public void setVerbatimLongitude(String verbatimLongitude) {
 		this.verbatimLongitude = verbatimLongitude;
+	}
+	public String getVerbatimCoordinates() {
+		return verbatimCoordinates;
+	}
+	public void setVerbatimCoordinates(String verbatimCoordinates) {
+		this.verbatimCoordinates = verbatimCoordinates;
 	}
 }

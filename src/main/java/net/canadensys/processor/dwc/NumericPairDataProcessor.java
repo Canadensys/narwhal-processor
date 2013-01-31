@@ -100,12 +100,16 @@ public class NumericPairDataProcessor implements DataProcessor{
 			if(output[0] != null && output[1] != null){
 				return true;
 			}
+		//change to multiple Exception catch when moving to Java 7
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+			return false;
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
+			return false;
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
+			return false;
 		}
 		
 		//no valid numeric pair was found, check if this value was mandatory

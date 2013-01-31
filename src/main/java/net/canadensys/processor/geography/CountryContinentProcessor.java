@@ -120,12 +120,16 @@ public class CountryContinentProcessor implements DataProcessor{
 			if(process(textCountryISOCode,result) != null){
 				return true;
 			}
+		//change to multiple Exception catch when moving to Java 7
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+			return false;
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
+			return false;
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
+			return false;
 		}
 		
 		//no valid Continent was found for that country, check if it was mandatory

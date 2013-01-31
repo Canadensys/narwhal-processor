@@ -93,12 +93,16 @@ public class CountryProcessor implements DataProcessor {
 			if(process(textCountry,result) != null){
 				return true;
 			}
+		//change to multiple Exception catch when moving to Java 7
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+			return false;
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
+			return false;
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
+			return false;
 		}
 		
 		//no valid country was found, check if this value was mandatory
