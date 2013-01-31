@@ -1,6 +1,7 @@
-package net.canadensys.processor.dwc;
+package net.canadensys.processor.geography;
 
 import net.canadensys.processor.ProcessingResult;
+import net.canadensys.processor.dwc.NumericPairDataProcessor;
 
 /**
  * Data processor to handle latitude and longitude data.
@@ -8,7 +9,7 @@ import net.canadensys.processor.ProcessingResult;
  * @author canadensys
  *
  */
-public class LatLongDataProcessor extends NumericPairDataProcessor{
+public class DecimalLatLongProcessor extends NumericPairDataProcessor{
 	
 	//decimalLatitude : Legal values lie between -90 and 90, inclusive.
 	public static final int MIN_LATITUDE = -90;
@@ -25,11 +26,11 @@ public class LatLongDataProcessor extends NumericPairDataProcessor{
 	/**
 	 * Default constructor, property name will be assigned to the matching DarwinCore property name.
 	 */
-	public LatLongDataProcessor() {
+	public DecimalLatLongProcessor() {
 		super(DWC_DECIMAL_LATITUDE, DWC_DECIMAL_LONGITUDE);
 	}
 	
-	public LatLongDataProcessor(String latitudePropertyName, String longitudePropertyName) {
+	public DecimalLatLongProcessor(String latitudePropertyName, String longitudePropertyName) {
 		super(latitudePropertyName, longitudePropertyName);
 	}
 	

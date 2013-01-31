@@ -16,7 +16,7 @@ import org.junit.Test;
  *
  */
 public class CoordinatePairProcessorTest {
-	
+		
 	@Test
 	public void testCoordinatePairProcessor(){
 		CoordinatePairProcessor cpProcessor = new CoordinatePairProcessor();

@@ -5,15 +5,16 @@ import static org.junit.Assert.assertNull;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
+import net.canadensys.processor.geography.DecimalLatLongProcessor;
 
 import org.junit.Test;
 
 /**
- * Test for the LatLongDataProcessor
+ * Test for the DecimalLatLongProcessor
  * @author canadensys
  *
  */
-public class LatLongDataProcessorTest {
+public class DecimalLatLongProcessorTest {
 
 	@Test
 	public void testProcessing(){		
@@ -23,7 +24,7 @@ public class LatLongDataProcessorTest {
 		mockRawModel.setDecimalLatitude("45.8º");
 		mockRawModel.setDecimalLongitude("100.4765 degree");
 		
-		NumericPairDataProcessor processor = new LatLongDataProcessor();
+		NumericPairDataProcessor processor = new DecimalLatLongProcessor();
 		processor.processBean(mockRawModel, mockModel, null, null);
 		
 		assertEquals(45.8, mockModel.getDecimalLatitude(),0);
@@ -39,7 +40,7 @@ public class LatLongDataProcessorTest {
 		mockRawModel.setDecimalLongitude("degree");
 		
 		ProcessingResult result = new ProcessingResult();
-		NumericPairDataProcessor processor = new LatLongDataProcessor();
+		NumericPairDataProcessor processor = new DecimalLatLongProcessor();
 		processor.processBean(mockRawModel, mockModel, null, result);
 		
 		assertNull(mockModel.getDecimalLatitude());
