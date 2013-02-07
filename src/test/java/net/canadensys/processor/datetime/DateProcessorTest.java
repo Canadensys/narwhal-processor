@@ -98,6 +98,44 @@ public class DateProcessorTest {
 	}
 	
 	@Test
+	public void testBadRomanNumeralsDates(){
+		DateProcessor dateProcessor = new DateProcessor("eventDate", "eventStartYear", "eventStartMonth", "eventStartDay");
+		
+		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
+		MockOccurrenceModel mockModel = new MockOccurrenceModel();
+
+		//bad roman numeral
+		mockRawModel.setEventDate("10-VX-2010");
+		ProcessingResult pr = new ProcessingResult();
+		dateProcessor.processBean(mockRawModel, mockModel, null, pr);
+		
+		assertNull(mockModel.getEventStartYear());
+		assertNull(mockModel.getEventStartMonth());
+		assertNull(mockModel.getEventStartDay());
+		assertTrue(pr.getErrorList().size() >=1);
+		
+		//bad month
+		mockRawModel.setEventDate("10-XV-2010");
+		pr.getErrorList().clear();
+		dateProcessor.processBean(mockRawModel, mockModel, null, pr);
+		
+		assertNull(mockModel.getEventStartYear());
+		assertNull(mockModel.getEventStartMonth());
+		assertNull(mockModel.getEventStartDay());
+		assertTrue(pr.getErrorList().size() >=1);
+		
+		//roman numeral for day
+		mockRawModel.setEventDate("X-05-2010");
+		pr.getErrorList().clear();
+		dateProcessor.processBean(mockRawModel, mockModel, null, pr);
+		
+		assertNull(mockModel.getEventStartYear());
+		assertNull(mockModel.getEventStartMonth());
+		assertNull(mockModel.getEventStartDay());
+		assertTrue(pr.getErrorList().size() >=1);
+	}
+	
+	@Test
 	public void testStandardizeDatePunctuation(){
 		DateProcessor dateProcessor = new DateProcessor("eventDate", "eventStartYear", "eventStartMonth", "eventStartDay");
 		

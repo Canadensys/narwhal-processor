@@ -3,6 +3,8 @@ package net.canadensys.processor.datetime;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.time.LocalDate;
 import javax.time.MonthOfYear;
@@ -13,6 +15,7 @@ import javax.time.format.CalendricalParseException;
 import javax.time.format.DateTimeFormatter;
 import javax.time.format.DateTimeFormatters;
 
+import net.canadensys.lang.RomanNumeral;
 import net.canadensys.processor.DataProcessor;
 import net.canadensys.processor.ProcessingResult;
 
@@ -70,6 +73,7 @@ public class DateProcessor implements DataProcessor{
 	private static final DateTimeFormatter PARTIAL_MONTH_PATTERN = DateTimeFormatters.pattern("MMM", Locale.US);
 	
 	protected static final String STANDARDIZE_PUNCT_PATTERN = "(?<=\\d+)[.|/](?=\\d+)";
+	protected static final Pattern ROMAN_NUMERAL_PATTERN = Pattern.compile("\\d[.\\-\\/]([XVI]+)[.\\-\\/]\\d",Pattern.CASE_INSENSITIVE);
 	
 	/**
 	 * Default constructor, default field names will be used
@@ -224,7 +228,8 @@ public class DateProcessor implements DataProcessor{
 		catch(CalendricalParseException cpe){}
 		
 		//make sure the date can't be parsed into the 2 different patterns
-		if(le_d_m_yyyy_date != null && me_m_d_yyyy_date != null){
+		//but allow if it gives the same date (e.g. 8-8-2010)
+		if(le_d_m_yyyy_date != null && me_m_d_yyyy_date != null && !le_d_m_yyyy_date.equals(me_m_d_yyyy_date)){
 			if(result != null){
 				result.addError("The date ["+dateText+"] could not be precisely determined.");
 			}
@@ -236,6 +241,11 @@ public class DateProcessor implements DataProcessor{
 		}
 		if(me_m_d_yyyy_date != null){
 			setPartialDate(output,me_m_d_yyyy_date);
+			return;
+		}
+		
+		//try Roman Numerals
+		if(processRomanNumeralDate(dateText, output, result)){
 			return;
 		}
 		
@@ -284,8 +294,41 @@ public class DateProcessor implements DataProcessor{
 		return date.replaceAll(STANDARDIZE_PUNCT_PATTERN, "-");
 	}
 	
+	/**
+	 * This function will parse a date with a Roman numeral as the month.
+	 * e.g. 8/xi/2003, 8.xi.2003, 8-xi.2003, or 8.XI.2003
+	 * @param dateText
+	 * @param output
+	 * @param result
+	 * @return could be parsed as date with a Roman numeral as the month.
+	 */
+	public boolean processRomanNumeralDate(String dateText, Integer[] output, ProcessingResult result){
+		Matcher romanNumeralMatcher = ROMAN_NUMERAL_PATTERN.matcher(dateText);
+		if(romanNumeralMatcher.find()){
+			String romNum = romanNumeralMatcher.group(1);
+			try{
+				int intValue = new RomanNumeral(romNum).toInt();
+				String newTextDate = dateText.replace(romNum, Integer.toString(intValue));
+				//Standardize the date punctuation based on the new date text
+				newTextDate = standardizeDatePunctuation(newTextDate);
+				//We only support Roman numeral for the month
+				LocalDate le_d_m_yyyy_date = LE_D_M_YYYY_PATTERN.parse(newTextDate, LocalDate.rule());
+				setPartialDate(output,le_d_m_yyyy_date);
+				return true;
+			}
+			catch (NumberFormatException ex) {
+				if(result != null){
+					result.addError("The date ["+dateText+"] could not be processed as Roman Numerals.");
+				}
+			}
+			catch (CalendricalParseException e) {}
+		}
+		return false;
+	}
+	
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
 	}
+
 }
