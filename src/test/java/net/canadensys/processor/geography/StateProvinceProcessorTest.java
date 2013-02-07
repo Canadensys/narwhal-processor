@@ -11,6 +11,7 @@ import net.canadensys.processor.DataProcessor;
 import net.canadensys.processor.DataProcessor.ErrorHandlingModeEnum;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
+import net.canadensys.vocabulary.stateprovince.BEProvince;
 import net.canadensys.vocabulary.stateprovince.StateProvinceEnum;
 import net.canadensys.vocabulary.stateprovince.CAProvince;
 
@@ -35,6 +36,16 @@ public class StateProvinceProcessorTest {
 		mockRawModel.setStateprovince("The Northwest Territories");
 		spProcessor.processBean(mockRawModel, mockModel, null, null);
 		assertEquals(CAProvince.NORTHWEST_TERRITORIES.getName(), mockModel.getStateprovince());
+	}
+	
+	/**
+	 * Test Belgium dictionary
+	 */
+	@Test
+	public void testBEProvince(){
+		StateProvinceProcessor<BEProvince> spProcessor = new StateProvinceProcessor<BEProvince>(Country.BELGIUM, BEProvince.class);
+		StateProvinceEnum spe = spProcessor.process("Provinz Antwerpen", null);
+		assertEquals(BEProvince.ANTWERP, spe);
 	}
 	
 	@Test

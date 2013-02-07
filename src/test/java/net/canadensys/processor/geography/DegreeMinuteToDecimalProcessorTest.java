@@ -19,7 +19,7 @@ import org.junit.Test;
 public class DegreeMinuteToDecimalProcessorTest {
 	
 	@Test
-	public void testDegreeMinuteToDecimalProcessor(){		
+	public void testDegreeMinuteToDecimalProcessor(){
 		DegreeMinuteToDecimalProcessor dmtdProcessor = new DegreeMinuteToDecimalProcessor();
 		assertEquals(40.44639f,dmtdProcessor.process("40°26′47″N", null).floatValue(),0);
 		assertEquals(40.44639f,dmtdProcessor.process("40:26:47N ", null).floatValue(),0);
@@ -29,12 +29,14 @@ public class DegreeMinuteToDecimalProcessorTest {
 		assertEquals(40.44639f,dmtdProcessor.process("40d 26m 47sN ", null).floatValue(),0);
 		assertEquals(-74.0059731f,dmtdProcessor.process("74° 0' 21.5022\"W",null).floatValue(),0);
 		
+		//test with double precision
+		assertEquals(-76.45305555555557d,dmtdProcessor.process("76°27'11\" W",null),0);
+		
 		//no seconds
 		assertEquals(40.433334f,dmtdProcessor.process("40d 26'N", null).floatValue(),0);
 		
 		//decimal minutes
 		assertEquals(40.436165f,dmtdProcessor.process("40d 26.17'N", null).floatValue(),0);
-		//assertEquals(40.446195f,dmtdProcessor.process("40° 26.7717", null).floatValue(),0);
 		
 		//decimal on the second
 		assertEquals(40.44653f, dmtdProcessor.process("40:26:47.5N", null).floatValue(),0);
@@ -44,14 +46,14 @@ public class DegreeMinuteToDecimalProcessorTest {
 		MockOccurrenceModel occModel = new MockOccurrenceModel();
 		rawModel.setVerbatimLatitude("40°26′47″N");
 		
-		dmtdProcessor = new DegreeMinuteToDecimalProcessor("verbatimLatitude","floatDecimalLatitude");
+		dmtdProcessor = new DegreeMinuteToDecimalProcessor("verbatimLatitude","decimalLatitude");
 		dmtdProcessor.processBean(rawModel, occModel, null, null);
-		assertEquals(40.44639f, occModel.getFloatDecimalLatitude().floatValue(),0);
+		assertEquals(40.44639f, occModel.getDecimalLatitude().floatValue(),0);
 	}
 	
 	@Test
 	public void testDegreeMinuteToDecimalValidation(){
-		DataProcessor dataProcessor = new DegreeMinuteToDecimalProcessor("verbatimLatitude","floatDecimalLatitude");
+		DataProcessor dataProcessor = new DegreeMinuteToDecimalProcessor("verbatimLatitude","decimalLatitude");
 		MockRawOccurrenceModel rawModel = new MockRawOccurrenceModel();
 		rawModel.setVerbatimLatitude("40°26′47″N");
 		assertTrue(dataProcessor.validateBean(rawModel, false, null, null));

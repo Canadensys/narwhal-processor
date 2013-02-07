@@ -43,9 +43,9 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	//Regex info : (?:X) 	X, as a non-capturing group	
 	//(\\d{1,3}) :get 1 to 3 digits
 	//(?:[°d: ]+ :followed by at least °d: or a space
-	//(\d*\.?\d+) :any int or float
+	//(\d*\.?\d+) :any int or decimal
 	//(?:[\'m′: ])* :followed by an optional 'm:′
-	//(\d*\.?\d+)* :any int or float
+	//(\d*\.?\d+)* :any int or decimal
 	//[\"s″ ]? :followed by an optional "s″
 	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d{1,3})(?:[°d: ]+)(\\d*\\.?\\d+)(?:[\'m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
 	
@@ -68,7 +68,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	/**
 	 * 
 	 * @param coordinateInName name of the String field in the input JavaBean
-	 * @param coordinateOutName name of the Float field in the output JavaBean
+	 * @param coordinateOutName name of the Double field in the output JavaBean
 	 */
 	public DegreeMinuteToDecimalProcessor(String coordinateInName, String coordinateOutName){
 		this.coordinateInName = coordinateInName;
@@ -78,7 +78,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	/**
 	 * Degree/minute/second to decimal Bean processing function.
 	 * @param in Java bean containing the coordinate degree/minute/seconds as String
-	 * @param out Java bean containing the decimal coordinate as Float 
+	 * @param out Java bean containing the decimal coordinate as Double 
 	 * @param params Will be ignored so use null
 	 * @param result Optional ProcessingResult
 	 */
@@ -86,7 +86,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result) {
 		try {
 			String val1 = (String)PropertyUtils.getSimpleProperty(in, coordinateInName);
-			Float coord = process(val1,result);
+			Double coord = process(val1,result);
 			PropertyUtils.setSimpleProperty(out, coordinateOutName, coord);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -126,12 +126,11 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 		
 	/**
 	 * Degree/minute/second to decimal processing function.
-	 * Note : Could move to Double if Float precision is not enough
 	 * @param dms degree/minute/second string
 	 * @param result optional
 	 * @return decimal value of the dms coordinate or null
 	 */
-	public Float process(String dms, ProcessingResult result){
+	public Double process(String dms, ProcessingResult result){
 		
 		if(StringUtils.isBlank(dms)){
 			return null;
@@ -176,9 +175,9 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 				partsIdx++;
 			}
 		}
-		Float degree = NumberUtils.parseNumber(parts[DEGREE_IDX], Float.class,0f);
-		Float minute = NumberUtils.parseNumber(parts[MINUTE_IDX], Float.class,0f);
-		Float second = NumberUtils.parseNumber(parts[SECOND_IDX], Float.class,0f);
+		Double degree = NumberUtils.parseNumber(parts[DEGREE_IDX], Double.class,0d);
+		Double minute = NumberUtils.parseNumber(parts[MINUTE_IDX], Double.class,0d);
+		Double second = NumberUtils.parseNumber(parts[SECOND_IDX], Double.class,0d);
 		
 		//make sure that we extracted all the numbers
 		if(!KEEP_NUMBERS_PATTERN.matcher(parts[DEGREE_IDX]+parts[MINUTE_IDX]+StringUtils.defaultString(parts[SECOND_IDX], ""))
@@ -211,7 +210,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 		}
 				
 		//compute decimal value
-		float decimal = (degree + (minute/60) + (second/3600))*negation;
+		double decimal = (degree + (minute/60) + (second/3600))*negation;
 		return decimal;
 	}
 	

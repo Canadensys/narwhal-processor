@@ -13,9 +13,6 @@ public class MockOccurrenceModel {
 	private Double decimalLatitude;
 	private Double decimalLongitude;
 	
-	private Float floatDecimalLatitude;
-	private Float floatDecimalLongitude;
-	
 	private Double minAltitude;
 	private Double maxAltitude;
 	
@@ -85,17 +82,5 @@ public class MockOccurrenceModel {
 	}
 	public void setStateprovince(String stateprovince) {
 		this.stateprovince = stateprovince;
-	}
-	public Float getFloatDecimalLatitude() {
-		return floatDecimalLatitude;
-	}
-	public void setFloatDecimalLatitude(Float floatDecimalLatitude) {
-		this.floatDecimalLatitude = floatDecimalLatitude;
-	}
-	public Float getFloatDecimalLongitude() {
-		return floatDecimalLongitude;
-	}
-	public void setFloatDecimalLongitude(Float floatDecimalLongitude) {
-		this.floatDecimalLongitude = floatDecimalLongitude;
 	}
 }

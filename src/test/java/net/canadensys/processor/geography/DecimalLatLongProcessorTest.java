@@ -1,11 +1,11 @@
-package net.canadensys.processor.dwc;
+package net.canadensys.processor.geography;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import net.canadensys.processor.ProcessingResult;
+import net.canadensys.processor.dwc.NumericPairDataProcessor;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
-import net.canadensys.processor.geography.DecimalLatLongProcessor;
 
 import org.junit.Test;
 
