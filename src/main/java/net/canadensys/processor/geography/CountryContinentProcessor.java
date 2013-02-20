@@ -15,6 +15,8 @@ import net.canadensys.vocabulary.Continent;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * CountryContinent processor to find the continent of a country.
@@ -24,6 +26,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class CountryContinentProcessor implements DataProcessor{
+	
+	final Logger logger = LoggerFactory.getLogger(CountryContinentProcessor.class);
 	
 	protected static final String SEPARATOR = "\t";
 	protected static final String DEFAULT_CONTINENT_COUNTRY_FILE = "/dictionaries/geography/country_continent.txt";
@@ -104,11 +108,11 @@ public class CountryContinentProcessor implements DataProcessor{
 			}
 			PropertyUtils.setSimpleProperty(out, continentName, continent);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		}	
 	}
 	
@@ -122,13 +126,13 @@ public class CountryContinentProcessor implements DataProcessor{
 			}
 		//change to multiple Exception catch when moving to Java 7
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		}
 		

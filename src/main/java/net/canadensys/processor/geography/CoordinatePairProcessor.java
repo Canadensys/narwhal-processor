@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import net.canadensys.processor.DataProcessor;
 import net.canadensys.processor.ProcessingResult;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Allows to split a coordinate pair string into latitude and longitude parts.
@@ -21,8 +23,10 @@ import net.canadensys.processor.ProcessingResult;
  */
 public class CoordinatePairProcessor implements DataProcessor{
 	
-	public static final int LATITUDE = 0;
-	public static final int LONGITUDE = 1;
+	final Logger logger = LoggerFactory.getLogger(CoordinatePairProcessor.class);
+	
+	public static final int LATITUDE_IDX = 0;
+	public static final int LONGITUDE_IDX = 1;
 	
 	protected static Pattern  DECIMAL_COORD_PAIR = Pattern.compile("(^\\s?\\-?\\d{1,3}\\.?\\d+)[,;\\/ \\t]+(\\-?\\d{1,3}\\.?\\d+)");
 	protected static Pattern  DMS_COORD_PAIR = Pattern.compile("(.+)[,;\\/\\t]+(.+)");
@@ -72,19 +76,19 @@ public class CoordinatePairProcessor implements DataProcessor{
 			String coordinate = (String)PropertyUtils.getSimpleProperty(in, coordinatePairName);
 			String[] coordinatePair = process(coordinate,result);
 			if(coordinatePair != null){
-				PropertyUtils.setSimpleProperty(out, latitudeName, coordinatePair[LATITUDE]);
-				PropertyUtils.setSimpleProperty(out, longitudeName, coordinatePair[LONGITUDE]);
+				PropertyUtils.setSimpleProperty(out, latitudeName, coordinatePair[LATITUDE_IDX]);
+				PropertyUtils.setSimpleProperty(out, longitudeName, coordinatePair[LONGITUDE_IDX]);
 			}
 			else{
 				PropertyUtils.setSimpleProperty(out, latitudeName, null);
 				PropertyUtils.setSimpleProperty(out, longitudeName, null);
 			}
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		}
 	}
 	
@@ -109,8 +113,8 @@ public class CoordinatePairProcessor implements DataProcessor{
 		if(m.find()){
 			if(m.groupCount() == 2){
 				coordinates = new String[2];
-				coordinates[LATITUDE] = m.group(1);
-				coordinates[LONGITUDE] = m.group(2);
+				coordinates[LATITUDE_IDX] = m.group(1);
+				coordinates[LONGITUDE_IDX] = m.group(2);
 				return coordinates;
 			}
 		}
@@ -121,13 +125,13 @@ public class CoordinatePairProcessor implements DataProcessor{
 			if(m.groupCount() == 2){
 				coordinates = new String[2];
 				if(CHECK_LONGITUDE.matcher(m.group(2)).find()){
-					coordinates[LATITUDE] = m.group(1);
-					coordinates[LONGITUDE] = m.group(2);
+					coordinates[LATITUDE_IDX] = m.group(1);
+					coordinates[LONGITUDE_IDX] = m.group(2);
 				}
 				else{
 					if(CHECK_LONGITUDE.matcher(m.group(1)).find()){
-						coordinates[LATITUDE] = m.group(2);
-						coordinates[LONGITUDE] = m.group(1);
+						coordinates[LATITUDE_IDX] = m.group(2);
+						coordinates[LONGITUDE_IDX] = m.group(1);
 					}
 					else{
 						if(result != null){
@@ -137,7 +141,7 @@ public class CoordinatePairProcessor implements DataProcessor{
 				}
 			}
 		}
-		if(coordinates == null || coordinates[LATITUDE] == null || coordinates[LONGITUDE] == null){
+		if(coordinates == null || coordinates[LATITUDE_IDX] == null || coordinates[LONGITUDE_IDX] == null){
 			if(result != null){
 				result.addError("Could not find valid coordinate pair in [" + coordinatePair + "]");
 			}
@@ -163,13 +167,13 @@ public class CoordinatePairProcessor implements DataProcessor{
 			}
 		//change to multiple Exception catch when moving to Java 7
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		}
 		

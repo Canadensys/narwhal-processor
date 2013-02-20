@@ -11,6 +11,8 @@ import net.canadensys.utils.NumberUtils;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Allows to process a degree/minute/second coordinate into a decimal coordinate.
@@ -27,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class DegreeMinuteToDecimalProcessor implements DataProcessor{
+	
+	final Logger logger = LoggerFactory.getLogger(DegreeMinuteToDecimalProcessor.class);
 	
 	protected static int DEGREE_IDX = 0;
 	protected static int MINUTE_IDX = 1;
@@ -89,11 +93,11 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 			Double coord = process(val1,result);
 			PropertyUtils.setSimpleProperty(out, coordinateOutName, coord);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		}
 	}
 	
@@ -107,13 +111,13 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 			}
 		//change to multiple Exception catch when moving to Java 7
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		}
 		

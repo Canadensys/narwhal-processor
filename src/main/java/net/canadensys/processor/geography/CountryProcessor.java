@@ -12,6 +12,8 @@ import org.gbif.api.model.vocabulary.Country;
 import org.gbif.common.parsers.ParseResult;
 import org.gbif.common.parsers.ParseResult.CONFIDENCE;
 import org.gbif.common.parsers.countryname.CountryNameParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Country processor to handle country names.
@@ -21,6 +23,8 @@ import org.gbif.common.parsers.countryname.CountryNameParser;
  *
  */
 public class CountryProcessor implements DataProcessor {
+	
+	final Logger logger = LoggerFactory.getLogger(CountryProcessor.class);
 	
 	protected static CountryNameParser COUNTRY_NAME_PARSER = CountryNameParser.getInstance();
 	protected static final String DEFAULT_COUNTRY_NAME = "country";
@@ -77,11 +81,11 @@ public class CountryProcessor implements DataProcessor {
 			}
 			PropertyUtils.setSimpleProperty(out, countryName, country);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		}
 	}
 	
@@ -95,13 +99,13 @@ public class CountryProcessor implements DataProcessor {
 			}
 		//change to multiple Exception catch when moving to Java 7
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		}
 		

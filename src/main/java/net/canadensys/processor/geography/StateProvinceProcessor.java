@@ -16,6 +16,8 @@ import org.gbif.api.model.vocabulary.Country;
 import org.gbif.common.parsers.FileBasedDictionaryParser;
 import org.gbif.common.parsers.ParseResult;
 import org.gbif.common.parsers.ParseResult.CONFIDENCE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
@@ -32,7 +34,9 @@ import com.google.common.base.Strings;
  * See : http://jtechies.blogspot.ca/2012/07/item-34-emulate-extensible-enums-with.html
  */
 public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> extends FileBasedDictionaryParser implements DataProcessor {
-		
+	
+	final Logger logger = LoggerFactory.getLogger(StateProvinceProcessor.class);
+	
 	private static final CharMatcher LETTER_MATCHER = CharMatcher.JAVA_LETTER.or(CharMatcher.WHITESPACE).precomputed();
 	private static final CharMatcher WHITESPACE_MATCHER = CharMatcher.WHITESPACE.precomputed();
 	protected static final String DEFAULT_STATEPROVINCE_NAME = "stateprovince";
@@ -79,7 +83,9 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 		
 		StateProvinceEnum[] statesProvinces = stateProvinceClass.getEnumConstants();
 		if(statesProvinces == null || statesProvinces.length <= 0 || fromCodeMethod == null){
-			throw new NoSuchElementException("No well-formed StateProvinceEnum found for country " + targetCountry.getTitle() + " and Class " + stateProvinceClass);
+			String errorText = "No well-formed StateProvinceEnum found for country " + targetCountry.getTitle() + " and Class " + stateProvinceClass;
+			logger.error(errorText);
+			throw new NoSuchElementException(errorText);
 		}
 		
 		for (StateProvinceEnum cp : statesProvinces){
@@ -124,11 +130,11 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 			}
 			PropertyUtils.setSimpleProperty(out, stateProvinceName, stateProvinceStr);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		}
 	}
 	
@@ -142,13 +148,13 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 			}
 		//change to multiple Exception catch when moving to Java 7
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		}
 		
@@ -178,11 +184,11 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 				StateProvinceEnum spe = (StateProvinceEnum)fromCodeMethod.invoke(null, parsingResult.getPayload());
 				return spe;
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+				logger.error("StateProvinceEnum fromCode Method access error", e);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				logger.error("StateProvinceEnum fromCode Method access error", e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error("StateProvinceEnum fromCode Method access error", e);
 			}
 		}
 		else{

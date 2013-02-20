@@ -10,6 +10,8 @@ import net.canadensys.utils.NumberUtils;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Data processor to handle a pair of numeric fields that are inter-connected.
@@ -20,6 +22,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class NumericPairDataProcessor implements DataProcessor{
+	
+	final Logger logger = LoggerFactory.getLogger(NumericPairDataProcessor.class);
 	
 	protected static final Pattern KEEP_NUMERIC_PATTERN = Pattern.compile("[^\\d\\.-]");
 	
@@ -67,11 +71,11 @@ public class NumericPairDataProcessor implements DataProcessor{
 			PropertyUtils.setSimpleProperty(out, value1Name, output[0]);
 			PropertyUtils.setSimpleProperty(out, value2Name, output[1]);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		}
 	}
 	
@@ -102,13 +106,13 @@ public class NumericPairDataProcessor implements DataProcessor{
 			}
 		//change to multiple Exception catch when moving to Java 7
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 			return false;
 		}
 		

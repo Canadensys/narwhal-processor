@@ -21,6 +21,8 @@ import net.canadensys.processor.ProcessingResult;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Data processor to handle dates including partial dates.
@@ -33,6 +35,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class DateProcessor implements DataProcessor{
+	
+	final Logger logger = LoggerFactory.getLogger(DateProcessor.class);
 		
 	public static final int YEAR_IDX = 0;
 	public static final int MONTH_IDX = 1;
@@ -113,11 +117,11 @@ public class DateProcessor implements DataProcessor{
 			PropertyUtils.setSimpleProperty(out, monthName, output[MONTH_IDX]);
 			PropertyUtils.setSimpleProperty(out, dayName, output[DAY_IDX]);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
 		}
 	}
 	
@@ -137,11 +141,14 @@ public class DateProcessor implements DataProcessor{
 				return true;
 			}
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
+			return false;
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
+			return false;
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error("Bean access error", e);
+			return false;
 		}
 		
 		//no valid date was found, check if this value was mandatory
