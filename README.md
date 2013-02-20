@@ -7,11 +7,16 @@ Comments, contributions, reviews and help are welcomed.
 
 Note
 ----
-This library is still young and under active development. Some parts may change based on the reviews, comments and usage. Do not hesitate to enter an [Issue](https://github.com/Canadensys/narwhal-processor/issues) if you have any problems or questions.
+This library is still under active development. Some parts may change based on the reviews, comments and usage. Do not hesitate to enter an [Issue](https://github.com/Canadensys/narwhal-processor/issues) if you have any problems or questions.
 
 Goal
 ----
-The goal of this library is to provide a set of processing functions trough a common Java interface that supports [JavaBeans](http://en.wikipedia.org/wiki/JavaBeans). This will ease the integration of the library in various biodiversity projects by providing a uniform way to access processing functions.
+The goal of this library is to provide a set of processing functions through a common Java interface that supports [JavaBeans](http://en.wikipedia.org/wiki/JavaBeans). This will ease the integration of the library in various biodiversity projects by providing a uniform way to access processing functions.
+
+Scope
+-----
+The narwhal-processor is meant to be used as a low-level processing library with few secondary or contextual validations. For example, given a date such as 1999-01-16, the output (if successful) will be parsed into day (16), month (01), and year (1999). However, if this date represents the date of collection, it is out of scope to determine the biological validity of Jan 16, 1999.
+The narwhal-processor only produces results from data that are without uncertainty.
 
 Documentation and Usage
 -----------------------
@@ -21,6 +26,7 @@ Dependencies
 ------------
  * [GBIF Parsers](http://code.google.com/p/gbif-common-resources/) 0.2 (included by Maven)
  * [Apache Commons BeanUtils](http://commons.apache.org/beanutils/) 1.8.3 (included by Maven)
+ * [canadensys-core](https://github.com/Canadensys/canadensys-core) 1.4 (included by Maven)
  * [JSR-310](http://threeten.sourceforge.net/) 0.6.3
 
 To include JSR-310 into your Maven local repo
