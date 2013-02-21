@@ -46,5 +46,18 @@ public class DecimalLatLongProcessorTest {
 		assertNull(mockModel.getDecimalLatitude());
 		assertNull(mockModel.getDecimalLongitude());
 		assertEquals(1, result.getErrorList().size());
+		
+		//test with only one valid coordinates
+		mockRawModel = new MockRawOccurrenceModel();
+		mockModel = new MockOccurrenceModel();
+		mockRawModel.setDecimalLatitude("10.5");
+		mockRawModel.setDecimalLongitude("degree");
+		result = new ProcessingResult();
+		processor.processBean(mockRawModel, mockModel, null, result);
+		
+		//we expect both to be null since only a latitude is not a valid coordinate
+		assertNull(mockModel.getDecimalLatitude());
+		assertNull(mockModel.getDecimalLongitude());
+		assertEquals(1, result.getErrorList().size());
 	}
 }

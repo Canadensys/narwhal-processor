@@ -11,6 +11,9 @@ import net.canadensys.processor.dwc.NumericPairDataProcessor;
  */
 public class DecimalLatLongProcessor extends NumericPairDataProcessor{
 	
+	public static final int LATITUDE_IDX = 0;
+	public static final int LONGITUDE_IDX = 1;
+	
 	//decimalLatitude : Legal values lie between -90 and 90, inclusive.
 	public static final int MIN_LATITUDE = -90;
 	public static final int MAX_LATITUDE = 90;
@@ -40,24 +43,30 @@ public class DecimalLatLongProcessor extends NumericPairDataProcessor{
 		super.process(value1, value2, output, clazz, result);
 		
 		//validate output boundaries
-		if(output[0]!=null){
-			if(output[0].intValue() > MAX_LATITUDE || output[0].intValue() < MIN_LATITUDE){
-				output[0] = null;
+		if(output[LATITUDE_IDX]!=null){
+			if(output[LATITUDE_IDX].intValue() > MAX_LATITUDE || output[LATITUDE_IDX].intValue() < MIN_LATITUDE){
 				if(result != null){
-					result.addError("Value ["+output[0].intValue()+"] is out of bound. Should be between "
+					result.addError("Value ["+output[LATITUDE_IDX].intValue()+"] is out of bound. Should be between "
 							+ MIN_LATITUDE +  " and " + MAX_LATITUDE);
 				}
+				output[LATITUDE_IDX] = null;
 			}
 		}
 		
-		if(output[1]!=null){
-			if(output[1].intValue() > MAX_LONGITUDE || output[1].intValue() < MIN_LONGITUDE){
-				output[1] = null;
+		if(output[LONGITUDE_IDX]!=null){
+			if(output[LONGITUDE_IDX].intValue() > MAX_LONGITUDE || output[LONGITUDE_IDX].intValue() < MIN_LONGITUDE){
 				if(result != null){
-					result.addError("Value ["+output[0].intValue()+"] is out of bound.Should be between "
+					result.addError("Value ["+output[LONGITUDE_IDX].intValue()+"] is out of bound.Should be between "
 							+ MIN_LONGITUDE +  " and " + MAX_LONGITUDE);
 				}
+				output[LONGITUDE_IDX] = null;
 			}
+		}
+		
+		//to be a valid coordinate we need both latitude and longitude to be valid
+		if(output[LATITUDE_IDX] == null || output[LONGITUDE_IDX] == null){
+			output[LATITUDE_IDX] = null;
+			output[LONGITUDE_IDX] = null;
 		}
 	}
 }
