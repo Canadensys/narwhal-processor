@@ -1,8 +1,10 @@
 package net.canadensys.processor.datetime;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public class DateProcessor implements DataProcessor{
 	
 	final Logger logger = LoggerFactory.getLogger(DateProcessor.class);
-		
+	
 	public static final int YEAR_IDX = 0;
 	public static final int MONTH_IDX = 1;
 	public static final int DAY_IDX = 2;
@@ -49,6 +51,7 @@ public class DateProcessor implements DataProcessor{
 	private static final String DEFAULT_DAY_NAME = "day";
 	
 	private String dateName, yearName, monthName, dayName;
+	private ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL make sense here
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -86,17 +89,25 @@ public class DateProcessor implements DataProcessor{
 		this(DEFAULT_DATE_NAME,DEFAULT_YEAR_NAME,DEFAULT_MONTH_NAME,DEFAULT_DAY_NAME);
 	}
 	
+
+	public DateProcessor(String dateName, String yearName, String monthName, String dayName){
+		this(dateName, yearName, monthName, dayName, Locale.ENGLISH);
+
+	}
+	
 	/**
 	 * @param dateName name of the field containing the date string
 	 * @param yearName name of the field where the year will be stored
 	 * @param monthName name of the field where the month will be stored
 	 * @param dayName name of the field where the day will be stored
+	 * @param locale used to record errors in ProcessingResult
 	 */
-	public DateProcessor(String dateName, String yearName, String monthName, String dayName){
+	public DateProcessor(String dateName, String yearName, String monthName, String dayName, Locale locale){
 		this.dateName = dateName;
 		this.yearName = yearName;
 		this.monthName = monthName;
 		this.dayName = dayName;
+		setLocale(locale);
 	}
 	
 	/**
@@ -238,7 +249,8 @@ public class DateProcessor implements DataProcessor{
 		//but allow if it gives the same date (e.g. 8-8-2010)
 		if(le_d_m_yyyy_date != null && me_m_d_yyyy_date != null && !le_d_m_yyyy_date.equals(me_m_d_yyyy_date)){
 			if(result != null){
-				result.addError("The date ["+dateText+"] could not be precisely determined.");
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("date.error.vagueDate"),dateText));
 			}
 			return;
 		}
@@ -257,7 +269,8 @@ public class DateProcessor implements DataProcessor{
 		}
 		
 		if(result != null){
-			result.addError("The date ["+dateText+"] could not be processed.");
+			result.addError(
+				MessageFormat.format(resourceBundle.getString("date.error.unprocessable"),dateText));
 		}
 	}
 	
@@ -325,7 +338,9 @@ public class DateProcessor implements DataProcessor{
 			}
 			catch (NumberFormatException ex) {
 				if(result != null){
-					result.addError("The date ["+dateText+"] could not be processed as Roman Numerals.");
+					result.addError(
+							MessageFormat.format(resourceBundle.getString("date.error.romanNumeralUnprocessable"),
+									dateText));
 				}
 			}
 			catch (CalendricalParseException e) {}
@@ -338,4 +353,10 @@ public class DateProcessor implements DataProcessor{
 		return errorHandlingMode;
 	}
 
+	/**
+	 * This setter should only be called by the constructor
+	 */
+	protected void setLocale(Locale locale) {
+		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
+	}
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 public interface DataProcessor {
 
 	public enum ErrorHandlingModeEnum {USE_NULL,USE_EMPTY,USE_ORIGINAL};
+	public static String ERROR_BUNDLE_NAME = "languages/errors";
 	
 	/**
 	 * Get the current error handling mode.
