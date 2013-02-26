@@ -50,8 +50,8 @@ public class DateProcessor implements DataProcessor{
 	private static final String DEFAULT_MONTH_NAME = "month";
 	private static final String DEFAULT_DAY_NAME = "day";
 	
-	private String dateName, yearName, monthName, dayName;
-	private ResourceBundle resourceBundle = null;
+	protected String dateName, yearName, monthName, dayName;
+	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL make sense here
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -89,25 +89,20 @@ public class DateProcessor implements DataProcessor{
 		this(DEFAULT_DATE_NAME,DEFAULT_YEAR_NAME,DEFAULT_MONTH_NAME,DEFAULT_DAY_NAME);
 	}
 	
-
-	public DateProcessor(String dateName, String yearName, String monthName, String dayName){
-		this(dateName, yearName, monthName, dayName, Locale.ENGLISH);
-
-	}
 	
 	/**
 	 * @param dateName name of the field containing the date string
 	 * @param yearName name of the field where the year will be stored
 	 * @param monthName name of the field where the month will be stored
 	 * @param dayName name of the field where the day will be stored
-	 * @param locale used to record errors in ProcessingResult
 	 */
-	public DateProcessor(String dateName, String yearName, String monthName, String dayName, Locale locale){
+	public DateProcessor(String dateName, String yearName, String monthName, String dayName){
 		this.dateName = dateName;
 		this.yearName = yearName;
 		this.monthName = monthName;
 		this.dayName = dayName;
-		setLocale(locale);
+		//always a default Locale
+		setLocale(Locale.ENGLISH);
 	}
 	
 	/**
@@ -352,11 +347,9 @@ public class DateProcessor implements DataProcessor{
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
 	}
-
-	/**
-	 * This setter should only be called by the constructor
-	 */
-	protected void setLocale(Locale locale) {
+	
+	@Override
+	public void setLocale(Locale locale) {
 		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

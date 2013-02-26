@@ -1,5 +1,6 @@
 package net.canadensys.processor;
 
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -13,6 +14,13 @@ public interface DataProcessor {
 
 	public enum ErrorHandlingModeEnum {USE_NULL,USE_EMPTY,USE_ORIGINAL};
 	public static String ERROR_BUNDLE_NAME = "languages/errors";
+	
+	/**
+	 * Set the Locale to used to create the error messages
+	 * Configuration method, should be called at creation time.
+	 * @param locale used to record errors in ProcessingResult
+	 */
+	public void setLocale(Locale locale);
 	
 	/**
 	 * Get the current error handling mode.

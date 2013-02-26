@@ -3,10 +3,13 @@ package net.canadensys.processor.geography;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import net.canadensys.processor.DataProcessor;
 import net.canadensys.processor.ProcessingResult;
@@ -39,6 +42,7 @@ public class CountryContinentProcessor implements DataProcessor{
 	
 	protected String countryISOLetterCodeName = null;
 	protected String continentName = null;
+	protected ResourceBundle resourceBundle = null;
 	
 	/**
 	 * Default constructor, default field names will be used
@@ -83,6 +87,8 @@ public class CountryContinentProcessor implements DataProcessor{
 		}
 		//make it read-only
 		countryContinentMap = Collections.unmodifiableMap(countryContinentMap);
+		//always a default Locale
+		setLocale(Locale.ENGLISH);
 	}
 	
 	/**
@@ -160,7 +166,8 @@ public class CountryContinentProcessor implements DataProcessor{
 		}
 		else{
 			if(result != null){
-				result.addError("Couldn't find a matching continent for country ISO Letter Code [" + countryISOLetterCode +"]");
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("countryContinent.error.notFound"),countryISOLetterCode));
 			}
 		}
 		return null;
@@ -182,5 +189,10 @@ public class CountryContinentProcessor implements DataProcessor{
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
+	}
+	
+	@Override
+	public void setLocale(Locale locale) {
+		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

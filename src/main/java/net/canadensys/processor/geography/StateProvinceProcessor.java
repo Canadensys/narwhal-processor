@@ -3,8 +3,11 @@ package net.canadensys.processor.geography;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.ResourceBundle;
 
 import net.canadensys.processor.DataProcessor;
 import net.canadensys.processor.ProcessingResult;
@@ -43,6 +46,7 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 	
 	private Country associatedCountry;
 	protected String stateProvinceName = null;
+	protected ResourceBundle resourceBundle = null;
 	protected ErrorHandlingModeEnum errorHandlingMode;
 	
 	//Keep a reference to the fromCode(String) method
@@ -92,11 +96,9 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 			add(cp.getName(),cp.getCode());
 			add(cp.getCode(), cp.getCode());
 		}
-	}
-
-	@Override
-	public ErrorHandlingModeEnum getErrorHandlingMode() {
-		return errorHandlingMode;
+		
+		//always a default Locale
+		setLocale(Locale.ENGLISH);
 	}
 
 	/**
@@ -193,7 +195,8 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 		}
 		else{
 			if(result != null){
-				result.addError("Couldn't find a matching state/province for [" + stateProvinceStr +"]" + " in " + associatedCountry.getTitle());
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("stateProvince.error.notFound"),stateProvinceStr,associatedCountry.getTitle()));
 			}
 		}
 		return null;
@@ -214,4 +217,14 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 		}
 		return null;
     }
+	
+	@Override
+	public ErrorHandlingModeEnum getErrorHandlingMode() {
+		return errorHandlingMode;
+	}
+	
+	@Override
+	public void setLocale(Locale locale) {
+		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
+	}
 }

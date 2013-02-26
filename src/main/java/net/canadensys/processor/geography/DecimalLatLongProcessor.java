@@ -1,5 +1,8 @@
 package net.canadensys.processor.geography;
 
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.NumericPairDataProcessor;
 
@@ -25,6 +28,7 @@ public class DecimalLatLongProcessor extends NumericPairDataProcessor{
 	//DarwinCore terms
 	protected static final String DWC_DECIMAL_LATITUDE = "decimalLatitude";
 	protected static final String DWC_DECIMAL_LONGITUDE = "decimalLongitude";
+
 	
 	/**
 	 * Default constructor, property name will be assigned to the matching DarwinCore property name.
@@ -46,8 +50,8 @@ public class DecimalLatLongProcessor extends NumericPairDataProcessor{
 		if(output[LATITUDE_IDX]!=null){
 			if(output[LATITUDE_IDX].intValue() > MAX_LATITUDE || output[LATITUDE_IDX].intValue() < MIN_LATITUDE){
 				if(result != null){
-					result.addError("Value ["+output[LATITUDE_IDX].intValue()+"] is out of bound. Should be between "
-							+ MIN_LATITUDE +  " and " + MAX_LATITUDE);
+					result.addError(
+							MessageFormat.format(resourceBundle.getString("decimalLatLong.error.outOfBounds"),output[LATITUDE_IDX].intValue(),MIN_LATITUDE,MAX_LATITUDE));
 				}
 				output[LATITUDE_IDX] = null;
 			}
@@ -56,8 +60,8 @@ public class DecimalLatLongProcessor extends NumericPairDataProcessor{
 		if(output[LONGITUDE_IDX]!=null){
 			if(output[LONGITUDE_IDX].intValue() > MAX_LONGITUDE || output[LONGITUDE_IDX].intValue() < MIN_LONGITUDE){
 				if(result != null){
-					result.addError("Value ["+output[LONGITUDE_IDX].intValue()+"] is out of bound.Should be between "
-							+ MIN_LONGITUDE +  " and " + MAX_LONGITUDE);
+					result.addError(
+							MessageFormat.format(resourceBundle.getString("decimalLatLong.error.outOfBounds"),output[LONGITUDE_IDX].intValue(),MIN_LONGITUDE,MAX_LONGITUDE));
 				}
 				output[LONGITUDE_IDX] = null;
 			}

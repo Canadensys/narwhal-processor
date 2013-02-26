@@ -1,7 +1,10 @@
 package net.canadensys.processor.geography;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import net.canadensys.processor.DataProcessor;
 import net.canadensys.processor.ProcessingResult;
@@ -30,6 +33,7 @@ public class CountryProcessor implements DataProcessor {
 	protected static final String DEFAULT_COUNTRY_NAME = "country";
 	
 	protected String countryName = null;
+	protected ResourceBundle resourceBundle = null;
 	protected ErrorHandlingModeEnum errorHandlingMode;
 	
 	/**
@@ -42,11 +46,8 @@ public class CountryProcessor implements DataProcessor {
 	public CountryProcessor(String countryName, ErrorHandlingModeEnum errorHandlingMode){
 		this.errorHandlingMode = errorHandlingMode;
 		this.countryName = countryName;
-	}
-	
-	@Override
-	public ErrorHandlingModeEnum getErrorHandlingMode() {
-		return errorHandlingMode;
+		//always a default Locale
+		setLocale(Locale.ENGLISH);
 	}
 	
 	/**
@@ -130,14 +131,24 @@ public class CountryProcessor implements DataProcessor {
 		
 		ParseResult<String> parsingResult = COUNTRY_NAME_PARSER.parse(countryStr);
 		if(parsingResult.isSuccessful() && parsingResult.getConfidence().equals(CONFIDENCE.DEFINITE)){
-			//country.setValue(Country.fromIsoCode(parsingResult.getPayload()));
 			return Country.fromIsoCode(parsingResult.getPayload());
 		}
 		else{
 			if(result != null){
-				result.addError("Couldn't find a matching country for [" + countryStr +"]");
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("country.error.notFound"),countryStr));
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public ErrorHandlingModeEnum getErrorHandlingMode() {
+		return errorHandlingMode;
+	}
+	
+	@Override
+	public void setLocale(Locale locale) {
+		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

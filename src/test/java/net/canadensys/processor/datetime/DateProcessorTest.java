@@ -95,6 +95,7 @@ public class DateProcessorTest {
 		assertNull(mockModel.getEventStartMonth());
 		assertNull(mockModel.getEventStartDay());
 		assertTrue(pr.getErrorList().size() >=1);
+		System.out.println(pr.getErrorString());
 	}
 	
 	@Test

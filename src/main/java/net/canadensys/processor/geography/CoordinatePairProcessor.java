@@ -1,7 +1,10 @@
 package net.canadensys.processor.geography;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +44,7 @@ public class CoordinatePairProcessor implements DataProcessor{
 	protected String coordinatePairName = null;
 	protected String latitudeName = null;
 	protected String longitudeName = null;
+	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL makes sense here
 	protected ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -61,6 +65,8 @@ public class CoordinatePairProcessor implements DataProcessor{
 		this.coordinatePairName = coordinatePairName;
 		this.latitudeName = latitudeName;
 		this.longitudeName = longitudeName;
+		//always a default Locale
+		setLocale(Locale.ENGLISH);
 	}
 	
 	/**
@@ -135,7 +141,8 @@ public class CoordinatePairProcessor implements DataProcessor{
 					}
 					else{
 						if(result != null){
-							result.addError("Could not find cardinal direction in [" + coordinatePair + "]");
+							result.addError(
+									MessageFormat.format(resourceBundle.getString("coordinatePair.error.noCardinalDirection"),coordinatePair));
 						}
 					}
 				}
@@ -143,16 +150,12 @@ public class CoordinatePairProcessor implements DataProcessor{
 		}
 		if(coordinates == null || coordinates[LATITUDE_IDX] == null || coordinates[LONGITUDE_IDX] == null){
 			if(result != null){
-				result.addError("Could not find valid coordinate pair in [" + coordinatePair + "]");
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("coordinatePair.error.noValidCoordinate"),coordinatePair));
 			}
 			return null;
 		}
 		return coordinates;
-	}
-
-	@Override
-	public ErrorHandlingModeEnum getErrorHandlingMode() {
-		return errorHandlingMode;
 	}
 
 	@Override
@@ -182,6 +185,16 @@ public class CoordinatePairProcessor implements DataProcessor{
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public ErrorHandlingModeEnum getErrorHandlingMode() {
+		return errorHandlingMode;
+	}
+	
+	@Override
+	public void setLocale(Locale locale) {
+		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 
 }

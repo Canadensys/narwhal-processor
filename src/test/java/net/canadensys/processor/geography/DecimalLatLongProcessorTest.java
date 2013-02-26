@@ -25,7 +25,8 @@ public class DecimalLatLongProcessorTest {
 		mockRawModel.setDecimalLongitude("100.4765 degree");
 		
 		NumericPairDataProcessor processor = new DecimalLatLongProcessor();
-		processor.processBean(mockRawModel, mockModel, null, null);
+		ProcessingResult pr = new ProcessingResult();
+		processor.processBean(mockRawModel, mockModel, null, pr);
 		
 		assertEquals(45.8, mockModel.getDecimalLatitude(),0);
 		assertEquals(100.4765, mockModel.getDecimalLongitude(),0);
@@ -59,5 +60,22 @@ public class DecimalLatLongProcessorTest {
 		assertNull(mockModel.getDecimalLatitude());
 		assertNull(mockModel.getDecimalLongitude());
 		assertEquals(1, result.getErrorList().size());
+	}
+	
+	@Test
+	public void testOutOfBound(){
+		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
+		MockOccurrenceModel mockModel = new MockOccurrenceModel();
+		
+		mockRawModel.setDecimalLatitude("45.8º");
+		mockRawModel.setDecimalLongitude("200.4765 degree");
+		
+		NumericPairDataProcessor processor = new DecimalLatLongProcessor();
+		ProcessingResult pr = new ProcessingResult();
+		processor.processBean(mockRawModel, mockModel, null, pr);
+		System.out.println(pr.getErrorString());
+		
+		assertNull(mockModel.getDecimalLatitude());
+		assertNull(mockModel.getDecimalLongitude());
 	}
 }

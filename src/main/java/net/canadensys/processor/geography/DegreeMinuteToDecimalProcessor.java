@@ -1,7 +1,10 @@
 package net.canadensys.processor.geography;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,6 +61,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	//Those field names will only be used with JavaBean
 	protected String coordinateInName = null;
 	protected String coordinateOutName = null;
+	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL makes sense here
 	protected ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -77,6 +81,8 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	public DegreeMinuteToDecimalProcessor(String coordinateInName, String coordinateOutName){
 		this.coordinateInName = coordinateInName;
 		this.coordinateOutName = coordinateOutName;
+		//always a default Locale
+		setLocale(Locale.ENGLISH);
 	}
 	
 	/**
@@ -143,7 +149,8 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 		//make sure we have a cardinal direction at the end
 		if(!CHECK_CARDINAL_DIRECTION_PATTERN.matcher(dms).find()){
 			if(result != null){
-				result.addError("No cardinal direction provided in [" + dms +"]");
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("dms.error.noCardinalDirection"),dms));
 			}
 			return null;
 		}
@@ -162,7 +169,8 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 		//find() need to be called to use group(idx)
 		if(!m.find()){
 			if(result != null){
-				result.addError("Could not match the pattern on [" + dms +"]");
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("dms.error.patternDoesntMatch"),dms));
 			}
 			return null;
 		}
@@ -187,7 +195,8 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 		if(!KEEP_NUMBERS_PATTERN.matcher(parts[DEGREE_IDX]+parts[MINUTE_IDX]+StringUtils.defaultString(parts[SECOND_IDX], ""))
 				.replaceAll("").equalsIgnoreCase(allNumbers)){
 			if(result != null){
-				result.addError("Could not match the pattern on [" + dms +"]");
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("dms.error.patternDoesntMatch"),dms));
 			}
 			return null;
 		}
@@ -197,7 +206,8 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 			if(parts[MINUTE_IDX].contains(".")){
 				if(parts[SECOND_IDX] != null){
 					if(result != null){
-						result.addError("Could not handle decimal on minute if second is provided [" + dms +"]");
+						result.addError(
+								MessageFormat.format(resourceBundle.getString("dms.error.decimalMinuteError"),dms));
 					}
 					return null;
 				}
@@ -207,7 +217,8 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 		if(parts[SECOND_IDX] == null){
 			if(p_dms.matches(".*[\"s″].*")){
 				if(result != null){
-					result.addError("Could not handle this [" + dms +"]");
+					result.addError(
+							MessageFormat.format(resourceBundle.getString("dms.error.unprocessable"),dms));
 				}
 				return null;
 			}
@@ -221,5 +232,10 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
+	}
+	
+	@Override
+	public void setLocale(Locale locale) {
+		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

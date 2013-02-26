@@ -1,7 +1,10 @@
 package net.canadensys.processor.dwc;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import net.canadensys.processor.DataProcessor;
@@ -33,7 +36,8 @@ public class NumericPairDataProcessor implements DataProcessor{
 	//Tag to get the Class to use for validation purpose
 	public static final String VALIDATE_CLASS_TAG = "Class";
 	
-	private String value1Name,value2Name;
+	protected String value1Name,value2Name;
+	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL make sense here
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -48,6 +52,8 @@ public class NumericPairDataProcessor implements DataProcessor{
 	public NumericPairDataProcessor(String value1Name, String value2Name){
 		this.value1Name = value1Name;
 		this.value2Name = value2Name;
+		//always a default Locale
+		setLocale(Locale.ENGLISH);
 	}
 	
 	/**
@@ -147,10 +153,12 @@ public class NumericPairDataProcessor implements DataProcessor{
 		if(result != null){
 			//It's an error only if the original value was not null
 			if(output[0] == null && !StringUtils.isBlank(originalValue1)){
-				result.addError("Value ["+originalValue1+"] could not be processed.");
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("numericPair.error.unprocessable"),originalValue1));
 			}
 			if(output[1] == null && !StringUtils.isBlank(originalValue2)){
-				result.addError("Value ["+originalValue2+"] could not be processed.");
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("numericPair.error.unprocessable"),originalValue2));
 			}
 		}
 	}
@@ -158,5 +166,10 @@ public class NumericPairDataProcessor implements DataProcessor{
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
+	}
+	
+	@Override
+	public void setLocale(Locale locale) {
+		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }
