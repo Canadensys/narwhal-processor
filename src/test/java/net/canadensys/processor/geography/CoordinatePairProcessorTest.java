@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
 
 import org.junit.Test;
@@ -20,9 +21,9 @@ public class CoordinatePairProcessorTest {
 	@Test
 	public void testCoordinatePairProcessor(){
 		CoordinatePairProcessor cpProcessor = new CoordinatePairProcessor();
-		
 		String[] coordinates = cpProcessor.process("-71.87d;35.98degree", null);
-		assertArrayEquals(new String[]{"-71.87d","35.98degree"}, coordinates);
+		//only the numeric part is kept
+		assertArrayEquals(new String[]{"-71.87","35.98"}, coordinates);
 		
 		coordinates = cpProcessor.process("40°26'47\"N/74° 0' 21.5022\"W", null);
 		assertArrayEquals(new String[]{"40°26'47\"N","74° 0' 21.5022\"W"}, coordinates);
@@ -68,5 +69,9 @@ public class CoordinatePairProcessorTest {
 		
 		//no cardinal direction
 		assertNull(cpProcessor.process("40°26'47\"N,74° 0' 21.5022", null));
+		
+		//no latitude
+		ProcessingResult pr = new ProcessingResult();
+		assertNull(cpProcessor.process("40°26'47\"W,74° 0' 21.5022E", pr));
 	}
 }

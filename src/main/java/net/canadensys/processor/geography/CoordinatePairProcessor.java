@@ -31,9 +31,15 @@ public class CoordinatePairProcessor implements DataProcessor{
 	public static final int LATITUDE_IDX = 0;
 	public static final int LONGITUDE_IDX = 1;
 	
-	protected static Pattern  DECIMAL_COORD_PAIR = Pattern.compile("(^\\s?\\-?\\d{1,3}\\.?\\d+)[,;\\/ \\t]+(\\-?\\d{1,3}\\.?\\d+)");
+	//Regex info :
+	//(^\\s?\\-?\\d{1,3}\\.?\\d+) : optional whitespace, optional negative sign and a number with optional decimal part
+	//[\\D]* : allow 0 or more non-digit character(s)
+	//[,;\\/ \\t]+ : at least one separator
+	//(\\-?\\d{1,3}\\.?\\d+) : optional negative sign and a number with optional decimal part
+	protected static Pattern  DECIMAL_COORD_PAIR = Pattern.compile("(^\\s?\\-?\\d{1,3}\\.?\\d+)[\\D]*[,;\\/ \\t]+(\\-?\\d{1,3}\\.?\\d+)");
 	protected static Pattern  DMS_COORD_PAIR = Pattern.compile("(.+)[,;\\/\\t]+(.+)");
 	
+	protected static Pattern CHECK_LATITUDE = Pattern.compile("[NS]\\s*$", Pattern.CASE_INSENSITIVE);
 	protected static Pattern CHECK_LONGITUDE = Pattern.compile("[EW]\\s*$", Pattern.CASE_INSENSITIVE);
 	
 	protected static final String DEFAULT_COORDINATE_PAIR_NAME = "coordinates";
@@ -102,6 +108,7 @@ public class CoordinatePairProcessor implements DataProcessor{
 	 * Coordinate pair processing function.
 	 * @param coordinatePair coordinate pair as decimal or degree/minute/seconds. Decimal coordinates must be
 	 * in lat,long order. dd/mm/ss can be in both orders, the E or W letter will be used to identify longitude.
+	 * Note : for decimal latitude, longitude only the numeric parts will be kept in the returning array.
 	 * @return 2 dimensional String array containing latitude and longitude or null
 	 */
 	public String[] process(String coordinatePair, ProcessingResult result){
@@ -145,6 +152,15 @@ public class CoordinatePairProcessor implements DataProcessor{
 									MessageFormat.format(resourceBundle.getString("coordinatePair.error.noCardinalDirection"),coordinatePair));
 						}
 					}
+				}
+				
+				//make sure the latitude is well defined
+				if(coordinates[LATITUDE_IDX] != null && !CHECK_LATITUDE.matcher(coordinates[LATITUDE_IDX]).find()){
+					if(result != null){
+						result.addError(
+								MessageFormat.format(resourceBundle.getString("coordinatePair.error.noLatitude"),coordinatePair));
+					}
+					coordinates = null;
 				}
 			}
 		}
