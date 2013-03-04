@@ -12,6 +12,7 @@ import net.canadensys.processor.DataProcessor.ErrorHandlingModeEnum;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import net.canadensys.vocabulary.stateprovince.BEProvince;
+import net.canadensys.vocabulary.stateprovince.CODepartment;
 import net.canadensys.vocabulary.stateprovince.StateProvinceEnum;
 import net.canadensys.vocabulary.stateprovince.CAProvince;
 
@@ -46,6 +47,16 @@ public class StateProvinceProcessorTest {
 		StateProvinceProcessor<BEProvince> spProcessor = new StateProvinceProcessor<BEProvince>(Country.BELGIUM, BEProvince.class);
 		StateProvinceEnum spe = spProcessor.process("Provinz Antwerpen", null);
 		assertEquals(BEProvince.ANTWERP, spe);
+	}
+	
+	/**
+	 * Test Colombia dictionary
+	 */
+	@Test
+	public void testCODepartment(){
+		StateProvinceProcessor<CODepartment> spProcessor = new StateProvinceProcessor<CODepartment>(Country.COLOMBIA, CODepartment.class);
+		StateProvinceEnum spe = spProcessor.process("San Andres y Providencia", null);
+		assertEquals(CODepartment.SAN_ANDRES_PROVIDENCIA_SANTA_CATALINA, spe);
 	}
 	
 	@Test

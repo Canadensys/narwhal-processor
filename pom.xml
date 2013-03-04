@@ -8,11 +8,15 @@
 	<name>narwhal-processor</name>
 	<url>http://canadensys.net</url>
 	
+	<properties>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+  
 	<repositories>
 	  	<repository>
 	      <id>gbif-all</id>
 	      <url>http://repository.gbif.org/content/groups/gbif</url>
-	    </repository>
+	    </repository> 
  	</repositories>
 	
 	<dependencies>
@@ -42,7 +46,7 @@
 		<dependency>
 			<groupId>net.canadensys</groupId>
 			<artifactId>canadensys-core</artifactId>
-			<version>1.4</version>
+			<version>1.5</version>
 		</dependency>
 		
 		<dependency>
@@ -50,7 +54,7 @@
 	    	<artifactId>slf4j-simple</artifactId>
 	    	<version>1.7.2</version>
 		</dependency>
-
+			
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
