@@ -35,11 +35,12 @@ public class DecimalLatLongProcessor extends NumericPairDataProcessor{
 	}
 	
 	@Override
-	public void process(String value1, String value2, Number[] output,
+	public Number[] process(String value1, String value2,
 			Class<? extends Number> clazz, ProcessingResult result) {
-		super.process(value1, value2, output, clazz, result);
+		Number[] output = super.process(value1, value2, clazz, result);
 		
 		//validate output boundaries
 		latLongHelper.ensureLatLongBoundaries(output, result);
+		return output;
 	}
 }

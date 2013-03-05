@@ -93,11 +93,10 @@ public class NumericPairDataProcessor implements DataProcessor{
 	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result) {
 		
 		try {
-			Number[] output = new Number[2];
 			String val1 = (String)PropertyUtils.getSimpleProperty(in, value1InName);
 			String val2 = (String)PropertyUtils.getSimpleProperty(in, value2InName);
 			
-			process(val1,val2,output,PropertyUtils.getPropertyType(out, value1OutName),result);
+			Number[] output = process(val1,val2,PropertyUtils.getPropertyType(out, value1OutName),result);
 						
 			PropertyUtils.setSimpleProperty(out, value1OutName, output[0]);
 			PropertyUtils.setSimpleProperty(out, value2OutName, output[1]);
@@ -120,7 +119,6 @@ public class NumericPairDataProcessor implements DataProcessor{
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
-		Number[] output = new Number[2];
 		String val1 = null, val2 = null;
 		//Get the class in which the result should be casted
 		Class<? extends Number> clazz = null;
@@ -131,7 +129,7 @@ public class NumericPairDataProcessor implements DataProcessor{
 		try {
 			val1 = (String)PropertyUtils.getSimpleProperty(in, value1InName);
 			val2 = (String)PropertyUtils.getSimpleProperty(in, value2InName);
-			process(val1,val2,output,clazz,result);
+			Number[] output = process(val1,val2,clazz,result);
 			if(output[0] != null && output[1] != null){
 				return true;
 			}
@@ -158,12 +156,11 @@ public class NumericPairDataProcessor implements DataProcessor{
 	 * Numeric pair processing function
 	 * @param value1 
 	 * @param value2
-	 * @param output initialized array(size==2) that will contain the parsed data or null if not parsable.
-	 * We use an output variable (instead of returning an array) to allow reuse of the array (and avoid unnecessary array creation).
 	 * @param clazz Class wanted for element of the minMaxOutput
 	 * @param result optional processing result
+	 * @return 2 dimensions array with instance of clazz or null if the process failed
 	 */
-	public void process(String value1, String value2, Number[] output, Class<? extends Number> clazz, ProcessingResult result){
+	public Number[] process(String value1, String value2, Class<? extends Number> clazz, ProcessingResult result){
 		String originalValue1 = value1;
 		String originalValue2 = value2;
 		if(!StringUtils.isBlank(originalValue1)){
@@ -172,6 +169,7 @@ public class NumericPairDataProcessor implements DataProcessor{
 		if(!StringUtils.isBlank(originalValue2)){
 			value2 = KEEP_NUMERIC_PATTERN.matcher(originalValue2).replaceAll("");
 		}
+		Number[] output = new Number[2];
 		output[0] = NumberUtils.parseNumber(value1, clazz);
 		output[1] = NumberUtils.parseNumber(value2, clazz);
 		
@@ -187,6 +185,7 @@ public class NumericPairDataProcessor implements DataProcessor{
 						MessageFormat.format(resourceBundle.getString("numericPair.error.unprocessable"),originalValue2));
 			}
 		}
+		return output;
 	}
 
 	@Override

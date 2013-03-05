@@ -122,9 +122,8 @@ public class MultiThreadingTest {
 		}
 		
 		public void run() {
-			Double[] output = new Double[2];
 			for(int i=0;i<dataList1.size();i++){
-				processor.process(dataList1.get(i), dataList2.get(i),output, Double.class, pr);
+				processor.process(dataList1.get(i), dataList2.get(i), Double.class, pr);
 			}
 		}
 	}

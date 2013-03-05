@@ -60,4 +60,11 @@ public class ProcessingResult {
 		}
 		return errorString;
 	}
+	
+	/**
+	 * Clear all errors
+	 */
+	public void clear(){
+		errorList.clear();
+	}
 }
