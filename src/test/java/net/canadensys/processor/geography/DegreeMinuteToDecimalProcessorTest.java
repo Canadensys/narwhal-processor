@@ -24,26 +24,38 @@ public class DegreeMinuteToDecimalProcessorTest {
 	@Test
 	public void testDegreeMinuteToDecimalProcessor(){
 		DegreeMinuteToDecimalProcessor dmtdProcessor = new DegreeMinuteToDecimalProcessor();
+		Double[] output = new Double[2];
 		//test supported syntax
-		assertEquals(40.44639f,dmtdProcessor.process("40°26′47″N","74° 0' 21.5022\"W", null)[0].floatValue(),0);
-		assertEquals(40.44639f,dmtdProcessor.process("40:26:47N ","30°17′12″E", null)[LAT_IDX].floatValue(),0);
-		assertEquals(40.44639f,dmtdProcessor.process("40°26'47\"N","30°17′12″E", null)[LAT_IDX].floatValue(),0);
-		assertEquals(40.44639f,dmtdProcessor.process("40d 26' 47\" N","30°17′12″E", null)[LAT_IDX].floatValue(),0);
-		assertEquals(40.44639f,dmtdProcessor.process("40d 26m 47N ","30°17′12″E", null)[LAT_IDX].floatValue(),0);
-		assertEquals(40.44639f,dmtdProcessor.process("40d 26m 47sN ","30°17′12″E", null)[LAT_IDX].floatValue(),0);
-		assertEquals(-74.0059731f,dmtdProcessor.process("40d 26m 47sN","74° 0' 21.5022\"W",null)[LNG_IDX].floatValue(),0);
+		dmtdProcessor.process("40°26′47″N","74° 0' 21.5022\"W",output, null);
+		assertEquals(40.44639f,output[LAT_IDX].floatValue(),0);
+		dmtdProcessor.process("40:26:47N ","30°17′12″E",output, null);
+		assertEquals(40.44639f,output[LAT_IDX].floatValue(),0);
+		dmtdProcessor.process("40°26'47\"N","30°17′12″E",output, null);
+		assertEquals(40.44639f,output[LAT_IDX].floatValue(),0);
+		dmtdProcessor.process("40d 26' 47\" N","30°17′12″E",output, null);
+		assertEquals(40.44639f,output[LAT_IDX].floatValue(),0);
+		dmtdProcessor.process("40d 26m 47N ","30°17′12″E",output, null);
+		assertEquals(40.44639f,output[LAT_IDX].floatValue(),0);
+		dmtdProcessor.process("40d 26m 47sN ","30°17′12″E",output, null);
+		assertEquals(40.44639f,output[LAT_IDX].floatValue(),0);
+		dmtdProcessor.process("40d 26m 47sN","74° 0' 21.5022\"W",output,null);
+		assertEquals(-74.0059731f,output[LNG_IDX].floatValue(),0);
 		
 		//test with double precision
-		assertEquals(-76.45305555555557d,dmtdProcessor.process("40°26′47″N","76°27'11\" W",null)[LNG_IDX],0);
+		dmtdProcessor.process("40°26′47″N","76°27'11\" W",output,null);
+		assertEquals(-76.45305555555557d,output[LNG_IDX],0);
 		
 		//no seconds
-		assertEquals(40.433334f,dmtdProcessor.process("40d 26'N","30°17′12″E", null)[LAT_IDX].floatValue(),0);
+		dmtdProcessor.process("40d 26'N","30°17′12″E",output, null);
+		assertEquals(40.433334f,output[LAT_IDX].floatValue(),0);
 		
 		//decimal minutes
-		assertEquals(40.436165f,dmtdProcessor.process("40d 26.17'N","30°17′12″E", null)[LAT_IDX].floatValue(),0);
+		dmtdProcessor.process("40d 26.17'N","30°17′12″E",output, null);
+		assertEquals(40.436165f,output[LAT_IDX].floatValue(),0);
 		
 		//decimal on the second
-		assertEquals(40.44653f, dmtdProcessor.process("40:26:47.5N","30°17′12″E", null)[LAT_IDX].floatValue(),0);
+		dmtdProcessor.process("40:26:47.5N","30°17′12″E", output, null);
+		assertEquals(40.44653f, output[LAT_IDX].floatValue(),0);
 		
 		//Test Java bean
 		MockRawOccurrenceModel rawModel = new MockRawOccurrenceModel();
@@ -78,28 +90,37 @@ public class DegreeMinuteToDecimalProcessorTest {
 	@Test
 	public void testWrongDMSToDecimal(){
 		DegreeMinuteToDecimalProcessor dmtdProcessor = new DegreeMinuteToDecimalProcessor();
+		Double[] output = new Double[2];
 		Double[] nullOutput = {null,null};
 		
 		//test no cardinal direction
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40°26'47\"","30°17′12″E", null));
+		dmtdProcessor.process("40°26'47\"","30°17′12″E",output, null);
+		assertArrayEquals(nullOutput, output);
 		
 		//test wrong cardinal direction
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40°26'47T","30°17′12″E", null));
+		dmtdProcessor.process("40°26'47T","30°17′12″E",output, null);
+		assertArrayEquals(nullOutput, output);
 		
 		//test no cardinal directions
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40°N26'47\"","30°17′12″", null));
+		dmtdProcessor.process("40°N26'47\"","30°17′12″",output, null);
+		assertArrayEquals(nullOutput, output);
 		
 		//decimal on the degree is not supported
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40.1:26:47N","30°17′12″E", null));
+		dmtdProcessor.process("40.1:26:47N","30°17′12″E",output, null);
+		assertArrayEquals(nullOutput, output);
 		
 		//test decimal coordinate
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40.44653N","30°17′12″E", null));
+		dmtdProcessor.process("40.44653N","30°17′12″E",output, null);
+		assertArrayEquals(nullOutput, output);
 		
 		//second but no minute
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40d8.29sN","30°17′12″E", null));
+		dmtdProcessor.process("40d8.29sN","30°17′12″E",output, null);
+		assertArrayEquals(nullOutput, output);
 		
 		//decimal on the minute AND second is not supported
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40:26.1:47N","30°17′12″E", null));
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40:26.1:47.2N","30°17′12″E", null));
+		dmtdProcessor.process("40:26.1:47N","30°17′12″E",output, null);
+		assertArrayEquals(nullOutput, output);
+		dmtdProcessor.process("40:26.1:47.2N","30°17′12″E",output, null);
+		assertArrayEquals(nullOutput, output);
 	}
 }

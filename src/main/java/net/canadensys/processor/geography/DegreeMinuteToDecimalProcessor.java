@@ -116,12 +116,13 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 	@Override
 	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result) {
 		try {
+			Double[] output = new Double[2];
 			String lat = (String)PropertyUtils.getSimpleProperty(in, latitudeInName);
 			String lng = (String)PropertyUtils.getSimpleProperty(in, longitudeInName);
 			
-			Double[] coord = process(lat,lng,result);
-			PropertyUtils.setSimpleProperty(out, latitudeOutName, coord[LatLongProcessorHelper.LATITUDE_IDX]);
-			PropertyUtils.setSimpleProperty(out, longitudeOutName, coord[LatLongProcessorHelper.LONGITUDE_IDX]);
+			process(lat,lng,output,result);
+			PropertyUtils.setSimpleProperty(out, latitudeOutName, output[LatLongProcessorHelper.LATITUDE_IDX]);
+			PropertyUtils.setSimpleProperty(out, longitudeOutName, output[LatLongProcessorHelper.LONGITUDE_IDX]);
 		} catch (IllegalAccessException e) {
 			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
@@ -137,8 +138,9 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 		try {
 			lat = (String)PropertyUtils.getSimpleProperty(in, latitudeInName);
 			lng = (String)PropertyUtils.getSimpleProperty(in, longitudeInName);
+			Double[] output = new Double[2];
 			
-			Double[] output = process(lat,lng,result);
+			process(lat,lng,output,result);
 			if(output[LatLongProcessorHelper.LATITUDE_IDX] != null && output[LatLongProcessorHelper.LONGITUDE_IDX] != null){
 				return true;
 			}
@@ -163,12 +165,14 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 	
 	/**
 	 * Degree/minute/second to decimal processing function.
-	 * @param dms degree/minute/second string
+	 * @param dmsLat degree/minute/second latitude string
+	 * @param dmsLlong degree/minute/second longitude string
+	 * @param output initialized array(size==2) that will contain the parsed data or null if not parsable.
+	 * We use an output variable (instead of returning an array) to allow reuse of the array (and avoid unnecessary array creation).
 	 * @param result optional
 	 * @return decimal values of the dms coordinate or null
 	 */
-	public Double[] process(String dmsLat, String dmsLong, ProcessingResult result){		
-		Double[] output = new Double[2];
+	public void process(String dmsLat, String dmsLong, Double[] output, ProcessingResult result){
 		output[LatLongProcessorHelper.LATITUDE_IDX] = dmsToDecimalDegree(dmsLat, result);
 		output[LatLongProcessorHelper.LONGITUDE_IDX] = dmsToDecimalDegree(dmsLong, result);
 		
@@ -190,8 +194,6 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 		
 		//use delegate to validate boundaries
 		latLongHelper.ensureLatLongBoundaries(output, result);
-
-		return output;
 	}
 		
 	/**
