@@ -31,16 +31,19 @@ import org.slf4j.LoggerFactory;
  * @author canadensys
  *
  */
-public class DegreeMinuteToDecimalProcessor implements DataProcessor{
+public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 	
 	final Logger logger = LoggerFactory.getLogger(DegreeMinuteToDecimalProcessor.class);
-	
+		
 	protected static int DEGREE_IDX = 0;
 	protected static int MINUTE_IDX = 1;
 	protected static int SECOND_IDX = 2;
 	
 	protected static Pattern CHECK_CARDINAL_DIRECTION_PATTERN = Pattern.compile("[NESW]\\s*$", Pattern.CASE_INSENSITIVE);
 	protected static Pattern CHECK_SOUTH_WEST_PATTERN = Pattern.compile("[SW]\\s*$", Pattern.CASE_INSENSITIVE);
+	
+	protected static Pattern CHECK_LATITUDE = Pattern.compile("[NS]\\s*$", Pattern.CASE_INSENSITIVE);
+	protected static Pattern CHECK_LONGITUDE = Pattern.compile("[EW]\\s*$", Pattern.CASE_INSENSITIVE);
 	
 	//negative sign(and whitespace) and NSEW letters and whitespace //\s*$
 	protected static Pattern REMOVE_CARDINAL_DIRECTION_PATTERN = Pattern.compile("(^\\s?-\\s?)|(\\s?[NSEW]\\s*$)", Pattern.CASE_INSENSITIVE);
@@ -56,11 +59,14 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	//[\"s″ ]? :followed by an optional "s″
 	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d{1,3})(?:[°d: ]+)(\\d*\\.?\\d+)(?:[\'m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
 	
-	protected static final String DEFAULT_COORDINATE_NAME = "coordinate";
+	protected static final String DEFAULT_LATITUDE_NAME = "lat";
+	protected static final String DEFAULT_LONGITUDE_NAME = "lng";
 	
-	//Those field names will only be used with JavaBean
-	protected String coordinateInName = null;
-	protected String coordinateOutName = null;
+	//Those field names will only be used with Java beans
+	protected String latitudeInName, longitudeInName = null;
+	protected String latitudeOutName, longitudeOutName = null;
+	protected LatLongProcessorHelper latLongHelper = null;
+	
 	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL makes sense here
@@ -70,19 +76,34 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	 * Default constructor, default field names will be used.
 	 */
 	public DegreeMinuteToDecimalProcessor(){
-		this(DEFAULT_COORDINATE_NAME,DEFAULT_COORDINATE_NAME);
+		this(DEFAULT_LATITUDE_NAME,DEFAULT_LONGITUDE_NAME);
 	}
 	
 	/**
 	 * 
-	 * @param coordinateInName name of the String field in the input JavaBean
-	 * @param coordinateOutName name of the Double field in the output JavaBean
+	 * @param latitudeInName name of the String latitude field in the input and the output Java bean
+	 * @param longitudeInName name of the String longitude field in the input and the output Java bean
 	 */
-	public DegreeMinuteToDecimalProcessor(String coordinateInName, String coordinateOutName){
-		this.coordinateInName = coordinateInName;
-		this.coordinateOutName = coordinateOutName;
-		//always a default Locale
+	public DegreeMinuteToDecimalProcessor(String latitudeInName, String longitudeInName){
+		this(latitudeInName,longitudeInName,latitudeInName,longitudeInName);
+	}
+	
+	/**
+	 * 
+	 * @param latitudeInName name of the String latitude field in the input Java bean
+	 * @param longitudeInName name of the String longitude field in the input Java bean
+	 * @param latitudeOutName name of the Double longitude field in the output Java bean
+	 * @param longitudeOutName name of the Double longitude field in the output Java bean
+	 */
+	public DegreeMinuteToDecimalProcessor(String latitudeInName, String longitudeInName,
+			String latitudeOutName, String longitudeOutName){
+		this.latitudeInName = latitudeInName;
+		this.longitudeInName = longitudeInName;
+		this.latitudeOutName = latitudeOutName;
+		this.longitudeOutName = longitudeOutName;
+		
 		setLocale(Locale.ENGLISH);
+		latLongHelper = new LatLongProcessorHelper(resourceBundle);
 	}
 	
 	/**
@@ -95,9 +116,12 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	@Override
 	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result) {
 		try {
-			String val1 = (String)PropertyUtils.getSimpleProperty(in, coordinateInName);
-			Double coord = process(val1,result);
-			PropertyUtils.setSimpleProperty(out, coordinateOutName, coord);
+			String lat = (String)PropertyUtils.getSimpleProperty(in, latitudeInName);
+			String lng = (String)PropertyUtils.getSimpleProperty(in, longitudeInName);
+			
+			Double[] coord = process(lat,lng,result);
+			PropertyUtils.setSimpleProperty(out, latitudeOutName, coord[LatLongProcessorHelper.LATITUDE_IDX]);
+			PropertyUtils.setSimpleProperty(out, longitudeOutName, coord[LatLongProcessorHelper.LONGITUDE_IDX]);
 		} catch (IllegalAccessException e) {
 			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
@@ -109,10 +133,13 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	
 	@Override
 	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
-		String textCoordinate = null;
+		String lat=null, lng =null;
 		try {
-			textCoordinate = (String)PropertyUtils.getSimpleProperty(in, coordinateInName);
-			if(process(textCoordinate,result) != null){
+			lat = (String)PropertyUtils.getSimpleProperty(in, latitudeInName);
+			lng = (String)PropertyUtils.getSimpleProperty(in, longitudeInName);
+			
+			Double[] output = process(lat,lng,result);
+			if(output[LatLongProcessorHelper.LATITUDE_IDX] != null && output[LatLongProcessorHelper.LONGITUDE_IDX] != null){
 				return true;
 			}
 		//change to multiple Exception catch when moving to Java 7
@@ -128,10 +155,43 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 		}
 		
 		//not valid, check if the value was mandatory
-		if(!isMandatory && StringUtils.isBlank(textCoordinate)){
+		if(!isMandatory && StringUtils.isBlank(lat) && StringUtils.isBlank(lng)){
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Degree/minute/second to decimal processing function.
+	 * @param dms degree/minute/second string
+	 * @param result optional
+	 * @return decimal values of the dms coordinate or null
+	 */
+	public Double[] process(String dmsLat, String dmsLong, ProcessingResult result){		
+		Double[] output = new Double[2];
+		output[LatLongProcessorHelper.LATITUDE_IDX] = dmsToDecimalDegree(dmsLat, result);
+		output[LatLongProcessorHelper.LONGITUDE_IDX] = dmsToDecimalDegree(dmsLong, result);
+		
+		//make sure that cardinal directions are valid
+		if(output[LatLongProcessorHelper.LATITUDE_IDX] != null && !CHECK_LATITUDE.matcher(dmsLat).find()){
+			if(result != null){
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("dms.error.noCardinalDirection"),dmsLat));
+			}
+			output[LatLongProcessorHelper.LATITUDE_IDX] = null;
+		}
+		if(output[LatLongProcessorHelper.LONGITUDE_IDX] != null && !CHECK_LONGITUDE.matcher(dmsLong).find()){
+			if(result != null){
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("dms.error.noCardinalDirection"),dmsLong));
+			}
+			output[LatLongProcessorHelper.LONGITUDE_IDX] = null;
+		}
+		
+		//use delegate to validate boundaries
+		latLongHelper.ensureLatLongBoundaries(output, result);
+
+		return output;
 	}
 		
 	/**
@@ -140,7 +200,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor{
 	 * @param result optional
 	 * @return decimal value of the dms coordinate or null
 	 */
-	public Double process(String dms, ProcessingResult result){
+	protected Double dmsToDecimalDegree(String dms, ProcessingResult result){
 		
 		if(StringUtils.isBlank(dms)){
 			return null;

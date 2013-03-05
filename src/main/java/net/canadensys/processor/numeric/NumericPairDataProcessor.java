@@ -1,4 +1,4 @@
-package net.canadensys.processor.dwc;
+package net.canadensys.processor.numeric;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * Data processor to handle a pair of numeric fields that are inter-connected.
  * Will attempt to normalize value contained in 2 Strings fields to Number fields.
  * The string value can contain a suffix (units, comments, ...).
- * NO conversion will be attempted.
+ * NO unit conversions will be attempted.
  * @author canadensys
  *
  */
@@ -36,7 +36,10 @@ public class NumericPairDataProcessor implements DataProcessor{
 	//Tag to get the Class to use for validation purpose
 	public static final String VALIDATE_CLASS_TAG = "Class";
 	
-	protected String value1Name,value2Name;
+	//Name of the fields inside the Java bean
+	protected String value1InName,value2InName;
+	protected String value1OutName,value2OutName;
+	
 	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL make sense here
@@ -49,9 +52,31 @@ public class NumericPairDataProcessor implements DataProcessor{
 		this(DEFAULT_VALUE1_NAME,DEFAULT_VALUE2_NAME);
 	}
 	
-	public NumericPairDataProcessor(String value1Name, String value2Name){
-		this.value1Name = value1Name;
-		this.value2Name = value2Name;
+	/**
+	 * Constructor that allows to set the name of the fields to use in the 'in' Java bean.
+	 * The same names will be used so the 'out' Java bean.
+	 * @param value1InName name of the field 1 inside the 'in' Java bean
+	 * @param value2InName name of the field 2 inside the 'in' Java bean
+	 */
+	public NumericPairDataProcessor(String value1InName, String value2InName){
+		//if out values are not provided, use the same value as in.
+		this(value1InName,value2InName,value1InName,value2InName);
+	}
+	
+	/**
+	 * Constructor that allows to set the name of the fields to use in the 'in' and 'out' Java beans.
+	 * @param value1InName
+	 * @param value2InName
+	 * @param value1OutName
+	 * @param value2OutName
+	 */
+	public NumericPairDataProcessor(String value1InName, String value2InName, 
+			String value1OutName, String value2OutName){
+		this.value1InName = value1InName;
+		this.value2InName = value2InName;
+		
+		this.value1OutName = value1OutName;
+		this.value2OutName = value2OutName;
 		//always a default Locale
 		setLocale(Locale.ENGLISH);
 	}
@@ -69,13 +94,13 @@ public class NumericPairDataProcessor implements DataProcessor{
 		
 		try {
 			Number[] output = new Number[2];
-			String val1 = (String)PropertyUtils.getSimpleProperty(in, value1Name);
-			String val2 = (String)PropertyUtils.getSimpleProperty(in, value2Name);
+			String val1 = (String)PropertyUtils.getSimpleProperty(in, value1InName);
+			String val2 = (String)PropertyUtils.getSimpleProperty(in, value2InName);
 			
-			process(val1,val2,output,PropertyUtils.getPropertyType(out, value1Name),result);
+			process(val1,val2,output,PropertyUtils.getPropertyType(out, value1OutName),result);
 						
-			PropertyUtils.setSimpleProperty(out, value1Name, output[0]);
-			PropertyUtils.setSimpleProperty(out, value2Name, output[1]);
+			PropertyUtils.setSimpleProperty(out, value1OutName, output[0]);
+			PropertyUtils.setSimpleProperty(out, value2OutName, output[1]);
 		} catch (IllegalAccessException e) {
 			logger.error("Bean access error", e);
 		} catch (InvocationTargetException e) {
@@ -104,8 +129,8 @@ public class NumericPairDataProcessor implements DataProcessor{
 		}
 		
 		try {
-			val1 = (String)PropertyUtils.getSimpleProperty(in, value1Name);
-			val2 = (String)PropertyUtils.getSimpleProperty(in, value2Name);
+			val1 = (String)PropertyUtils.getSimpleProperty(in, value1InName);
+			val2 = (String)PropertyUtils.getSimpleProperty(in, value2InName);
 			process(val1,val2,output,clazz,result);
 			if(output[0] != null && output[1] != null){
 				return true;
@@ -133,7 +158,8 @@ public class NumericPairDataProcessor implements DataProcessor{
 	 * Numeric pair processing function
 	 * @param value1 
 	 * @param value2
-	 * @param minMaxOutput initialized array(size==2) that will contain the parsed data or null if not parsable
+	 * @param output initialized array(size==2) that will contain the parsed data or null if not parsable.
+	 * We use an output variable (instead of returning an array) to allow reuse of the array (and avoid unnecessary array creation).
 	 * @param clazz Class wanted for element of the minMaxOutput
 	 * @param result optional processing result
 	 */

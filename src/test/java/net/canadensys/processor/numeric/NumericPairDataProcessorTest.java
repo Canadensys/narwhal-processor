@@ -1,4 +1,4 @@
-package net.canadensys.processor.dwc;
+package net.canadensys.processor.numeric;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
+import net.canadensys.processor.numeric.NumericPairDataProcessor;
 
 import org.junit.Test;
 

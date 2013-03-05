@@ -1,10 +1,7 @@
 package net.canadensys.processor.geography;
 
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-
 import net.canadensys.processor.ProcessingResult;
-import net.canadensys.processor.dwc.NumericPairDataProcessor;
+import net.canadensys.processor.numeric.NumericPairDataProcessor;
 
 /**
  * Data processor to handle latitude and longitude data.
@@ -14,31 +11,27 @@ import net.canadensys.processor.dwc.NumericPairDataProcessor;
  */
 public class DecimalLatLongProcessor extends NumericPairDataProcessor{
 	
-	public static final int LATITUDE_IDX = 0;
-	public static final int LONGITUDE_IDX = 1;
-	
-	//decimalLatitude : Legal values lie between -90 and 90, inclusive.
-	public static final int MIN_LATITUDE = -90;
-	public static final int MAX_LATITUDE = 90;
-	
-	//decimalLongitude : Legal values lie between -180 and 180, inclusive.
-	public static final int MIN_LONGITUDE = -180;
-	public static final int MAX_LONGITUDE = 180;
-	
 	//DarwinCore terms
 	protected static final String DWC_DECIMAL_LATITUDE = "decimalLatitude";
 	protected static final String DWC_DECIMAL_LONGITUDE = "decimalLongitude";
-
 	
+	protected LatLongProcessorHelper latLongHelper = null;
+
 	/**
 	 * Default constructor, property name will be assigned to the matching DarwinCore property name.
 	 */
 	public DecimalLatLongProcessor() {
-		super(DWC_DECIMAL_LATITUDE, DWC_DECIMAL_LONGITUDE);
+		this(DWC_DECIMAL_LATITUDE, DWC_DECIMAL_LONGITUDE);
 	}
 	
 	public DecimalLatLongProcessor(String latitudePropertyName, String longitudePropertyName) {
 		super(latitudePropertyName, longitudePropertyName);
+		latLongHelper = new LatLongProcessorHelper(resourceBundle);
+	}
+	
+	public DecimalLatLongProcessor(String latitudeInPropertyName, String longitudeInPropertyName,
+			String latitudeOutPropertyName, String longitudeOutPropertyName) {
+		super(latitudeInPropertyName, longitudeInPropertyName, latitudeOutPropertyName, longitudeOutPropertyName);
 	}
 	
 	@Override
@@ -47,30 +40,6 @@ public class DecimalLatLongProcessor extends NumericPairDataProcessor{
 		super.process(value1, value2, output, clazz, result);
 		
 		//validate output boundaries
-		if(output[LATITUDE_IDX]!=null){
-			if(output[LATITUDE_IDX].intValue() > MAX_LATITUDE || output[LATITUDE_IDX].intValue() < MIN_LATITUDE){
-				if(result != null){
-					result.addError(
-							MessageFormat.format(resourceBundle.getString("decimalLatLong.error.outOfBounds"),output[LATITUDE_IDX].intValue(),MIN_LATITUDE,MAX_LATITUDE));
-				}
-				output[LATITUDE_IDX] = null;
-			}
-		}
-		
-		if(output[LONGITUDE_IDX]!=null){
-			if(output[LONGITUDE_IDX].intValue() > MAX_LONGITUDE || output[LONGITUDE_IDX].intValue() < MIN_LONGITUDE){
-				if(result != null){
-					result.addError(
-							MessageFormat.format(resourceBundle.getString("decimalLatLong.error.outOfBounds"),output[LONGITUDE_IDX].intValue(),MIN_LONGITUDE,MAX_LONGITUDE));
-				}
-				output[LONGITUDE_IDX] = null;
-			}
-		}
-		
-		//to be a valid coordinate we need both latitude and longitude to be valid
-		if(output[LATITUDE_IDX] == null || output[LONGITUDE_IDX] == null){
-			output[LATITUDE_IDX] = null;
-			output[LONGITUDE_IDX] = null;
-		}
+		latLongHelper.ensureLatLongBoundaries(output, result);
 	}
 }

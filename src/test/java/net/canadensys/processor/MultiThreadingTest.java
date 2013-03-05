@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import net.canadensys.processor.dwc.NumericPairDataProcessor;
+import net.canadensys.processor.numeric.NumericPairDataProcessor;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
@@ -122,8 +122,9 @@ public class MultiThreadingTest {
 		}
 		
 		public void run() {
+			Double[] output = new Double[2];
 			for(int i=0;i<dataList1.size();i++){
-				processor.process(dataList1.get(i), dataList2.get(i), new Double[2], Double.class, pr);
+				processor.process(dataList1.get(i), dataList2.get(i),output, Double.class, pr);
 			}
 		}
 	}
