@@ -36,7 +36,8 @@ public class CoordinatePairProcessor implements DataProcessor{
 	//[\\D]* : allow 0 or more non-digit character(s)
 	//[,;\\/ \\t]+ : at least one separator
 	//(\\-?\\d{1,3}\\.?\\d+) : optional negative sign and a number with optional decimal part
-	protected static Pattern  DECIMAL_COORD_PAIR = Pattern.compile("(^\\s?\\-?\\d{1,3}\\.?\\d+)[\\D]*[,;\\/ \\t]+(\\-?\\d{1,3}\\.?\\d+)");
+	//[\\D]* : allow 0 or more non-digit character(s) at the end
+	protected static Pattern  DECIMAL_COORD_PAIR = Pattern.compile("(^\\s?\\-?\\d{1,3}\\.?\\d+)[\\D]*[,;\\/ \\t]+(\\-?\\d{1,3}\\.?\\d+)[\\D]*");
 	protected static Pattern  DMS_COORD_PAIR = Pattern.compile("(.+)[,;\\/\\t]+(.+)");
 	
 	protected static Pattern CHECK_LATITUDE = Pattern.compile("[NS]\\s*$", Pattern.CASE_INSENSITIVE);
@@ -122,8 +123,9 @@ public class CoordinatePairProcessor implements DataProcessor{
 		
 		//try decimal coordinates
 		Matcher m = DECIMAL_COORD_PAIR.matcher(coordinatePair);
+				
 		//find() need to be called to use group(idx)
-		if(m.find()){
+		if(m.find() && m.matches()){
 			if(m.groupCount() == 2){
 				coordinates = new String[2];
 				coordinates[LATITUDE_IDX] = m.group(1);

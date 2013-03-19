@@ -28,6 +28,9 @@ public class CoordinatePairProcessorTest {
 		coordinates = cpProcessor.process("40°26'47\"N/74° 0' 21.5022\"W", null);
 		assertArrayEquals(new String[]{"40°26'47\"N","74° 0' 21.5022\"W"}, coordinates);
 		
+		coordinates = cpProcessor.process("45° 32' 25\"N,129° 40' 31\"W", null);
+		assertArrayEquals(new String[]{"45° 32' 25\"N","129° 40' 31\"W"}, coordinates);
+		
 		//test inverted coordinates
 		coordinates = cpProcessor.process("74° 0' 21.5022\"W/40°26'47\"N", null);
 		assertArrayEquals(new String[]{"40°26'47\"N","74° 0' 21.5022\"W"}, coordinates);

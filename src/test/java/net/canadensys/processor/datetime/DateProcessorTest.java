@@ -143,13 +143,13 @@ public class DateProcessorTest {
 		assertEquals("8-11-2003",dateProcessor.standardizeDatePunctuation("8/11/2003"));
 		assertEquals("08-11-2003",dateProcessor.standardizeDatePunctuation("08.11.2003"));
 		assertEquals("08-11-2003",dateProcessor.standardizeDatePunctuation("08-11-2003"));
-		assertEquals("08-11 2003",dateProcessor.standardizeDatePunctuation("08.11 2003"));
+		assertEquals("08-11-2003",dateProcessor.standardizeDatePunctuation("08.11 2003"));
+		assertEquals("10-10-2000",dateProcessor.standardizeDatePunctuation("10 10 2000"));
+		assertEquals("10-Oct-2000",dateProcessor.standardizeDatePunctuation("10 Oct 2000"));
+		assertEquals("10-Oct-2000",dateProcessor.standardizeDatePunctuation("10/Oct/2000"));
+		assertEquals("10-Oct-2000",dateProcessor.standardizeDatePunctuation("10.Oct. 2000"));
 		
 		//Should remain the same
-		assertEquals("10/Oct/2000",dateProcessor.standardizeDatePunctuation("10/Oct/2000"));
-		assertEquals("10.Oct.2000",dateProcessor.standardizeDatePunctuation("10.Oct.2000"));
 		assertEquals("10-Oct-2000",dateProcessor.standardizeDatePunctuation("10-Oct-2000"));
-		assertEquals("10 Oct 2000",dateProcessor.standardizeDatePunctuation("10 Oct 2000"));
-		assertEquals("10 10 2000",dateProcessor.standardizeDatePunctuation("10 10 2000"));
 	}
 }

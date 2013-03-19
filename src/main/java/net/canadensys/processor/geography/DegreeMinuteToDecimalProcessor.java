@@ -54,10 +54,10 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 	//(\\d{1,3}) :get 1 to 3 digits
 	//(?:[°d: ]+ :followed by at least °d: or a space
 	//(\d*\.?\d+) :any int or decimal
-	//(?:[\'m′: ])* :followed by an optional 'm:′
+	//(?:['m′: ])* :followed by an optional 'm:′
 	//(\d*\.?\d+)* :any int or decimal
 	//[\"s″ ]? :followed by an optional "s″
-	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d{1,3})(?:[°d: ]+)(\\d*\\.?\\d+)(?:[\'m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
+	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d{1,3})(?:[°d: ]+)(\\d*\\.?\\d+)(?:['m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
 	
 	protected static final String DEFAULT_LATITUDE_NAME = "lat";
 	protected static final String DEFAULT_LONGITUDE_NAME = "lng";

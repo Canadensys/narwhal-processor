@@ -56,8 +56,9 @@ public class DateProcessor implements DataProcessor{
 	//Only USE_NULL make sense here
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
 	
+	//All patterns are using dash(-) as separator, all other separators will be replaced
 	//Gregorian little-endian, starting with day 
-	private static final DateTimeFormatter LE_D_MMM_YYYY_PATTERN = DateTimeFormatters.pattern("d MMM yyyy", Locale.US);
+	private static final DateTimeFormatter LE_D_MMM_YYYY_PATTERN = DateTimeFormatters.pattern("d-MMM-yyyy", Locale.US);
 	//Could bring conflicts with middle-endian like in 13-10-2012
 	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = DateTimeFormatters.pattern("d-M-yyyy", Locale.US);
 	
@@ -65,22 +66,22 @@ public class DateProcessor implements DataProcessor{
 	//ISO 8601
 	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = DateTimeFormatters.pattern("yyyyMMdd", Locale.US);
 	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = DateTimeFormatters.pattern("yyyy[-M[-d]]", Locale.US);
-	private static final DateTimeFormatter BE_YYYY_MMM_D_PATTERN = DateTimeFormatters.pattern("yyyy MMM d", Locale.US);
+	private static final DateTimeFormatter BE_YYYY_MMM_D_PATTERN = DateTimeFormatters.pattern("yyyy-MMM-d", Locale.US);
 	
 	//Middle-endian, starting with month
 	//11-9-2003, 11.9.2003, 11.09.03, or 11/09/03
-	private static final DateTimeFormatter ME_MMM_D_YYYY_PATTERN = DateTimeFormatters.pattern("MMM d yyyy", Locale.US);
+	private static final DateTimeFormatter ME_MMM_D_YYYY_PATTERN = DateTimeFormatters.pattern("MMM-d-yyyy", Locale.US);
 	//Could bring conflicts with little-endian like in 13-10-2012
 	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = DateTimeFormatters.pattern("M-d-yyyy", Locale.US);
 	//Not sure this one is safe to implement
 	//private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M-d-yy", Locale.US);
 	
 	//Partial date
-	private static final DateTimeFormatter PARTIAL_MONTH_YEAR_PATTERN = DateTimeFormatters.pattern("MMM yyyy", Locale.US);
+	private static final DateTimeFormatter PARTIAL_MONTH_YEAR_PATTERN = DateTimeFormatters.pattern("MMM-yyyy", Locale.US);
 	private static final DateTimeFormatter PARTIAL_MONTH_PATTERN = DateTimeFormatters.pattern("MMM", Locale.US);
 	
-	protected static final String STANDARDIZE_PUNCT_PATTERN = "(?<=\\d+)[.|/](?=\\d+)";
-	protected static final Pattern ROMAN_NUMERAL_PATTERN = Pattern.compile("\\d[.\\-\\/]([XVI]+)[.\\-\\/]\\d",Pattern.CASE_INSENSITIVE);
+	protected static final String STANDARDIZE_PUNCT_PATTERN = "[.|/ ,]+";
+	protected static final Pattern ROMAN_NUMERAL_PATTERN = Pattern.compile("\\d[.\\-/ ]([XVI]+)[.\\-/ ]\\d",Pattern.CASE_INSENSITIVE);
 	
 	/**
 	 * Default constructor, default field names will be used
@@ -299,9 +300,7 @@ public class DateProcessor implements DataProcessor{
 	}
 	
 	/**
-	 * This function will replace all dots (.) and slashes(/) characters by a dash(-).
-	 * This will be applied only if a number is found ahead of the punctuation.
-	 * 2007.07.31 => 2007-07-31, 3/27/2002 => 3-27-2002, 7 Nov 2012 => 7 Nov 2012 (not changed)
+	 * This function will replace all dots (.), space ( ), slashes(/) and coma(,) characters by a dash(-).
 	 * @param date
 	 * @return
 	 */
@@ -327,9 +326,18 @@ public class DateProcessor implements DataProcessor{
 				//Standardize the date punctuation based on the new date text
 				newTextDate = standardizeDatePunctuation(newTextDate);
 				//We only support Roman numeral for the month
-				LocalDate le_d_m_yyyy_date = LE_D_M_YYYY_PATTERN.parse(newTextDate, LocalDate.rule());
-				setPartialDate(output,le_d_m_yyyy_date);
-				return true;
+				try{
+					LocalDate le_d_m_yyyy_date = LE_D_M_YYYY_PATTERN.parse(newTextDate, LocalDate.rule());
+					setPartialDate(output,le_d_m_yyyy_date);
+					return true;
+				}
+				catch (CalendricalParseException e) {}
+				try{
+					LocalDate le_d_m_yyyy_date = BE_ISO8601_PARTIAL_DATE_PATTERN.parse(newTextDate, LocalDate.rule());
+					setPartialDate(output,le_d_m_yyyy_date);
+					return true;
+				}
+				catch (CalendricalParseException e) {}
 			}
 			catch (NumberFormatException ex) {
 				if(result != null){
@@ -338,7 +346,6 @@ public class DateProcessor implements DataProcessor{
 									dateText));
 				}
 			}
-			catch (CalendricalParseException e) {}
 		}
 		return false;
 	}
