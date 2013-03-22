@@ -57,6 +57,16 @@ public class DegreeMinuteToDecimalProcessorTest {
 		output = dmtdProcessor.process("40:26:47.5N","30°17′12″E", null);
 		assertEquals(40.44653f, output[LAT_IDX].floatValue(),0);
 		
+		//already decimal degree
+		output = dmtdProcessor.process("45.5° N","-129.6° W", null);
+		assertEquals(45.5f, output[LAT_IDX].floatValue(),0);
+		assertEquals(-129.6f, output[LNG_IDX].floatValue(),0);
+		
+		//one digit degree
+		output = dmtdProcessor.process("1:2:3 N","4:5:6 W", null);
+		assertEquals(1.0341667f, output[LAT_IDX].floatValue(),0);
+		assertEquals(-4.085f, output[LNG_IDX].floatValue(),0);
+		
 		//Test Java bean
 		MockRawOccurrenceModel rawModel = new MockRawOccurrenceModel();
 		MockOccurrenceModel occModel = new MockOccurrenceModel();
@@ -101,7 +111,7 @@ public class DegreeMinuteToDecimalProcessorTest {
 		//test no cardinal directions
 		assertArrayEquals(nullOutput, dmtdProcessor.process("40°N26'47\"","30°17′12″", null));
 	
-		//decimal on the degree is not supported
+		//decimal on the degree is not supported if minute and/or second is used
 		assertArrayEquals(nullOutput, dmtdProcessor.process("40.1:26:47N","30°17′12″E", null));
 		
 		//test decimal coordinate

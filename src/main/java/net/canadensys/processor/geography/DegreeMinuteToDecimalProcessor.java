@@ -51,13 +51,14 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 	protected static final Pattern KEEP_NUMBERS_PATTERN = Pattern.compile("[^\\d]");
 
 	//Regex info : (?:X) 	X, as a non-capturing group	
-	//(\\d{1,3}) :get 1 to 3 digits
+	//(\d*\.?\d+) :any int or decimal 
 	//(?:[°d: ]+ :followed by at least °d: or a space
-	//(\d*\.?\d+) :any int or decimal
+	//(\d*\.?\d+) :any int or decimal (optional)
 	//(?:['m′: ])* :followed by an optional 'm:′
-	//(\d*\.?\d+)* :any int or decimal
+	//(\d*\.?\d+)* :any int or decimal (optional)
 	//[\"s″ ]? :followed by an optional "s″
-	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d{1,3})(?:[°d: ]+)(\\d*\\.?\\d+)(?:['m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
+	//This regex requires validation on extracted groups
+	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d*\\.?\\d+)(?:[°d: ]+)(\\d*\\.?\\d+)*(?:['m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
 	
 	protected static final String DEFAULT_LATITUDE_NAME = "lat";
 	protected static final String DEFAULT_LONGITUDE_NAME = "lng";
@@ -236,7 +237,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 		}
 				
 		//start at 1 (0 is always the complete match)
-		//TODO remove this part
+		//TODO Could we remove this part?
 		String[] parts = new String[3];
 		int partsIdx = 0;
 		String currPart;
@@ -251,7 +252,7 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 		Double minute = NumberUtils.parseNumber(parts[MINUTE_IDX], Double.class,0d);
 		Double second = NumberUtils.parseNumber(parts[SECOND_IDX], Double.class,0d);
 		
-		//make sure that we extracted all the numbers
+		//make sure that we extracted all numbers
 		if(!KEEP_NUMBERS_PATTERN.matcher(parts[DEGREE_IDX]+parts[MINUTE_IDX]+StringUtils.defaultString(parts[SECOND_IDX], ""))
 				.replaceAll("").equalsIgnoreCase(allNumbers)){
 			if(result != null){
@@ -261,19 +262,29 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 			return null;
 		}
 		
-		//make sure that if we have decimals on minute, we don't second
-		if(parts[MINUTE_IDX] != null){
-			if(parts[MINUTE_IDX].contains(".")){
-				if(parts[SECOND_IDX] != null){
-					if(result != null){
-						result.addError(
-								MessageFormat.format(resourceBundle.getString("dms.error.decimalMinuteError"),dms));
-					}
-					return null;
+		//If we have decimals on degree, we don't have minute and second
+		if(parts[DEGREE_IDX] != null && parts[DEGREE_IDX].contains(".")){
+			if(parts[MINUTE_IDX] != null || parts[SECOND_IDX] != null){
+				if(result != null){
+					result.addError(
+							MessageFormat.format(resourceBundle.getString("dms.error.decimalDegreeError"),dms));
 				}
+				return null;
 			}
 		}
-				
+		
+		//If we have decimals on minute, we don't have second
+		if(parts[MINUTE_IDX] != null && parts[MINUTE_IDX].contains(".")){
+			if(parts[SECOND_IDX] != null){
+				if(result != null){
+					result.addError(
+							MessageFormat.format(resourceBundle.getString("dms.error.decimalMinuteError"),dms));
+				}
+				return null;
+			}
+		}
+		
+		//If we have extracted nothing in second, but we have a second identifier ("s″), minute was not provided.
 		if(parts[SECOND_IDX] == null){
 			if(p_dms.matches(".*[\"s″].*")){
 				if(result != null){
