@@ -21,7 +21,7 @@ public class CoordinatePairProcessorTest {
 	@Test
 	public void testCoordinatePairProcessor(){
 		CoordinatePairProcessor cpProcessor = new CoordinatePairProcessor();
-		String[] coordinates = cpProcessor.process("-71.87d;35.98degree", null);
+		String[] coordinates = cpProcessor.process("-71.87°;35.98 °", null);
 		//only the numeric part is kept
 		assertArrayEquals(new String[]{"-71.87","35.98"}, coordinates);
 		
@@ -30,6 +30,10 @@ public class CoordinatePairProcessorTest {
 		
 		coordinates = cpProcessor.process("45° 32' 25\"N,129° 40' 31\"W", null);
 		assertArrayEquals(new String[]{"45° 32' 25\"N","129° 40' 31\"W"}, coordinates);
+		
+		//test that decimal degrees with cardinal directions will keep directions
+		coordinates = cpProcessor.process("45.5° N, 129.6° W", null);
+		assertArrayEquals(new String[]{"45.5° N","129.6° W"}, coordinates);
 		
 		//test inverted coordinates
 		coordinates = cpProcessor.process("74° 0' 21.5022\"W/40°26'47\"N", null);

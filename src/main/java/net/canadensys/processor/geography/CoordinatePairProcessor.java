@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
  * Allows to split a coordinate pair string into latitude and longitude parts.
  * The pair must be separated by one of the following characters ,;/\t
  * The resulting latitude and longitude are strings and could be invalid or unusable in their current representation.
+ * String.trim() is used on latitude and longitude results
  * 
  * @author canadensys
  *
@@ -33,11 +34,11 @@ public class CoordinatePairProcessor implements DataProcessor{
 	
 	//Regex info :
 	//(^\\s?\\-?\\d{1,3}\\.?\\d+) : optional whitespace, optional negative sign and a number with optional decimal part
-	//[\\D]* : allow 0 or more non-digit character(s)
+	//[^1-9a-z]* : allow 0 or more non-alphanumeric character(s)
 	//[,;\\/ \\t]+ : at least one separator
 	//(\\-?\\d{1,3}\\.?\\d+) : optional negative sign and a number with optional decimal part
-	//[\\D]* : allow 0 or more non-digit character(s) at the end
-	protected static Pattern  DECIMAL_COORD_PAIR = Pattern.compile("(^\\s?\\-?\\d{1,3}\\.?\\d+)[\\D]*[,;\\/ \\t]+(\\-?\\d{1,3}\\.?\\d+)[\\D]*");
+	//[^1-9a-z]* : allow 0 or more non-alphanumeric character(s)
+	protected static Pattern  DECIMAL_COORD_PAIR = Pattern.compile("(^\\s?\\-?\\d{1,3}\\.?\\d+)[^1-9a-z]*[,;\\/ \\t]+(\\-?\\d{1,3}\\.?\\d+)[^1-9a-z]*",Pattern.CASE_INSENSITIVE);
 	protected static Pattern  DMS_COORD_PAIR = Pattern.compile("(.+)[,;\\/\\t]+(.+)");
 	
 	protected static Pattern CHECK_LATITUDE = Pattern.compile("[NS]\\s*$", Pattern.CASE_INSENSITIVE);
@@ -140,13 +141,13 @@ public class CoordinatePairProcessor implements DataProcessor{
 			if(m.groupCount() == 2){
 				coordinates = new String[2];
 				if(CHECK_LONGITUDE.matcher(m.group(2)).find()){
-					coordinates[LATITUDE_IDX] = m.group(1);
-					coordinates[LONGITUDE_IDX] = m.group(2);
+					coordinates[LATITUDE_IDX] = m.group(1).trim();
+					coordinates[LONGITUDE_IDX] = m.group(2).trim();
 				}
 				else{
 					if(CHECK_LONGITUDE.matcher(m.group(1)).find()){
-						coordinates[LATITUDE_IDX] = m.group(2);
-						coordinates[LONGITUDE_IDX] = m.group(1);
+						coordinates[LATITUDE_IDX] = m.group(2).trim();
+						coordinates[LONGITUDE_IDX] = m.group(1).trim();
 					}
 					else{
 						if(result != null){
