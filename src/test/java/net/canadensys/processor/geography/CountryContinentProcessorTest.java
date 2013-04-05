@@ -2,7 +2,7 @@ package net.canadensys.processor.geography;
 
 import static org.junit.Assert.*;
 
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import net.canadensys.vocabulary.Continent;
@@ -18,7 +18,7 @@ public class CountryContinentProcessorTest {
 
 	@Test
 	public void testCountryContinent(){
-		DataProcessor dataProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
+		AbstractDataProcessor dataProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
 		
 		MockCountryCodeHolder mockRawModel = new MockCountryCodeHolder();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
@@ -32,7 +32,7 @@ public class CountryContinentProcessorTest {
 	
 	@Test
 	public void testCountryContinentValidation(){
-		DataProcessor dataProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
+		AbstractDataProcessor dataProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
 		MockCountryCodeHolder mockRawModel = new MockCountryCodeHolder();
 		mockRawModel.setCountryISOLetterCode("CA");
 		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
@@ -45,7 +45,7 @@ public class CountryContinentProcessorTest {
 	
 	@Test
 	public void testWrongCountryContinent(){
-		DataProcessor dataProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
+		AbstractDataProcessor dataProcessor = new CountryContinentProcessor("countryISOLetterCode", "continent");
 		
 		MockCountryCodeHolder mockRawModel = new MockCountryCodeHolder();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();

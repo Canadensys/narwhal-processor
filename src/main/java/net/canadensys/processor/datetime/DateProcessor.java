@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +17,7 @@ import javax.time.format.DateTimeFormatter;
 import javax.time.format.DateTimeFormatters;
 
 import net.canadensys.lang.RomanNumeral;
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -36,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author canadensys
  *
  */
-public class DateProcessor implements DataProcessor{
+public class DateProcessor extends AbstractDataProcessor{
 	
 	final Logger logger = LoggerFactory.getLogger(DateProcessor.class);
 	
@@ -51,7 +50,6 @@ public class DateProcessor implements DataProcessor{
 	private static final String DEFAULT_DAY_NAME = "day";
 	
 	protected String dateName, yearName, monthName, dayName;
-	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL make sense here
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -115,10 +113,10 @@ public class DateProcessor implements DataProcessor{
 	@Override
 	public void processBean(Object in, Object out, Map<String, Object> params, ProcessingResult result) {
 		try {
-			Integer[] output = new Integer[3];
+			Integer[] output = null;
 			String textDate = (String)PropertyUtils.getSimpleProperty(in, dateName);
 			
-			process(textDate,output,result);
+			output = process(textDate,result);
 						
 			PropertyUtils.setSimpleProperty(out, yearName, output[YEAR_IDX]);
 			PropertyUtils.setSimpleProperty(out, monthName, output[MONTH_IDX]);
@@ -137,12 +135,12 @@ public class DateProcessor implements DataProcessor{
 	 * considered valid.
 	 */
 	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
-		Integer[] output = new Integer[3];
+		Integer[] output = null;
 		String textDate = null;
 
 		try {
 			textDate = (String)PropertyUtils.getSimpleProperty(in, dateName);
-			process(textDate,output,result);
+			output = process(textDate,result);
 			//we support partial date so if we have only one part, it's valid
 			if(output[0] != null || output[1] != null || output[2] != null){
 				return true;
@@ -168,48 +166,49 @@ public class DateProcessor implements DataProcessor{
 	/**
 	 * Date processing function
 	 * @param dateText a test representing the date or partial-date
-	 * @param output initialized array(size==3) that will contain the parsed data(year,month,day) or null.
 	 * @param result optional processing result
+	 * @return initialized array(size==3) that will contain the parsed data(year,month,day) or null.
 	 */
-	public void process(String dateText, Integer[] output, ProcessingResult result){
+	public Integer[] process(String dateText, ProcessingResult result){
+		Integer[] output = new Integer[3];
 		if(StringUtils.isBlank(dateText)){
-			return;
+			return output;
 		}
-		
+
 		dateText = standardizeDatePunctuation(dateText);
 		
 		try{
 			//try ISO 8601 (with partial date like 2008 or 2008-12)
 			setPartialDate(output,BE_ISO8601_PARTIAL_DATE_PATTERN.parseBest(dateText, LocalDate.rule(),YearMonth.rule(),Year.rule()));
-			return;
+			return output;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try ISO 8601 (with partial date like 20081227)
 			setPartialDate(output,BE_ISO8601_BASIC_PATTERN.parse(dateText, LocalDate.rule()));
-			return;
+			return output;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try format like Jul 6 1987
 			setPartialDate(output,ME_MMM_D_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
-			return;
+			return output;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try format like 1987 Jul 6
 			setPartialDate(output,BE_YYYY_MMM_D_PATTERN.parse(dateText, LocalDate.rule()));
-			return;
+			return output;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try format like 6 Jul 1986
 			setPartialDate(output,LE_D_MMM_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
-			return;
+			return output;
 		}
 		catch(CalendricalParseException cpe){}
 		
@@ -217,14 +216,14 @@ public class DateProcessor implements DataProcessor{
 		try{
 			//try format like Jun 1895
 			setPartialDate(output,PARTIAL_MONTH_YEAR_PATTERN.parse(dateText, YearMonth.rule()));
-			return;
+			return output;
 		}
 		catch(CalendricalParseException cpe){}
 		
 		try{
 			//try format like Jun
 			setPartialDate(output,PARTIAL_MONTH_PATTERN.parse(dateText, MonthOfYear.rule()));
-			return;
+			return output;
 		}
 		catch(CalendricalParseException cpe){}
 		
@@ -248,26 +247,27 @@ public class DateProcessor implements DataProcessor{
 				result.addError(
 						MessageFormat.format(resourceBundle.getString("date.error.vagueDate"),dateText));
 			}
-			return;
+			return output;
 		}
 		if(le_d_m_yyyy_date != null){
 			setPartialDate(output,le_d_m_yyyy_date);
-			return;
+			return output;
 		}
 		if(me_m_d_yyyy_date != null){
 			setPartialDate(output,me_m_d_yyyy_date);
-			return;
+			return output;
 		}
 		
 		//try Roman Numerals
 		if(processRomanNumeralDate(dateText, output, result)){
-			return;
+			return output;
 		}
 		
 		if(result != null){
 			result.addError(
 				MessageFormat.format(resourceBundle.getString("date.error.unprocessable"),dateText));
 		}
+		return output;
 	}
 	
 
@@ -353,10 +353,5 @@ public class DateProcessor implements DataProcessor{
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
-	}
-	
-	@Override
-	public void setLocale(Locale locale) {
-		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

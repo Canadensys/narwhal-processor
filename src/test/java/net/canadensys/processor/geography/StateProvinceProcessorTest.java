@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.NoSuchElementException;
 
-import net.canadensys.processor.DataProcessor;
-import net.canadensys.processor.DataProcessor.ErrorHandlingModeEnum;
+import net.canadensys.processor.AbstractDataProcessor;
+import net.canadensys.processor.AbstractDataProcessor.ErrorHandlingModeEnum;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import net.canadensys.vocabulary.stateprovince.BEProvince;
@@ -61,7 +61,7 @@ public class StateProvinceProcessorTest {
 	
 	@Test
 	public void testProvinceStateValidation(){
-		DataProcessor dataProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class);
+		AbstractDataProcessor dataProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class);
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		mockRawModel.setStateprovince("The Northwest Territories");
 		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
@@ -74,7 +74,7 @@ public class StateProvinceProcessorTest {
 	
 	@Test
 	public void testWrongProvinceState(){
-		DataProcessor spProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class);
+		AbstractDataProcessor spProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class);
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		
@@ -91,7 +91,7 @@ public class StateProvinceProcessorTest {
 	
 	@Test
 	public void testWrongProvinceStateOtherErrorHandling(){
-		DataProcessor spProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class,"stateprovince",ErrorHandlingModeEnum.USE_NULL);
+		AbstractDataProcessor spProcessor = new StateProvinceProcessor<CAProvince>(Country.CANADA, CAProvince.class,"stateprovince",ErrorHandlingModeEnum.USE_NULL);
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		

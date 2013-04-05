@@ -4,9 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -25,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author canadensys
  *
  */
-public class CountryProcessor implements DataProcessor {
+public class CountryProcessor extends AbstractDataProcessor {
 	
 	final Logger logger = LoggerFactory.getLogger(CountryProcessor.class);
 	
@@ -33,7 +32,6 @@ public class CountryProcessor implements DataProcessor {
 	protected static final String DEFAULT_COUNTRY_NAME = "country";
 	
 	protected String countryName = null;
-	protected ResourceBundle resourceBundle = null;
 	protected ErrorHandlingModeEnum errorHandlingMode;
 	
 	/**
@@ -145,10 +143,5 @@ public class CountryProcessor implements DataProcessor {
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
-	}
-	
-	@Override
-	public void setLocale(Locale locale) {
-		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

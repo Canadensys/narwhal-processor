@@ -4,11 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -25,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author canadensys
  *
  */
-public class CoordinatePairProcessor implements DataProcessor{
+public class CoordinatePairProcessor extends AbstractDataProcessor{
 	
 	final Logger logger = LoggerFactory.getLogger(CoordinatePairProcessor.class);
 	
@@ -52,7 +51,6 @@ public class CoordinatePairProcessor implements DataProcessor{
 	protected String coordinatePairName = null;
 	protected String latitudeName = null;
 	protected String longitudeName = null;
-	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL makes sense here
 	protected ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -210,10 +208,4 @@ public class CoordinatePairProcessor implements DataProcessor{
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
 	}
-	
-	@Override
-	public void setLocale(Locale locale) {
-		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
-	}
-
 }

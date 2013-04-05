@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
 
@@ -52,7 +52,7 @@ public class CoordinatePairProcessorTest {
 	
 	@Test
 	public void testCoordinatePairValidation(){
-		DataProcessor cpProcessor = new CoordinatePairProcessor("verbatimCoordinates","verbatimLatitude","verbatimLongitude");
+		AbstractDataProcessor cpProcessor = new CoordinatePairProcessor("verbatimCoordinates","verbatimLatitude","verbatimLongitude");
 		MockRawOccurrenceModel rawModel = new MockRawOccurrenceModel();
 		rawModel.setVerbatimCoordinates("74° 0' 21.5022\"W/40°26'47\"N");
 		assertTrue(cpProcessor.validateBean(rawModel, false, null, null));

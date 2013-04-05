@@ -1,52 +1,43 @@
 package net.canadensys.processor.geography;
 
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.ResourceBundle;
 
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.parser.StateProvinceNameParser;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.vocabulary.stateprovince.StateProvinceEnum;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.gbif.api.model.vocabulary.Country;
-import org.gbif.common.parsers.FileBasedDictionaryParser;
 import org.gbif.common.parsers.ParseResult;
 import org.gbif.common.parsers.ParseResult.CONFIDENCE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Strings;
-
 /**
  * StateProvince processor to handle state or province names of a specific country.
- * To allow the parsing into a controlled vocabulary those 2 conditions must be met :
- * 1) A valid implementation of StateProvinceEnum for this country must exists in the canadensys-core library
- * 2) A dictionary file (/dictionaries/geography/CountryIso2LetterCode_StateProvinceName.txt) must exist and be valid.
  * You should reuse the same instance(one per country) to save resources.
  * @author canadensys
  *
  * @param <T> any enum that implements StateProvinceEnum
  * See : http://jtechies.blogspot.ca/2012/07/item-34-emulate-extensible-enums-with.html
  */
-public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> extends FileBasedDictionaryParser implements DataProcessor {
+public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> extends AbstractDataProcessor {
 	
 	final Logger logger = LoggerFactory.getLogger(StateProvinceProcessor.class);
 	
-	private static final CharMatcher LETTER_MATCHER = CharMatcher.JAVA_LETTER.or(CharMatcher.WHITESPACE).precomputed();
-	private static final CharMatcher WHITESPACE_MATCHER = CharMatcher.WHITESPACE.precomputed();
 	protected static final String DEFAULT_STATEPROVINCE_NAME = "stateprovince";
+	
+	private StateProvinceNameParser<T> stateProvinceNameParser;
 	
 	private Country associatedCountry;
 	protected String stateProvinceName = null;
-	protected ResourceBundle resourceBundle = null;
 	protected ErrorHandlingModeEnum errorHandlingMode;
 	
 	//Keep a reference to the fromCode(String) method
@@ -71,8 +62,7 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 	 * @param errorHandlingMode
 	 */
 	public StateProvinceProcessor(Country targetCountry, Class<T> stateProvinceClass, String stateProvinceName, ErrorHandlingModeEnum errorHandlingMode){
-		super(false, new InputStream[] { 
-				StateProvinceProcessor.class.getResourceAsStream("/dictionaries/geography/"+targetCountry.getIso2LetterCode()+ "_StateProvinceName.txt") });
+		stateProvinceNameParser = new StateProvinceNameParser<T>(targetCountry,stateProvinceClass);
 		this.associatedCountry = targetCountry;
 		this.errorHandlingMode = errorHandlingMode;
 		this.stateProvinceName = stateProvinceName;
@@ -85,16 +75,10 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 			fromCodeMethod = null;
 		}
 		
-		StateProvinceEnum[] statesProvinces = stateProvinceClass.getEnumConstants();
-		if(statesProvinces == null || statesProvinces.length <= 0 || fromCodeMethod == null){
+		if(fromCodeMethod == null){
 			String errorText = "No well-formed StateProvinceEnum found for country " + targetCountry.getTitle() + " and Class " + stateProvinceClass;
 			logger.error(errorText);
 			throw new NoSuchElementException(errorText);
-		}
-		
-		for (StateProvinceEnum cp : statesProvinces){
-			add(cp.getName(),cp.getCode());
-			add(cp.getCode(), cp.getCode());
 		}
 		
 		//always a default Locale
@@ -178,7 +162,7 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 		if(StringUtils.isBlank(stateProvinceStr)){
 			return null;
 		}
-		ParseResult<String> parsingResult = parse(stateProvinceStr);
+		ParseResult<String> parsingResult = stateProvinceNameParser.parse(stateProvinceStr);
 		if(parsingResult.isSuccessful() && parsingResult.getConfidence().equals(CONFIDENCE.DEFINITE)){
 			//using reflection to invoke fromCode(String), the cost is higher than calling directly
 			//CanadaProvince.fromCode(String) but this will work for all StateProvinceEnum implementation
@@ -207,24 +191,7 @@ public class StateProvinceProcessor<T extends Enum<T> & StateProvinceEnum> exten
 	}
 	
 	@Override
-	protected String normalize(String value) {
-		if (value != null){
-			String stateProvince = LETTER_MATCHER.retainFrom(value);
-			stateProvince = WHITESPACE_MATCHER.trimAndCollapseFrom(stateProvince, ' ');
-			stateProvince = StringUtils.stripAccents(stateProvince);
-			stateProvince = Strings.emptyToNull(stateProvince);
-			return super.normalize(stateProvince);
-		}
-		return null;
-    }
-	
-	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
-	}
-	
-	@Override
-	public void setLocale(Locale locale) {
-		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

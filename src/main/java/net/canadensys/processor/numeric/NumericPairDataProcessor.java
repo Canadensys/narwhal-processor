@@ -4,10 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.utils.NumberUtils;
 
@@ -24,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * @author canadensys
  *
  */
-public class NumericPairDataProcessor implements DataProcessor{
+public class NumericPairDataProcessor extends AbstractDataProcessor{
 	
 	final Logger logger = LoggerFactory.getLogger(NumericPairDataProcessor.class);
 	
@@ -39,8 +38,6 @@ public class NumericPairDataProcessor implements DataProcessor{
 	//Name of the fields inside the Java bean
 	protected String value1InName,value2InName;
 	protected String value1OutName,value2OutName;
-	
-	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL make sense here
 	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -191,10 +188,5 @@ public class NumericPairDataProcessor implements DataProcessor{
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
-	}
-	
-	@Override
-	public void setLocale(Locale locale) {
-		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

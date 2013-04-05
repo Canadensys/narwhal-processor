@@ -9,9 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.vocabulary.Continent;
 
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author canadensys
  *
  */
-public class CountryContinentProcessor implements DataProcessor{
+public class CountryContinentProcessor extends AbstractDataProcessor{
 	
 	final Logger logger = LoggerFactory.getLogger(CountryContinentProcessor.class);
 	
@@ -42,7 +41,6 @@ public class CountryContinentProcessor implements DataProcessor{
 	
 	protected String countryISOLetterCodeName = null;
 	protected String continentName = null;
-	protected ResourceBundle resourceBundle = null;
 	
 	/**
 	 * Default constructor, default field names will be used
@@ -189,10 +187,5 @@ public class CountryContinentProcessor implements DataProcessor{
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
-	}
-	
-	@Override
-	public void setLocale(Locale locale) {
-		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

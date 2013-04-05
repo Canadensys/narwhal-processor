@@ -4,7 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
@@ -40,6 +40,10 @@ public class DegreeMinuteToDecimalProcessorTest {
 		assertEquals(40.44639f,output[LAT_IDX].floatValue(),0);
 		output = dmtdProcessor.process("40d 26m 47sN","74° 0' 21.5022\"W",null);
 		assertEquals(-74.0059731f,output[LNG_IDX].floatValue(),0);
+		
+		//Math.abs(expected - actual) < epsilon
+		output = dmtdProcessor.process("40°26′47″N","74° 0' 21.5022\"W", null);
+		assertEquals(40.44639,output[LAT_IDX],0.00001);
 		
 		//test with double precision
 		output = dmtdProcessor.process("40°26′47″N","76°27'11\" W",null);
@@ -79,7 +83,7 @@ public class DegreeMinuteToDecimalProcessorTest {
 	
 	@Test
 	public void testDegreeMinuteToDecimalValidation(){
-		DataProcessor dataProcessor = new DegreeMinuteToDecimalProcessor("verbatimLatitude","verbatimLongitude","decimalLatitude", "decimalLongitude");
+		AbstractDataProcessor dataProcessor = new DegreeMinuteToDecimalProcessor("verbatimLatitude","verbatimLongitude","decimalLatitude", "decimalLongitude");
 		MockRawOccurrenceModel rawModel = new MockRawOccurrenceModel();
 		rawModel.setVerbatimLatitude("40°26′47″N");
 		rawModel.setVerbatimLongitude("30°17′12″E");

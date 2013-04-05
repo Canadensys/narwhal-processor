@@ -4,11 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.canadensys.processor.DataProcessor;
+import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.utils.NumberUtils;
 
@@ -31,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author canadensys
  *
  */
-public class DegreeMinuteToDecimalProcessor implements DataProcessor {
+public class DegreeMinuteToDecimalProcessor extends AbstractDataProcessor {
 	
 	final Logger logger = LoggerFactory.getLogger(DegreeMinuteToDecimalProcessor.class);
 		
@@ -67,8 +66,6 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 	protected String latitudeInName, longitudeInName = null;
 	protected String latitudeOutName, longitudeOutName = null;
 	protected LatLongProcessorHelper latLongHelper = null;
-	
-	protected ResourceBundle resourceBundle = null;
 	
 	//Only USE_NULL makes sense here
 	protected ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
@@ -303,10 +300,5 @@ public class DegreeMinuteToDecimalProcessor implements DataProcessor {
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
-	}
-	
-	@Override
-	public void setLocale(Locale locale) {
-		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 }

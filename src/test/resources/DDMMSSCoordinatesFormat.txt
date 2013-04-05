@@ -1,0 +1,2 @@
+#textDDMMSSCoordinates;lat;long;delta
+40°26′47″N,74° 0' 21.5022"W;40.44639;-74.0059731;5

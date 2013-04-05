@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import net.canadensys.processor.DataProcessor;
-import net.canadensys.processor.DataProcessor.ErrorHandlingModeEnum;
+import net.canadensys.processor.AbstractDataProcessor;
+import net.canadensys.processor.AbstractDataProcessor.ErrorHandlingModeEnum;
 import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 
@@ -20,7 +20,7 @@ public class CountryProcessorTest {
 	
 	@Test
 	public void testCountryProcessor(){
-		DataProcessor dataProcessor = new CountryProcessor();
+		AbstractDataProcessor dataProcessor = new CountryProcessor();
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		
@@ -32,7 +32,7 @@ public class CountryProcessorTest {
 	
 	@Test
 	public void testCountryValidation(){
-		DataProcessor dataProcessor = new CountryProcessor();
+		AbstractDataProcessor dataProcessor = new CountryProcessor();
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		mockRawModel.setCountry("u.s.a");
 		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
@@ -45,7 +45,7 @@ public class CountryProcessorTest {
 	
 	@Test
 	public void testWrongCountry(){
-		DataProcessor dataProcessor = new CountryProcessor();
+		AbstractDataProcessor dataProcessor = new CountryProcessor();
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		
@@ -57,7 +57,7 @@ public class CountryProcessorTest {
 	
 	@Test
 	public void testWrongCountryOtherErrorHandling(){
-		DataProcessor dataProcessor = new CountryProcessor("country",ErrorHandlingModeEnum.USE_NULL);
+		AbstractDataProcessor dataProcessor = new CountryProcessor("country",ErrorHandlingModeEnum.USE_NULL);
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
 		
