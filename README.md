@@ -34,6 +34,8 @@ To include JSR-310 into your Maven local repo
 mvn install:install-file -DgroupId=threeten -DartifactId=threeten -Dversion=0.6.3 -Dpackaging=jar -Dfile=lib/threeten/threeten/0.6.3/threeten-0.6.3.jar
 ```
 
+__Tested with Maven 3__
+
 Build
 -----
 ```
@@ -46,3 +48,13 @@ Unit tests
 ```
 mvn test
 ```
+
+Setup in Eclipse
+----------------
+After a git clone
+```
+mvn install:install-file -DgroupId=threeten -DartifactId=threeten -Dversion=0.6.3 -Dpackaging=jar -Dfile=lib/threeten/threeten/0.6.3/threeten-0.6.3.jar
+mvn eclipse:eclipse
+```
+In Eclipse : File/Import/Existing Projects into Workspace
+
