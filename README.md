@@ -58,5 +58,5 @@ mvn eclipse:eclipse
 ```
 In Eclipse : File/Import/Existing Projects into Workspace
 
-You may need to add the maven repository to Eclipse's Build Path via Preferences > Java > Build Path > Classpath Variables by clicking the New button and adding the name M2\_REPO\_ and the directory. On a Mac, this is usually /Users/<User>/.m2/repository.
+You may need to add the maven repository to Eclipse's Build Path via Preferences > Java > Build Path > Classpath Variables by clicking the New button and adding the name M2\_REPO and the directory. On a Mac, this is usually /Users/<User>/.m2/repository.
 
