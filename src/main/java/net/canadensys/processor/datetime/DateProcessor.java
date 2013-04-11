@@ -2,6 +2,8 @@ package net.canadensys.processor.datetime;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -14,6 +16,7 @@ import javax.time.extended.Year;
 import javax.time.extended.YearMonth;
 import javax.time.format.CalendricalParseException;
 import javax.time.format.DateTimeFormatter;
+import javax.time.format.DateTimeFormatterBuilder;
 import javax.time.format.DateTimeFormatters;
 
 import net.canadensys.lang.RomanNumeral;
@@ -30,8 +33,8 @@ import org.slf4j.LoggerFactory;
  * Some DateTimeFormatter/pattern documentation : 
  * - http://threeten.sourceforge.net/apidocs-2012-10-25/javax/time/format/DateTimeFormatter.html#parseBest(java.lang.CharSequence,%20java.lang.Class...)
  * - http://threeten.sourceforge.net/apidocs-2012-10-25/javax/time/format/DateTimeFormatters.html#pattern(java.lang.String)
- * TODO : Test non-US locale.
- * TODO : Build formatter with DateTimeFormatterBuilder.parseCaseInsensitive
+ * Good to know :
+ * - http://threeten.sourceforge.net/apidocs/javax/time/calendar/LocalDate.html
  * @author canadensys
  *
  */
@@ -56,7 +59,7 @@ public class DateProcessor extends AbstractDataProcessor{
 	
 	//All patterns are using dash(-) as separator, all other separators will be replaced
 	//Gregorian little-endian, starting with day 
-	private static final DateTimeFormatter LE_D_MMM_YYYY_PATTERN = DateTimeFormatters.pattern("d-MMM-yyyy", Locale.US);
+	private static final DateTimeFormatter LE_D_MMM_YYYY_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("d-MMM-yyyy").toFormatter(Locale.US);
 	//Could bring conflicts with middle-endian like in 13-10-2012
 	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = DateTimeFormatters.pattern("d-M-yyyy", Locale.US);
 	
@@ -64,22 +67,26 @@ public class DateProcessor extends AbstractDataProcessor{
 	//ISO 8601
 	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = DateTimeFormatters.pattern("yyyyMMdd", Locale.US);
 	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = DateTimeFormatters.pattern("yyyy[-M[-d]]", Locale.US);
-	private static final DateTimeFormatter BE_YYYY_MMM_D_PATTERN = DateTimeFormatters.pattern("yyyy-MMM-d", Locale.US);
+	private static final DateTimeFormatter BE_YYYY_MMM_D_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("yyyy-MMM-d").toFormatter(Locale.US);
 	
 	//Middle-endian, starting with month
 	//11-9-2003, 11.9.2003, 11.09.03, or 11/09/03
-	private static final DateTimeFormatter ME_MMM_D_YYYY_PATTERN = DateTimeFormatters.pattern("MMM-d-yyyy", Locale.US);
+	private static final DateTimeFormatter ME_MMM_D_YYYY_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("MMM-d-yyyy").toFormatter(Locale.US);
+	
 	//Could bring conflicts with little-endian like in 13-10-2012
 	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = DateTimeFormatters.pattern("M-d-yyyy", Locale.US);
 	//Not sure this one is safe to implement
 	//private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M-d-yy", Locale.US);
 	
 	//Partial date
-	private static final DateTimeFormatter PARTIAL_MONTH_YEAR_PATTERN = DateTimeFormatters.pattern("MMM-yyyy", Locale.US);
-	private static final DateTimeFormatter PARTIAL_MONTH_PATTERN = DateTimeFormatters.pattern("MMM", Locale.US);
+	private static final DateTimeFormatter PARTIAL_MONTH_YEAR_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("MMM-yyyy").toFormatter(Locale.US);
+	
+	private static final DateTimeFormatter PARTIAL_MONTH_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("MMM").toFormatter(Locale.US);
 	
 	protected static final String STANDARDIZE_PUNCT_PATTERN = "[.|/ ,]+";
 	protected static final Pattern ROMAN_NUMERAL_PATTERN = Pattern.compile("\\d[.\\-/ ]([XVI]+)[.\\-/ ]\\d",Pattern.CASE_INSENSITIVE);
+	
+	protected List<Locale> supportedLocale;
 	
 	/**
 	 * Default constructor, default field names will be used
@@ -102,6 +109,9 @@ public class DateProcessor extends AbstractDataProcessor{
 		this.dayName = dayName;
 		//always a default Locale
 		setLocale(Locale.ENGLISH);
+		supportedLocale = new ArrayList<Locale>();
+		supportedLocale.add(Locale.FRENCH);
+		supportedLocale.add(new Locale("ES"));	
 	}
 	
 	/**
@@ -184,33 +194,12 @@ public class DateProcessor extends AbstractDataProcessor{
 		}
 		catch(CalendricalParseException cpe){}
 		
-		try{
-			//try ISO 8601 (with partial date like 20081227)
-			setPartialDate(output,BE_ISO8601_BASIC_PATTERN.parse(dateText, LocalDate.rule()));
+		//Try to find a complete date
+		LocalDate localDate = tryParseCompleteDate(new DateTimeFormatter[]{BE_ISO8601_BASIC_PATTERN,ME_MMM_D_YYYY_PATTERN,BE_YYYY_MMM_D_PATTERN,LE_D_MMM_YYYY_PATTERN}, dateText);
+		if(localDate != null){
+			setPartialDate(output,localDate);
 			return output;
 		}
-		catch(CalendricalParseException cpe){}
-		
-		try{
-			//try format like Jul 6 1987
-			setPartialDate(output,ME_MMM_D_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
-			return output;
-		}
-		catch(CalendricalParseException cpe){}
-		
-		try{
-			//try format like 1987 Jul 6
-			setPartialDate(output,BE_YYYY_MMM_D_PATTERN.parse(dateText, LocalDate.rule()));
-			return output;
-		}
-		catch(CalendricalParseException cpe){}
-		
-		try{
-			//try format like 6 Jul 1986
-			setPartialDate(output,LE_D_MMM_YYYY_PATTERN.parse(dateText, LocalDate.rule()));
-			return output;
-		}
-		catch(CalendricalParseException cpe){}
 		
 		//PARTIAL DATE
 		try{
@@ -260,6 +249,13 @@ public class DateProcessor extends AbstractDataProcessor{
 		
 		//try Roman Numerals
 		if(processRomanNumeralDate(dateText, output, result)){
+			return output;
+		}
+		
+		//try with different Locale
+		localDate = tryParseWithSupportedLocale(new DateTimeFormatter[]{LE_D_MMM_YYYY_PATTERN,ME_MMM_D_YYYY_PATTERN,BE_YYYY_MMM_D_PATTERN}, dateText);
+		if(localDate != null){
+			setPartialDate(output,localDate);
 			return output;
 		}
 		
@@ -353,5 +349,45 @@ public class DateProcessor extends AbstractDataProcessor{
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return errorHandlingMode;
+	}
+	
+	/**
+	 * Try to parse a complete date from dateText.
+	 * Partial dates are not supported since LocalDate.rule() is used.
+	 * @param dateTimeFormatterList
+	 * @param dateText
+	 * @return the LocalDate or null
+	 */
+	private LocalDate tryParseCompleteDate(DateTimeFormatter[] dateTimeFormatterList, String dateText){
+		LocalDate localDate = null;
+		for(DateTimeFormatter currDateTimeFormatter : dateTimeFormatterList){
+			try{
+				localDate = currDateTimeFormatter.parse(dateText, LocalDate.rule());
+				return localDate;
+			}
+			catch (CalendricalParseException e) {}
+		}
+		return null;
+	}
+	
+	/**
+	 * Try to parse a dateText with all supported Locale.
+	 * Partial dates are not supported since LocalDate.rule() is used.
+	 * @param dateTimeFormatterList
+	 * @param dateText
+	 * @return the LocalDate or null
+	 */
+	private LocalDate tryParseWithSupportedLocale(DateTimeFormatter[] dateTimeFormatterList, String dateText){
+		LocalDate localDate = null;
+		for(DateTimeFormatter currDateTimeFormatter : dateTimeFormatterList){
+			for(Locale currLocale : supportedLocale){
+				try{
+					localDate = currDateTimeFormatter.withLocale(currLocale).parse(dateText, LocalDate.rule());
+					return localDate;
+				}
+				catch (CalendricalParseException e) {}
+			}
+		}
+		return null;
 	}
 }
