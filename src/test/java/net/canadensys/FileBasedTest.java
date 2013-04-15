@@ -16,6 +16,7 @@ public abstract class FileBasedTest {
 	//Default values
 	private static final String COMMENT_LINE_CHAR = "#";
 	private static final String ELEMENT_SEPARATOR = ";";
+	private static final String DEFAULT_ENCODING = "UTF-8";
 	
 	private File testFile;
 	private String commentLineChar;
@@ -42,14 +43,14 @@ public abstract class FileBasedTest {
 	 * @param elements
 	 * @param lineNumber number or the line (starting at 1) including the commented lines
 	 */
-	public abstract void processLine(String[] elements,int lineNumber);
+	public abstract void processLine(String[] elements, int lineNumber);
 	
 	/**
 	 * Call this method to initiate the reading of the test file
 	 */
 	public void processFile(){
 		try {
-			List<String> fileLines = FileUtils.readLines(testFile);
+			List<String> fileLines = FileUtils.readLines(testFile,DEFAULT_ENCODING);
 			int lineNumber = 1;
 			for(String currLine : fileLines){
 				if(!currLine.startsWith(commentLineChar)){

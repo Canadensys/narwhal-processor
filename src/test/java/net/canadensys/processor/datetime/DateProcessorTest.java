@@ -17,7 +17,7 @@ import net.canadensys.utils.NumberUtils;
 import org.junit.Test;
 
 /**
- * Test for the DateProcessor
+ * Unit tests for the DateProcessor
  * @author canadensys
  *
  */
@@ -32,7 +32,6 @@ public class DateProcessorTest {
 
 		try {
 			final File dateFile = new File(getClass().getResource(TEST_FILE_NAME).toURI());
-			
 			FileBasedTest fileBasedTest = new FileBasedTest(dateFile) {
 				Integer year,month,day;
 				MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();

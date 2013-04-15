@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -47,8 +48,8 @@ public class DegreeMinuteToDecimalProcessorTest {
 						lat = NumberUtils.parseNumber(elements[2], Double.class);
 						lng = NumberUtils.parseNumber(elements[3], Double.class);
 						delta = NumberUtils.parseNumber(elements[4], Double.class);
-						
 						String assertText = "[Line #" + lineNumber + " in " + dateFile.getName()+"]";
+						assertNotNull(assertText, output);
 						assertEquals(assertText, lat, output[LAT_IDX], delta);
 						assertEquals(assertText, lng, output[LNG_IDX], delta);
 					}

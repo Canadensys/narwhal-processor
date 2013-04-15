@@ -60,6 +60,7 @@ public class DateProcessor extends AbstractDataProcessor{
 	//All patterns are using dash(-) as separator, all other separators will be replaced
 	//Gregorian little-endian, starting with day 
 	private static final DateTimeFormatter LE_D_MMM_YYYY_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("d-MMM-yyyy").toFormatter(Locale.US);
+	private static final DateTimeFormatter LE_D_MMMM_YYYY_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("d-MMMM-yyyy").toFormatter(Locale.US);
 	//Could bring conflicts with middle-endian like in 13-10-2012
 	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = DateTimeFormatters.pattern("d-M-yyyy", Locale.US);
 	
@@ -68,23 +69,34 @@ public class DateProcessor extends AbstractDataProcessor{
 	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = DateTimeFormatters.pattern("yyyyMMdd", Locale.US);
 	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = DateTimeFormatters.pattern("yyyy[-M[-d]]", Locale.US);
 	private static final DateTimeFormatter BE_YYYY_MMM_D_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("yyyy-MMM-d").toFormatter(Locale.US);
+	private static final DateTimeFormatter BE_YYYY_MMMM_D_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("yyyy-MMMM-d").toFormatter(Locale.US);
 	
 	//Middle-endian, starting with month
 	//11-9-2003, 11.9.2003, 11.09.03, or 11/09/03
 	private static final DateTimeFormatter ME_MMM_D_YYYY_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("MMM-d-yyyy").toFormatter(Locale.US);
+	private static final DateTimeFormatter ME_MMMM_D_YYYY_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("MMMM-d-yyyy").toFormatter(Locale.US);
 	
 	//Could bring conflicts with little-endian like in 13-10-2012
 	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = DateTimeFormatters.pattern("M-d-yyyy", Locale.US);
 	//Not sure this one is safe to implement
 	//private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M-d-yy", Locale.US);
 	
-	//Partial date
+	//Partial dates
 	private static final DateTimeFormatter PARTIAL_MONTH_YEAR_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("MMM-yyyy").toFormatter(Locale.US);
+	private static final DateTimeFormatter PARTIAL_FULL_MONTH_YEAR_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("MMMM-yyyy").toFormatter(Locale.US);
 	
 	private static final DateTimeFormatter PARTIAL_MONTH_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("MMM").toFormatter(Locale.US);
+	private static final DateTimeFormatter PARTIAL_FULL_MONTH_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("MMMM").toFormatter(Locale.US);
 	
 	protected static final String STANDARDIZE_PUNCT_PATTERN = "[.|/ ,]+";
 	protected static final Pattern ROMAN_NUMERAL_PATTERN = Pattern.compile("\\d[.\\-/ ]([XVI]+)[.\\-/ ]\\d",Pattern.CASE_INSENSITIVE);
+	
+	//keep a reference on the complete (non partial) date patterns list
+	private static DateTimeFormatter[] COMPLETE_DATE_PATTERNS = new DateTimeFormatter[]{BE_ISO8601_BASIC_PATTERN,ME_MMM_D_YYYY_PATTERN,ME_MMMM_D_YYYY_PATTERN,
+			BE_YYYY_MMM_D_PATTERN,BE_YYYY_MMMM_D_PATTERN,LE_D_MMM_YYYY_PATTERN,LE_D_MMMM_YYYY_PATTERN};
+	//keep a reference on the non-numerical month (using a word to express the month) complete (non partial) date patterns list
+	private static DateTimeFormatter[] NON_NUMERICAL_MONTH_COMPLETE_DATE_PATTERNS = new DateTimeFormatter[]{LE_D_MMM_YYYY_PATTERN,LE_D_MMMM_YYYY_PATTERN,
+			ME_MMM_D_YYYY_PATTERN,ME_MMMM_D_YYYY_PATTERN,BE_YYYY_MMM_D_PATTERN,BE_YYYY_MMMM_D_PATTERN};
 	
 	protected List<Locale> supportedLocale;
 	
@@ -111,7 +123,7 @@ public class DateProcessor extends AbstractDataProcessor{
 		setLocale(Locale.ENGLISH);
 		supportedLocale = new ArrayList<Locale>();
 		supportedLocale.add(Locale.FRENCH);
-		supportedLocale.add(new Locale("ES"));	
+		supportedLocale.add(new Locale("ES"));
 	}
 	
 	/**
@@ -195,7 +207,7 @@ public class DateProcessor extends AbstractDataProcessor{
 		catch(CalendricalParseException cpe){}
 		
 		//Try to find a complete date
-		LocalDate localDate = tryParseCompleteDate(new DateTimeFormatter[]{BE_ISO8601_BASIC_PATTERN,ME_MMM_D_YYYY_PATTERN,BE_YYYY_MMM_D_PATTERN,LE_D_MMM_YYYY_PATTERN}, dateText);
+		LocalDate localDate = tryParseCompleteDate(COMPLETE_DATE_PATTERNS, dateText);
 		if(localDate != null){
 			setPartialDate(output,localDate);
 			return output;
@@ -253,7 +265,7 @@ public class DateProcessor extends AbstractDataProcessor{
 		}
 		
 		//try with different Locale
-		localDate = tryParseWithSupportedLocale(new DateTimeFormatter[]{LE_D_MMM_YYYY_PATTERN,ME_MMM_D_YYYY_PATTERN,BE_YYYY_MMM_D_PATTERN}, dateText);
+		localDate = tryParseWithSupportedLocale(NON_NUMERICAL_MONTH_COMPLETE_DATE_PATTERNS, dateText);
 		if(localDate != null){
 			setPartialDate(output,localDate);
 			return output;
