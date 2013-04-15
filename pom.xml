@@ -32,7 +32,19 @@
 	  	<repository>
 	      <id>gbif-all</id>
 	      <url>http://repository.gbif.org/content/groups/gbif</url>
-	    </repository> 
+	    </repository>
+	    <repository>
+		    <id>ProjectRepo</id>
+  			<name>ProjectRepo</name>
+  			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<url>file://${project.basedir}/lib</url>
+		</repository>
  	</repositories>
 	
 	<dependencies>
