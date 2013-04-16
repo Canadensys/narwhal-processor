@@ -1,4 +1,4 @@
-#textDate;year;month;year
+#textDate;year;month;day
 #Gregorian little-endian(Day-Month-Year)
 3 Jun 1987;1987;6;3
 03 Jun 1987;1987;6;3
