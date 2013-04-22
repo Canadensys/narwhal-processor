@@ -16,12 +16,12 @@ public class LatLongProcessorHelper {
 	public static final int LONGITUDE_IDX = 1;
 	
 	//decimalLatitude : Legal values lie between -90 and 90, inclusive.
-	public static final int MIN_LATITUDE = -90;
-	public static final int MAX_LATITUDE = 90;
+	public static final double MIN_LATITUDE = -90d;
+	public static final double MAX_LATITUDE = 90d;
 	
 	//decimalLongitude : Legal values lie between -180 and 180, inclusive.
-	public static final int MIN_LONGITUDE = -180;
-	public static final int MAX_LONGITUDE = 180;
+	public static final double MIN_LONGITUDE = -180d;
+	public static final double MAX_LONGITUDE = 180d;
 	
 	protected ResourceBundle resourceBundle = null;
 	
@@ -38,20 +38,20 @@ public class LatLongProcessorHelper {
 	public void ensureLatLongBoundaries(Number[] output, ProcessingResult result){
 		//validate output boundaries
 		if(output[LATITUDE_IDX]!=null){
-			if(output[LATITUDE_IDX].intValue() > MAX_LATITUDE || output[LATITUDE_IDX].intValue() < MIN_LATITUDE){
+			if(output[LATITUDE_IDX].doubleValue() > MAX_LATITUDE || output[LATITUDE_IDX].doubleValue() < MIN_LATITUDE){
 				if(result != null){
 					result.addError(
-							MessageFormat.format(resourceBundle.getString("decimalLatLong.error.outOfBounds"),output[LATITUDE_IDX].intValue(),MIN_LATITUDE,MAX_LATITUDE));
+							MessageFormat.format(resourceBundle.getString("decimalLatLong.error.outOfBounds"),output[LATITUDE_IDX].doubleValue(),MIN_LATITUDE,MAX_LATITUDE));
 				}
 				output[LATITUDE_IDX] = null;
 			}
 		}
 		
 		if(output[LONGITUDE_IDX]!=null){
-			if(output[LONGITUDE_IDX].intValue() > MAX_LONGITUDE || output[LONGITUDE_IDX].intValue() < MIN_LONGITUDE){
+			if(output[LONGITUDE_IDX].doubleValue() > MAX_LONGITUDE || output[LONGITUDE_IDX].doubleValue() < MIN_LONGITUDE){
 				if(result != null){
 					result.addError(
-							MessageFormat.format(resourceBundle.getString("decimalLatLong.error.outOfBounds"),output[LONGITUDE_IDX].intValue(),MIN_LONGITUDE,MAX_LONGITUDE));
+							MessageFormat.format(resourceBundle.getString("decimalLatLong.error.outOfBounds"),output[LONGITUDE_IDX].doubleValue(),MIN_LONGITUDE,MAX_LONGITUDE));
 				}
 				output[LONGITUDE_IDX] = null;
 			}
