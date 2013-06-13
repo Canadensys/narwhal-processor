@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
  * Allows to process a degree/minute/second coordinate into a decimal coordinate.
  * Supported format :
  * 40°26′47″N
+ * 40º26'47"N
  * 40:26:47N
  * 40°26'47"N
  * 40d 26' 47" N
@@ -57,7 +58,7 @@ public class DegreeMinuteToDecimalProcessor extends AbstractDataProcessor {
 	//(\d*\.?\d+)* :any int or decimal (optional)
 	//[\"s″ ]? :followed by an optional "s″
 	//This regex requires validation on extracted groups
-	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d*\\.?\\d+)(?:[°d: ]+)(\\d*\\.?\\d+)*(?:['m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
+	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d*\\.?\\d+)(?:[º°d: ]+)(\\d*\\.?\\d+)*(?:['m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
 	
 	protected static final String DEFAULT_LATITUDE_NAME = "lat";
 	protected static final String DEFAULT_LONGITUDE_NAME = "lng";

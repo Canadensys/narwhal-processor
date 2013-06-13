@@ -60,7 +60,10 @@ public class DegreeMinuteToDecimalProcessorTest {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		
+
+		output = dmtdProcessor.process("40º26′47″N","74º 0' 21.5022\"W", null);
+		assertEquals(40.44639,output[LAT_IDX],0.00001);
+
 		output = dmtdProcessor.process("40°26′47″N","74° 0' 21.5022\"W", null);
 		assertEquals(40.44639,output[LAT_IDX],0.00001);
 		
