@@ -86,7 +86,6 @@ public class DecimalLatLongProcessorTest {
 		NumericPairDataProcessor processor = new DecimalLatLongProcessor();
 		ProcessingResult pr = new ProcessingResult();
 		processor.processBean(mockRawModel, mockModel, null, pr);
-		System.out.println(pr.getErrorString());
 		
 		assertNull(mockModel.getDecimalLatitude());
 		assertNull(mockModel.getDecimalLongitude());

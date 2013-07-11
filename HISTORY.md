@@ -1,6 +1,10 @@
 Version History
 ===============
 
+Version 1.3 2013-07-11
+* Now using gbif-parsers 0.4
+* Fixed issue where 180.1 degrees was considered valid
+
 Version 1.2 2013-04-15
 * Now supports full month (non abbreviated) in date parsing
 * Initial Locale support to support date in French and Spanish
