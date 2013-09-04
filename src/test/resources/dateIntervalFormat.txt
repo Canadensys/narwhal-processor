@@ -1,0 +1,4 @@
+#textDateInterval;textDateIntervalStart;textDateIntervalEnd
+9.v.1994 - 3.vi.1994;9.v.1994;3.vi.1994
+1977-08-16/1977-08-20;1977-08-16;1977-08-20
+1910 Jul 23/1910 Jul 24;1910 Jul 23;1910 Jul 24
