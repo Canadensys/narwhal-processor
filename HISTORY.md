@@ -1,6 +1,11 @@
 Version History
 ===============
 
+Version 1.4 2013-10-10
+* Added date interval parsing
+* Added province abbreviations for Canada
+* Added travis-ci
+
 Version 1.3 2013-07-11
 * Now using gbif-parsers 0.4
 * Fixed issue where 180.1 degrees was considered valid

@@ -34,6 +34,9 @@ public class DateIntervalProcessor extends AbstractDataProcessor {
 	public static final int START_DATE_IDX = 0;
 	public static final int END_DATE_IDX = 1;
 	
+	//Only USE_NULL make sense here
+	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
+	
 	//default field names
 	private static final String DEFAULT_DATE_INTERVAL_NAME = "dateInterval";
 	private static final String DEFAULT_DATE_START_NAME = "dateStart";
@@ -62,8 +65,7 @@ public class DateIntervalProcessor extends AbstractDataProcessor {
 	
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
-		// TODO Auto-generated method stub
-		return null;
+		return errorHandlingMode;
 	}
 	
 	@Override
