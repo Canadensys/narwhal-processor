@@ -1,0 +1,13 @@
+#textCoordinatePair%latStr%longStr
+
+#only the numeric part is kept
+-71.87°;35.98 °%-71.87%35.98
+
+40°26'47"N/74° 0' 21.5022"W%40°26'47"N%74° 0' 21.5022"W
+45° 32' 25"N,129° 40' 31"W%45° 32' 25"N%129° 40' 31"W
+
+#test that decimal degrees, with cardinal directions, those will be kept
+45.5° N, 129.6° W%45.5° N%129.6° W
+
+#test inverted coordinates
+74° 0' 21.5022"W/40°26'47"N%40°26'47"N%74° 0' 21.5022"W

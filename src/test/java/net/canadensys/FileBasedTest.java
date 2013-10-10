@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Utility class to run a unit test using the values (input values and expected values) from a file.
@@ -24,6 +25,10 @@ public abstract class FileBasedTest {
 	
 	public FileBasedTest(File testFile){
 		this(testFile,ELEMENT_SEPARATOR,COMMENT_LINE_CHAR);
+	}
+	
+	public FileBasedTest(File testFile,String elementSeparatorChar){
+		this(testFile,elementSeparatorChar,COMMENT_LINE_CHAR);
 	}
 	
 	/**
@@ -53,7 +58,7 @@ public abstract class FileBasedTest {
 			List<String> fileLines = FileUtils.readLines(testFile,DEFAULT_ENCODING);
 			int lineNumber = 1;
 			for(String currLine : fileLines){
-				if(!currLine.startsWith(commentLineChar)){
+				if(!currLine.startsWith(commentLineChar) && StringUtils.isNotBlank(currLine)){
 					processLine(currLine.split(elementSeparatorChar),lineNumber);
 				}
 				lineNumber++;

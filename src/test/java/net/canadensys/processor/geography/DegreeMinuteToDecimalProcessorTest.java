@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -27,13 +28,9 @@ public class DegreeMinuteToDecimalProcessorTest {
 	
 	private static final String TEST_FILE_NAME = "/DDMMSSCoordinatesFormat.txt";
 	
-	private int LAT_IDX = 0;
-	private int LNG_IDX = 1;
-	
 	@Test
 	public void testDegreeMinuteToDecimalProcessor(){
 		final DegreeMinuteToDecimalProcessor dmtdProcessor = new DegreeMinuteToDecimalProcessor();
-		Double[] output = new Double[2];
 		
 		//test supported syntax (from the test file)
 		try {
@@ -50,8 +47,11 @@ public class DegreeMinuteToDecimalProcessorTest {
 						delta = NumberUtils.parseNumber(elements[4], Double.class);
 						String assertText = "[Line #" + lineNumber + " in " + dateFile.getName()+"]";
 						assertNotNull(assertText, output);
-						assertEquals(assertText, lat, output[LAT_IDX], delta);
-						assertEquals(assertText, lng, output[LNG_IDX], delta);
+						assertEquals(assertText, lat, output[LatLongProcessorHelper.LATITUDE_IDX], delta);
+						assertEquals(assertText, lng, output[LatLongProcessorHelper.LONGITUDE_IDX], delta);
+					}
+					else{
+						fail("[Line #" + lineNumber + " in " + dateFile.getName()+"] is not valid.");
 					}
 				}
 			};
@@ -61,37 +61,38 @@ public class DegreeMinuteToDecimalProcessorTest {
 			e.printStackTrace();
 		}
 
+		Double[] output = new Double[2];
 		output = dmtdProcessor.process("40º26′47″N","74º 0' 21.5022\"W", null);
-		assertEquals(40.44639,output[LAT_IDX],0.00001);
+		assertEquals(40.44639,output[LatLongProcessorHelper.LATITUDE_IDX],0.00001);
 
 		output = dmtdProcessor.process("40°26′47″N","74° 0' 21.5022\"W", null);
-		assertEquals(40.44639,output[LAT_IDX],0.00001);
+		assertEquals(40.44639,output[LatLongProcessorHelper.LATITUDE_IDX],0.00001);
 		
 		//test with double precision
 		output = dmtdProcessor.process("40°26′47″N","76°27'11\" W",null);
-		assertEquals(-76.45305555555557d,output[LNG_IDX],0);
+		assertEquals(-76.45305555555557d,output[LatLongProcessorHelper.LONGITUDE_IDX],0);
 		
 		//no seconds
 		output = dmtdProcessor.process("40d 26'N","30°17′12″E", null);
-		assertEquals(40.433334f,output[LAT_IDX].floatValue(),0);
+		assertEquals(40.433334f,output[LatLongProcessorHelper.LATITUDE_IDX].floatValue(),0);
 		
 		//decimal minutes
 		output = dmtdProcessor.process("40d 26.17'N","30°17′12″E", null);
-		assertEquals(40.436165f,output[LAT_IDX].floatValue(),0);
+		assertEquals(40.436165f,output[LatLongProcessorHelper.LATITUDE_IDX].floatValue(),0);
 		
 		//decimal on the second
 		output = dmtdProcessor.process("40:26:47.5N","30°17′12″E", null);
-		assertEquals(40.44653f, output[LAT_IDX].floatValue(),0);
+		assertEquals(40.44653f, output[LatLongProcessorHelper.LATITUDE_IDX].floatValue(),0);
 		
 		//already decimal degree
 		output = dmtdProcessor.process("45.5° N","-129.6° W", null);
-		assertEquals(45.5f, output[LAT_IDX].floatValue(),0);
-		assertEquals(-129.6f, output[LNG_IDX].floatValue(),0);
+		assertEquals(45.5f, output[LatLongProcessorHelper.LATITUDE_IDX].floatValue(),0);
+		assertEquals(-129.6f, output[LatLongProcessorHelper.LONGITUDE_IDX].floatValue(),0);
 		
 		//one digit degree
 		output = dmtdProcessor.process("1:2:3 N","4:5:6 W", null);
-		assertEquals(1.0341667f, output[LAT_IDX].floatValue(),0);
-		assertEquals(-4.085f, output[LNG_IDX].floatValue(),0);
+		assertEquals(1.0341667f, output[LatLongProcessorHelper.LATITUDE_IDX].floatValue(),0);
+		assertEquals(-4.085f, output[LatLongProcessorHelper.LONGITUDE_IDX].floatValue(),0);
 		
 		//Test Java bean
 		MockRawOccurrenceModel rawModel = new MockRawOccurrenceModel();

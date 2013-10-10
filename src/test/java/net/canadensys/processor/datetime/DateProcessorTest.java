@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -50,6 +51,9 @@ public class DateProcessorTest {
 						assertEquals(assertText, month, mockModel.getEventStartMonth());
 						assertEquals(assertText, day, mockModel.getEventStartDay());
 						System.out.println("Testing date : " + elements[0]);
+					}
+					else{
+						fail("[Line #" + lineNumber + " in " + dateFile.getName()+"] is not valid.");
 					}
 				}
 			};
