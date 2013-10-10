@@ -5,6 +5,10 @@ narwhal-processor is a processing library that normalizes data of a known type. 
 
 Comments, contributions, reviews and help are welcomed.
 
+Code Status
+-----------
+[![Build Status](https://travis-ci.org/Canadensys/narwhal-processor.png)](https://travis-ci.org/Canadensys/narwhal-processor)
+
 Note
 ----
 This library is still under active development. Some parts may change based on the reviews, comments and usage. Do not hesitate to enter an [Issue](https://github.com/Canadensys/narwhal-processor/issues) if you have any problems or questions.
