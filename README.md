@@ -33,6 +33,9 @@ Dependencies
  * [canadensys-core](https://github.com/Canadensys/canadensys-core) 1.6 (included by Maven)
  * [JSR-310](http://threeten.sourceforge.net/) 0.6.3
 
+Optional
+ * [GeoTools](http://www.geotools.org/) 10.0
+
 To include JSR-310 into your Maven local repo
 ```
 mvn install:install-file -DgroupId=threeten -DartifactId=threeten -Dversion=0.6.3 -Dpackaging=jar -Dfile=lib/threeten/threeten/0.6.3/threeten-0.6.3.jar

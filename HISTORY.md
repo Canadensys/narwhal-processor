@@ -1,6 +1,9 @@
 Version History
 ===============
 
+Version 1.5 TBA
+* Added CoordinatesToWGS84Processor to convert coordinates using GeoTools 10
+
 Version 1.4 2013-10-10
 * Added date interval parsing
 * Added province abbreviations for Canada
