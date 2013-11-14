@@ -1,221 +1,297 @@
-<class-diagram version="1.0.11" icons="true" automaticImage="PNG" always-add-relationships="false" 
-  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
-  <enumeration id="1" corner="BOTTOM_RIGHT" language="java" 
-    name="net.canadensys.processor.AbstractDataProcessor.ErrorHandlingModeEnum" project="narwhal-processor" 
-    file="/narwhal-processor/src/main/java/net/canadensys/processor/AbstractDataProcessor.java" binary="false">    
-    <position height="-1" width="-1" x="1507" y="973"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.3" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <enumeration id="1" language="java" name="net.canadensys.processor.AbstractDataProcessor.ErrorHandlingModeEnum" 
+    project="narwhal-processor" 
+    file="/narwhal-processor/src/main/java/net/canadensys/processor/AbstractDataProcessor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1462" y="942"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </enumeration>  
-  <class id="2" corner="BOTTOM_RIGHT" language="java" name="net.canadensys.processor.ProcessingResult" 
-    project="narwhal-processor" file="/narwhal-processor/src/main/java/net/canadensys/processor/ProcessingResult.java" 
-    binary="false">    
+  <class id="2" language="java" name="net.canadensys.processor.ProcessingResult" project="narwhal-processor" 
+    file="/narwhal-processor/src/main/java/net/canadensys/processor/ProcessingResult.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1143" y="960"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <class id="3" corner="BOTTOM_RIGHT" language="java" name="net.canadensys.processor.datetime.DateProcessor" 
-    project="narwhal-processor" 
-    file="/narwhal-processor/src/main/java/net/canadensys/processor/datetime/DateProcessor.java" binary="false">    
+  <class id="3" language="java" name="net.canadensys.processor.datetime.DateProcessor" project="narwhal-processor" 
+    file="/narwhal-processor/src/main/java/net/canadensys/processor/datetime/DateProcessor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="604" width="445" x="2028" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <class id="4" corner="BOTTOM_RIGHT" language="java" name="net.canadensys.processor.numeric.NumericPairDataProcessor" 
+  <class id="4" language="java" name="net.canadensys.processor.numeric.NumericPairDataProcessor" 
     project="narwhal-processor" 
     file="/narwhal-processor/src/main/java/net/canadensys/processor/numeric/NumericPairDataProcessor.java" 
-    binary="false">    
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="281" width="445" x="71" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <class id="5" corner="BOTTOM_RIGHT" language="java" name="net.canadensys.processor.geography.DecimalLatLongProcessor" 
+  <class id="5" language="java" name="net.canadensys.processor.geography.DecimalLatLongProcessor" 
     project="narwhal-processor" 
     file="/narwhal-processor/src/main/java/net/canadensys/processor/geography/DecimalLatLongProcessor.java" 
-    binary="false">    
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="294" y="506"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <class id="6" corner="BOTTOM_RIGHT" language="java" 
-    name="net.canadensys.processor.geography.DegreeMinuteToDecimalProcessor" project="narwhal-processor" 
-    file="/narwhal-processor/src/main/java/net/canadensys/processor/geography/DegreeMinuteToDecimalProcessor.java" 
-    binary="false">    
-    <position height="-1" width="-1" x="812" y="237"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
-    </display>  
-  </class>  
-  <class id="7" corner="BOTTOM_RIGHT" language="java" name="net.canadensys.processor.geography.CountryProcessor" 
+  <class id="6" language="java" name="net.canadensys.processor.geography.DegreeMinuteToDecimalProcessor" 
     project="narwhal-processor" 
-    file="/narwhal-processor/src/main/java/net/canadensys/processor/geography/CountryProcessor.java" binary="false">    
-    <position height="-1" width="-1" x="1316" y="93"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    file="/narwhal-processor/src/main/java/net/canadensys/processor/geography/DegreeMinuteToDecimalProcessor.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="812" y="237"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <class id="8" corner="BOTTOM_RIGHT" language="java" name="net.canadensys.processor.geography.StateProvinceProcessor" 
+  <class id="7" language="java" name="net.canadensys.processor.geography.CountryProcessor" project="narwhal-processor" 
+    file="/narwhal-processor/src/main/java/net/canadensys/processor/geography/CountryProcessor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1316" y="93"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="net.canadensys.processor.geography.StateProvinceProcessor" 
     project="narwhal-processor" 
     file="/narwhal-processor/src/main/java/net/canadensys/processor/geography/StateProvinceProcessor.java" 
-    binary="false">    
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="298" width="445" x="2513" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <class id="9" corner="BOTTOM_RIGHT" language="java" 
-    name="net.canadensys.processor.geography.CountryContinentProcessor" project="narwhal-processor" 
+  <class id="9" language="java" name="net.canadensys.processor.geography.CountryContinentProcessor" 
+    project="narwhal-processor" 
     file="/narwhal-processor/src/main/java/net/canadensys/processor/geography/CountryContinentProcessor.java" 
-    binary="false">    
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1779" y="203"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <class id="10" corner="BOTTOM_RIGHT" language="java" name="org.gbif.common.parsers.countryname.CountryNameParser" 
-    project="narwhal-processor" 
-    file="/Users/christiangendreau/.m2/repository/org/gbif/gbif-parsers/0.2/gbif-parsers-0.2.jar" binary="true">    
+  <class id="10" language="java" name="org.gbif.common.parsers.countryname.CountryNameParser" 
+    project="narwhal-processor" file="/Users/cgendreau/.m2/repository/org/gbif/gbif-parsers/0.4/gbif-parsers-0.4.jar" 
+    binary="true" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1228" y="361"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <enumeration id="11" corner="BOTTOM_RIGHT" language="java" name="org.gbif.api.model.vocabulary.Country" 
-    project="narwhal-processor" 
-    file="/Users/christiangendreau/.m2/repository/org/gbif/gbif-common-api/0.3/gbif-common-api-0.3.jar" binary="true">    
+  <enumeration id="11" language="java" name="org.gbif.api.model.vocabulary.Country" project="narwhal-processor" 
+    file="/Users/cgendreau/.m2/repository/org/gbif/gbif-common-api/0.3/gbif-common-api-0.3.jar" binary="true" 
+    corner="BOTTOM_RIGHT">    
     <position height="53" width="373" x="2543" y="401"/>    
-    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false"/>      
-      <operations public="false" package="false" protected="false" private="false"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </enumeration>  
-  <class id="12" corner="BOTTOM_RIGHT" language="java" name="net.canadensys.processor.geography.LatLongProcessorHelper" 
+  <class id="12" language="java" name="net.canadensys.processor.geography.LatLongProcessorHelper" 
     project="narwhal-processor" 
     file="/narwhal-processor/src/main/java/net/canadensys/processor/geography/LatLongProcessorHelper.java" 
-    binary="false">    
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="596" y="756"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <class id="13" corner="BOTTOM_RIGHT" language="java" name="net.canadensys.parser.StateProvinceNameParser" 
-    project="narwhal-processor" 
-    file="/narwhal-processor/src/main/java/net/canadensys/parser/StateProvinceNameParser.java" binary="false">    
+  <class id="13" language="java" name="net.canadensys.parser.StateProvinceNameParser" project="narwhal-processor" 
+    file="/narwhal-processor/src/main/java/net/canadensys/parser/StateProvinceNameParser.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2857" y="594"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <class id="14" corner="BOTTOM_RIGHT" language="java" name="net.canadensys.processor.AbstractDataProcessor" 
-    project="narwhal-processor" 
-    file="/narwhal-processor/src/main/java/net/canadensys/processor/AbstractDataProcessor.java" binary="false">    
+  <class id="14" language="java" name="net.canadensys.processor.AbstractDataProcessor" project="narwhal-processor" 
+    file="/narwhal-processor/src/main/java/net/canadensys/processor/AbstractDataProcessor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1458" y="734"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
     </display>  
   </class>  
-  <generalization id="15">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="14"/>  
-  </generalization>  
-  <generalization id="16">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="14"/>  
-  </generalization>  
-  <generalization id="17">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="14"/>  
-  </generalization>  
+  <class id="15" language="java" name="net.canadensys.processor.datetime.DateIntervalProcessor" 
+    project="narwhal-processor" 
+    file="/narwhal-processor/src/main/java/net/canadensys/processor/datetime/DateIntervalProcessor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2188" y="729"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="net.canadensys.processor.geography.CoordinatesToWGS84Processor" 
+    project="narwhal-processor" 
+    file="/narwhal-processor/src/main/java/net/canadensys/processor/geography/CoordinatesToWGS84Processor.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2203" y="1061"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
+    </display>  
+  </class>  
+  <interface id="17" language="java" name="org.opengis.referencing.crs.CoordinateReferenceSystem" 
+    project="narwhal-processor" file="/Users/cgendreau/.m2/repository/org/geotools/gt-opengis/10.0/gt-opengis-10.0.jar" 
+    binary="true" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2710" y="1090"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="false"/>      
+      <operations public="true" package="true" protected="true" private="true" static="false"/>    
+    </display>  
+  </interface>  
   <association id="18">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="19" name="stateProvinceNameParser"/>      
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="19" name="COUNTRY_NAME_PARSER"/>      
       <multiplicity id="20" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="21">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="14"/>  
-  </generalization>  
-  <generalization id="22">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="23">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="14"/>  
-  </generalization>  
-  <association id="24">    
-    <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="25" name="singletonObject"/>      
-      <multiplicity id="26" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="27">    
-    <end type="SOURCE" refId="8"/>    
+  <generalization id="21">    
+    <end type="SOURCE" refId="16"/>    
     <end type="TARGET" refId="14"/>  
   </generalization>  
+  <generalization id="22">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <dependency id="23">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <generalization id="24">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <association id="25">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="26" name="TARGET_CRS"/>      
+      <multiplicity id="27" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <association id="28">    
-    <end type="SOURCE" refId="6" navigable="false">      
+    <end type="SOURCE" refId="5" navigable="false">      
       <attribute id="29" name="latLongHelper"/>      
       <multiplicity id="30" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
+    <display labels="false" multiplicity="false"/>  
   </association>  
   <association id="31">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="32" name="COUNTRY_NAME_PARSER"/>      
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="32" name="stateProvinceNameParser"/>      
       <multiplicity id="33" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="13" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="34">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="35" name="latLongHelper"/>      
-      <multiplicity id="36" minimum="0" maximum="1"/>    
+  <generalization id="34">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <association id="35">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="36" name="latLongHelper"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
+    <display labels="false" multiplicity="false"/>  
   </association>  
-  <dependency id="37">    
+  <dependency id="38">    
     <end type="SOURCE" refId="14"/>    
     <end type="TARGET" refId="2"/>  
   </dependency>  
-  <association id="38">    
+  <generalization id="39">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <generalization id="40">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <generalization id="41">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <association id="42">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="43" name="sourceCRS"/>      
+      <multiplicity id="44" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="45">    
     <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="39" name="associatedCountry"/>      
-      <multiplicity id="40" minimum="0" maximum="1"/>    
+      <attribute id="46" name="associatedCountry"/>      
+      <multiplicity id="47" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="11" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <generalization id="48">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <association id="49">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="50" name="singletonObject"/>      
+      <multiplicity id="51" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="52">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-    visibility="true">    
-    <attributes public="true" package="true" protected="true" private="true"/>    
-    <operations public="true" package="true" protected="true" private="true"/>  
+    accessors="false" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="false"/>    
+    <operations public="true" package="true" protected="true" private="true" static="false"/>  
   </classifier-display>  
   <association-display labels="true" multiplicity="true"/>
 </class-diagram>

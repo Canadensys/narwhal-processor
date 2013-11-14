@@ -25,12 +25,14 @@ public class LanguageTest {
 	public void testLanguageFiles(){
 		ResourceBundle resourceBundleEN = ResourceBundle.getBundle("languages/errors", new Locale("EN"));
 		ResourceBundle resourceBundleES = ResourceBundle.getBundle("languages/errors", new Locale("ES"));
+		ResourceBundle resourceBundleFR = ResourceBundle.getBundle("languages/errors", new Locale("FR"));
 		
 		Enumeration<String> enKeys = resourceBundleEN.getKeys();
 		String key;
 		while(enKeys.hasMoreElements()){
 			key = enKeys.nextElement();
 			assertTrue("The key [" +key + "] couldn't be found in the ES language file" ,resourceBundleES.containsKey(key));
+			assertTrue("The key [" +key + "] couldn't be found in the FR language file" ,resourceBundleFR.containsKey(key));
 		}
 	}
 	
@@ -42,5 +44,15 @@ public class LanguageTest {
 		ProcessingResult pr = new ProcessingResult();
 		dllProcessor.process("a", "b", Double.class, pr);
 		assertTrue(pr.getErrorString().contains("no pudo ser procesado"));
+	}
+	
+	@Test
+	public void testFrench(){
+		DecimalLatLongProcessor dllProcessor = new DecimalLatLongProcessor();
+		dllProcessor.setLocale(new Locale("FR"));
+		
+		ProcessingResult pr = new ProcessingResult();
+		dllProcessor.process("a", "b", Double.class, pr);
+		assertTrue(pr.getErrorString().contains("Impossible de traiter la valeur"));
 	}
 }

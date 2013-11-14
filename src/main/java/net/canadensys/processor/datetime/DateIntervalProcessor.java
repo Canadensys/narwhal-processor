@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,6 +62,9 @@ public class DateIntervalProcessor extends AbstractDataProcessor {
 		this.dateIntervalName = dateIntervalName;
 		this.dateStartName = dateStartName;
 		this.dateEndName = dateEndName;
+		
+		//always a default Locale
+		setLocale(Locale.ENGLISH);
 	}
 	
 	@Override

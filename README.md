@@ -1,7 +1,7 @@
 narwhal-processor
 =================
 
-narwhal-processor is a processing library that normalizes data of a known type. Current and proposed data types that can be normalized include date, country name, continent, state and province, coordinates, numeric range (altitude, depth) and scientific name.
+narwhal-processor is a processing library that normalizes data of a known type. Current and proposed data types that can be normalized include date, country name, continent, state and province, coordinates and numeric range (altitude, depth).
 
 Comments, contributions, reviews and help are welcomed.
 
@@ -66,4 +66,14 @@ mvn eclipse:eclipse
 In Eclipse : File/Import/Existing Projects into Workspace
 
 You may need to add the maven repository to Eclipse's Build Path via Preferences > Java > Build Path > Classpath Variables by clicking the New button and adding the name M2\_REPO and the directory. On a Mac, this is usually /Users/\<User\>/.m2/repository.
+
+Contributors
+------------
+* Daniel Amariles
+* Peter Desmet
+
+Mythology
+---------
+From [Wikipedia](http://en.wikipedia.org/wiki/Narwhal#Relation_with_humans):
+<cite>Some medieval Europeans believed narwhal tusks to be the horns from the legendary unicorn.[26] As these horns were considered to have magic powers, such as the ability to cure poison and melancholia </cite>
 

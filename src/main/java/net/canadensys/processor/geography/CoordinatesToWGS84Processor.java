@@ -1,6 +1,8 @@
 package net.canadensys.processor.geography;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Map;
 
 import net.canadensys.processor.AbstractDataProcessor;
@@ -80,6 +82,9 @@ public class CoordinatesToWGS84Processor extends AbstractDataProcessor {
 			this.yCoordinateInName = yCoordinateInName;
 			this.latitudeOutName = latitudeOutName;
 			this.longitudeOutName = longitudeOutName;
+			
+			//always a default Locale
+			setLocale(Locale.ENGLISH);
 		} catch (NoSuchAuthorityCodeException e) {
 			logger.error("CoordinatesToWGS84Procesor constuctor error", e);
 			throw new UnsupportedOperationException(e);
@@ -160,27 +165,30 @@ public class CoordinatesToWGS84Processor extends AbstractDataProcessor {
 		
 		if(sourceCRS == null){
 			if(result != null){
-				result.addError("The source Coordinate Reference System is not valid or undefined");
+				result.addError(resourceBundle.getString("coordinateConversion.error.invalidSourceCRS"));
 			}
 			return output;
 		}
 		
 	    Coordinate coord = new Coordinate(x,y);
 	    Point sourcePoint = geometryFactory.createPoint(coord);
-	    
 		try {
 			MathTransform transform = CRS.findMathTransform(sourceCRS, TARGET_CRS);
 			Geometry targetGeometry = JTS.transform( sourcePoint, transform);
 			output[LatLongProcessorHelper.LATITUDE_IDX] = targetGeometry.getCoordinate().y;
 			output[LatLongProcessorHelper.LONGITUDE_IDX] = targetGeometry.getCoordinate().x;
-		} catch (NoSuchAuthorityCodeException e) {
-			e.printStackTrace();
 		} catch (FactoryException e) {
-			e.printStackTrace();
+			if(result != null){
+				result.addError(MessageFormat.format(resourceBundle.getString("coordinateConversion.error.noTransformation"), sourceCRS.getName()));
+			}
 		} catch (MismatchedDimensionException e) {
-			e.printStackTrace();
+			if(result != null){
+				result.addError(MessageFormat.format(resourceBundle.getString("coordinateConversion.error.transformError"), coord.toString()));
+			}
 		} catch (TransformException e) {
-			e.printStackTrace();
+			if(result != null){
+				result.addError(MessageFormat.format(resourceBundle.getString("coordinateConversion.error.transformError"), coord.toString()));
+			}
 		}	
 		return output;
 	}
