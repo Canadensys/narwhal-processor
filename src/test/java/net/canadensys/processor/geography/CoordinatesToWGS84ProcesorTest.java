@@ -2,13 +2,17 @@ package net.canadensys.processor.geography;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.net.URISyntaxException;
 
 import net.canadensys.FileBasedTest;
+import net.canadensys.processor.ProcessingResult;
 
+import org.apache.commons.lang3.StringUtils;
 import org.geotools.referencing.CRS;
 import org.junit.Test;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -20,7 +24,18 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  */
 public class CoordinatesToWGS84ProcesorTest {
 	
+	private static final int TEST_FILE_COLUMNS = 7;
 	private static final String TEST_FILE_NAME = "/CoordinatesToWGS84.txt";
+
+	@Test
+	public void testWithNoCRS(){
+		CoordinatesToWGS84Processor ctwProcessor = new CoordinatesToWGS84Processor();
+		ProcessingResult pr = new ProcessingResult();
+		Double[] output = ctwProcessor.process(1d, 2d, null, pr);
+		assertNull(output[LatLongProcessorHelper.LATITUDE_IDX]);
+		assertNull(output[LatLongProcessorHelper.LONGITUDE_IDX]);
+		assertTrue(StringUtils.isNotBlank(pr.getErrorString()));
+	}
 	
 	@Test
 	public void testProcessor(){
@@ -34,7 +49,7 @@ public class CoordinatesToWGS84ProcesorTest {
 				CoordinateReferenceSystem crs;
 				@Override
 				public void processLine(String[] elements, int lineNumber) {
-					if(elements.length == 6){
+					if(elements.length == TEST_FILE_COLUMNS){
 						try {
 							crs = CRS.decode(elements[0]);
 						} catch (Exception e) {
@@ -60,5 +75,4 @@ public class CoordinatesToWGS84ProcesorTest {
 			e.printStackTrace();
 		}
 	}
-
 }
