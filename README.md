@@ -72,8 +72,8 @@ Contributors
 * Daniel Amariles
 * Peter Desmet
 
-Mythology
----------
+Narwhal Mythology
+-----------------
 From [Wikipedia](http://en.wikipedia.org/wiki/Narwhal#Relation_with_humans):
-<cite>Some medieval Europeans believed narwhal tusks to be the horns from the legendary unicorn.[26] As these horns were considered to have magic powers, such as the ability to cure poison and melancholia </cite>
+<cite>Some medieval Europeans believed narwhal tusks to be the horns from the legendary unicorn. As these horns were considered to have magic powers, such as the ability to cure poison and melancholia </cite>
 
