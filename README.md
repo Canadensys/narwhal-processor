@@ -71,6 +71,7 @@ Contributors
 ------------
 * Daniel Amariles
 * Peter Desmet
+* Oscar Fonts (NTv2 transformations with GeoTools)
 
 Narwhal Mythology
 -----------------
