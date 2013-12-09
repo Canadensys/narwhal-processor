@@ -1,7 +1,7 @@
 Version History
 ===============
 
-Version 1.5 TBA
+Version 1.5 2013-12-09
 * Added CoordinatesToWGS84Processor to convert coordinates using GeoTools 10
 
 Version 1.4 2013-10-10

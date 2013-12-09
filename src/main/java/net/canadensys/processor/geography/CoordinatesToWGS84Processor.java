@@ -12,7 +12,6 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
@@ -47,11 +46,25 @@ public class CoordinatesToWGS84Processor extends AbstractDataProcessor {
 	protected String xCoordinateInName, yCoordinateInName = null;
 	protected String latitudeOutName, longitudeOutName = null;
 	
-	protected final CoordinateReferenceSystem TARGET_CRS = DefaultGeographicCRS.WGS84;
+	protected static final CoordinateReferenceSystem TARGET_CRS;
 	protected CoordinateReferenceSystem sourceCRS = null;
 	
 	//Only USE_NULL makes sense here
 	protected ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
+
+	//Setup EPSG:4326 (wsg84)
+	static{
+		System.setProperty("org.geotools.referencing.forceXY", "true");
+		CoordinateReferenceSystem tmpCrs = null;
+		try {
+			tmpCrs = CRS.decode("EPSG:4326");
+		} catch (NoSuchAuthorityCodeException e) {
+			e.printStackTrace();
+		} catch (FactoryException e) {
+			e.printStackTrace();
+		}
+		TARGET_CRS = tmpCrs;
+	}
 	
 	/**
 	 * This constructor will only allow you to use 
@@ -173,7 +186,8 @@ public class CoordinatesToWGS84Processor extends AbstractDataProcessor {
 	    Coordinate coord = new Coordinate(x,y);
 	    Point sourcePoint = geometryFactory.createPoint(coord);
 		try {
-			MathTransform transform = CRS.findMathTransform(sourceCRS, TARGET_CRS);
+			//to ensure the best precision, do not use lenient transform
+			MathTransform transform = CRS.findMathTransform(sourceCRS, TARGET_CRS, false);
 			Geometry targetGeometry = JTS.transform( sourcePoint, transform);
 			output[LatLongProcessorHelper.LATITUDE_IDX] = targetGeometry.getCoordinate().y;
 			output[LatLongProcessorHelper.LONGITUDE_IDX] = targetGeometry.getCoordinate().x;
@@ -190,6 +204,33 @@ public class CoordinatesToWGS84Processor extends AbstractDataProcessor {
 				result.addError(MessageFormat.format(resourceBundle.getString("coordinateConversion.error.transformError"), coord.toString()));
 			}
 		}	
+		return output;
+	}
+	
+	/**
+	 * Process an array of coordinates as x,y into a WSG84 decimal latitude, longitude value.
+	 * @param x array of x coordinates
+	 * @param y  array of y coordinates
+	 * @param sourceCRS source CRS of coordinates
+	 * @param result optional array of ProcessingResult
+	 * @return
+	 */
+	public Double[][] processBatch(Double[] x, Double[] y, CoordinateReferenceSystem sourceCRS, ProcessingResult[] result) {
+		//sanity check
+		if(x == null || y == null || (x.length != y.length)){
+			return null;
+		}
+		
+		int batchSize = x.length;
+		Double[][] output =  new Double[batchSize][];
+		ProcessingResult currResult = null;
+		
+		for(int i=0;i<batchSize;i++){
+			if(result != null){
+				currResult = result[i];
+			}
+			output[i] = process(x[i],y[i],sourceCRS,currResult);
+		}
 		return output;
 	}
 
