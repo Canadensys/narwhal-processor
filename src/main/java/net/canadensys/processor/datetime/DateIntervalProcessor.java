@@ -164,7 +164,7 @@ public class DateIntervalProcessor extends AbstractDataProcessor {
 		} else {//odd...
 			if(result != null){
 				result.addError(
-					MessageFormat.format(resourceBundle.getString("date.error.nonSymmetric"),dateIntervalText));
+					MessageFormat.format(resourceBundle.getString("dateInterval.error.nonSymmetric"),dateIntervalText));
 			}	
 		}
 		return output;

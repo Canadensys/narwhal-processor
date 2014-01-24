@@ -4,7 +4,7 @@
 	<groupId>net.canadensys</groupId>
 	<artifactId>narwhal-processor</artifactId>
 	<packaging>jar</packaging>
-	<version>1.5</version>
+	<version>1.5.1</version>
 	<name>narwhal-processor</name>
 	<url>http://canadensys.net</url>
 	
