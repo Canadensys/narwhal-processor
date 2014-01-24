@@ -9,6 +9,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 
 import net.canadensys.FileBasedTest;
+import net.canadensys.processor.ProcessingResult;
 import net.canadensys.processor.dwc.mock.MockRawOccurrenceModel;
 
 import org.junit.Test;
@@ -69,5 +70,16 @@ public class DateIntervalProcessorTest {
 		mockRawModel.setEventDate(null);
 		assertFalse(dateIntervalProcessor.validateBean(mockRawModel, true, null, null));
 		assertTrue(dateIntervalProcessor.validateBean(mockRawModel, false, null, null));
+	}
+	
+	@Test
+	public void testNonSymetricDateInterval(){
+		DateIntervalProcessor dateIntervalProcessor = new DateIntervalProcessor("eventDate", "eventStartDate", "eventEndDate");
+		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
+		mockRawModel.setEventDate("1977-08-16,20");
+		
+		ProcessingResult pr = new ProcessingResult();
+		assertFalse(dateIntervalProcessor.validateBean(mockRawModel, false, null, pr));
+		assertTrue(pr.getErrorList().size() > 0);
 	}
 }

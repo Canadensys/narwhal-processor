@@ -1,5 +1,7 @@
 Version History
 ===============
+Version 1.5.1 2014-01-24
+* Fix issue that may prevent date interval processing
 
 Version 1.5 2013-12-09
 * Added CoordinatesToWGS84Processor to convert coordinates using GeoTools 10
