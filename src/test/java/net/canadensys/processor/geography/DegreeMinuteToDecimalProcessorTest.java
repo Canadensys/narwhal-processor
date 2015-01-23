@@ -26,7 +26,8 @@ import org.junit.Test;
  */
 public class DegreeMinuteToDecimalProcessorTest {
 	
-	private static final String TEST_FILE_NAME = "/DDMMSSCoordinatesFormat.txt";
+	private static final String TEST_FILE_NAME = "/ValidDDMMSSCoordinates.txt";
+	private static final String INVALID_DATA_FILE_NAME = "/InvalidDDMMSSCoordinates.txt";
 	
 	@Test
 	public void testDegreeMinuteToDecimalProcessor(){
@@ -62,11 +63,6 @@ public class DegreeMinuteToDecimalProcessorTest {
 		}
 
 		Double[] output = new Double[2];
-		output = dmtdProcessor.process("40º26′47″N","74º 0' 21.5022\"W", null);
-		assertEquals(40.44639,output[LatLongProcessorHelper.LATITUDE_IDX],0.00001);
-
-		output = dmtdProcessor.process("40°26′47″N","74° 0' 21.5022\"W", null);
-		assertEquals(40.44639,output[LatLongProcessorHelper.LATITUDE_IDX],0.00001);
 		
 		//test with double precision
 		output = dmtdProcessor.process("40°26′47″N","76°27'11\" W",null);
@@ -125,31 +121,33 @@ public class DegreeMinuteToDecimalProcessorTest {
 		assertEquals(1,pr.getErrorList().size());
 	}
 	
+	/**
+	 * Test all coordinates from the file INVALID_DATA_FILE_NAME that should not process.
+	 */
 	@Test
 	public void testWrongDMSToDecimal(){
-		DegreeMinuteToDecimalProcessor dmtdProcessor = new DegreeMinuteToDecimalProcessor();
-		Double[] nullOutput = {null,null};
-		
-		//test no cardinal direction
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40°26'47\"","30°17′12″E", null));
-		
-		//test wrong cardinal direction
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40°26'47T","30°17′12″E", null));
-		
-		//test no cardinal directions
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40°N26'47\"","30°17′12″", null));
-	
-		//decimal on the degree is not supported if minute and/or second is used
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40.1:26:47N","30°17′12″E", null));
-		
-		//test decimal coordinate
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40.44653N","30°17′12″E", null));
-		
-		//second but no minute
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40d8.29sN","30°17′12″E", null));
-		
-		//decimal on the minute AND second is not supported
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40:26.1:47N","30°17′12″E", null));
-		assertArrayEquals(nullOutput, dmtdProcessor.process("40:26.1:47.2N","30°17′12″E", null));
+		final DegreeMinuteToDecimalProcessor dmtdProcessor = new DegreeMinuteToDecimalProcessor();
+		final Double[] nullOutput = {null,null};
+				
+		try {
+			final File dateFile = new File(getClass().getResource(INVALID_DATA_FILE_NAME).toURI());
+			FileBasedTest fileBasedTest = new FileBasedTest(dateFile) {
+				@Override
+				public void processLine(String[] elements, int lineNumber) {
+					if(elements.length == 2){
+						String assertText = "[Line #" + lineNumber + " in " + dateFile.getName()+"]";
+						assertArrayEquals(assertText, nullOutput, dmtdProcessor.process(elements[0], elements[1], null));
+					}
+					else{
+						fail("[Line #" + lineNumber + " in " + dateFile.getName()+"] is not valid.");
+					}
+				}
+			};
+			
+			fileBasedTest.processFile();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			fail();
+		}
 	}
 }

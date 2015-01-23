@@ -39,6 +39,8 @@ public class DegreeMinuteToDecimalProcessor extends AbstractDataProcessor {
 	protected static int MINUTE_IDX = 1;
 	protected static int SECOND_IDX = 2;
 	
+	protected static int MAX_MINUTE_SECOND = 60;
+	
 	protected static Pattern CHECK_CARDINAL_DIRECTION_PATTERN = Pattern.compile("[NESW]\\s*$", Pattern.CASE_INSENSITIVE);
 	protected static Pattern CHECK_SOUTH_WEST_PATTERN = Pattern.compile("[SW]\\s*$", Pattern.CASE_INSENSITIVE);
 	
@@ -58,8 +60,8 @@ public class DegreeMinuteToDecimalProcessor extends AbstractDataProcessor {
 	//(\d*\.?\d+)* :any int or decimal (optional)
 	//[\"s″ ]? :followed by an optional "s″
 	//This regex requires validation on extracted groups
-	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d*\\.?\\d+)(?:[º°d: ]+)(\\d*\\.?\\d+)*(?:['m′: ])*(\\d*\\.?\\d+)*[\"s″ ]?");
-	
+	protected static Pattern  SPLIT_DMS_PARTS = Pattern.compile("(\\d*\\.?\\d+)(?:[º°d: ]+)(\\d*\\.?\\d+)*(?:['m′‘'’‛: ])*(\\d*\\.?\\d+)*[\"s″“‟” ]?");
+
 	//default Java bean field names.
 	protected static final String DEFAULT_LATITUDE_NAME = "lat";
 	protected static final String DEFAULT_LONGITUDE_NAME = "lng";
@@ -251,6 +253,11 @@ public class DegreeMinuteToDecimalProcessor extends AbstractDataProcessor {
 		Double minute = NumberUtils.parseNumber(parts[MINUTE_IDX], Double.class,0d);
 		Double second = NumberUtils.parseNumber(parts[SECOND_IDX], Double.class,0d);
 		
+		// check numeric bounds of minute and seconds
+		if(!checkMinuteSecondBounds(minute, second, dms, result)){
+			return null;
+		}
+		
 		//make sure that we extracted all numbers
 		if(!KEEP_NUMBERS_PATTERN.matcher(parts[DEGREE_IDX]+parts[MINUTE_IDX]+StringUtils.defaultString(parts[SECOND_IDX], ""))
 				.replaceAll("").equalsIgnoreCase(allNumbers)){
@@ -297,6 +304,33 @@ public class DegreeMinuteToDecimalProcessor extends AbstractDataProcessor {
 		//compute decimal value
 		double decimal = (degree + (minute/60) + (second/3600))*negation;
 		return decimal;
+	}
+	
+	/**
+	 * Check if the extract minutes and seconds values are within bounds.
+	 * @param minute
+	 * @param second
+	 * @param dms original degree, minute, second string
+	 * @param result can be null
+	 * @return bounds are respected or not
+	 */
+	private boolean checkMinuteSecondBounds(Double minute, Double second, String dms, ProcessingResult result){
+		if( minute >= MAX_MINUTE_SECOND){
+			if(result != null){
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("dms.error.minuteOutOfBounds"),dms));
+			}
+			return false;
+		}
+		
+		if( second >= MAX_MINUTE_SECOND){
+			if(result != null){
+				result.addError(
+						MessageFormat.format(resourceBundle.getString("dms.error.secondOutOfBounds"),dms));
+			}
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

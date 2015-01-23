@@ -1,0 +1,27 @@
+#textDDMMSSLat;textDDMMSSLong
+
+#no cardinal direction
+40°26'47";30°17′12″E
+40°N26'47";30°17′12″
+
+#wrong cardinal direction
+40°26'47T;30°17′12″E
+
+#decimal on the degree AND minute and/or second is used
+40.1:26:47N;30°17′12″E
+
+#decimal coordinate with no degree indication
+40.44653N;30°17′12″E
+
+#seconds provided but no minute
+40d8.29sN;30°17′12″E
+
+#decimal on the minute AND second is provided
+40:26.1:47N;30°17′12″E
+40:26.1:47.2N;30°17′12″E
+
+#out of bounds minutes
+45° 332' 25" N;129° 41' 31" W
+
+#out of bounds seconds
+45° 32' 255" N;129° 41' 31" W
