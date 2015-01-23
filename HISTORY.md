@@ -1,5 +1,9 @@
 Version History
 ===============
+
+Version 1.5.2 2015-01-23
+[Details](https://github.com/Canadensys/narwhal-processor/milestones/1.5.2)
+
 Version 1.5.1 2014-01-24
 * Fix issue that may prevent date interval processing
 

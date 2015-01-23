@@ -25,3 +25,6 @@
 
 #out of bounds seconds
 45° 32' 255" N;129° 41' 31" W
+
+#out of bounds degrees
+195° 32' 25" N;129° 41' 31" W
