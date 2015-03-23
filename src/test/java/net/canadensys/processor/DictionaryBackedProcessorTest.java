@@ -18,10 +18,19 @@ public class DictionaryBackedProcessorTest {
 	TermValueParser(new InputStream[] {
 			this.getClass().getResourceAsStream("/dictionaries/geography/CA_StateProvinceName.txt")
 	});
-
+	
 	DictionaryBackedProcessor canadaProvincesProcessor = new DictionaryBackedProcessor(canadaProvincesParser);
     assertEquals("CA-NL", canadaProvincesProcessor.processValue("Labrador"));
     assertEquals("CA-NL", canadaProvincesProcessor.processValue("NEWFOUNdLAND AND LABRADOR"));
+
+    FileBasedDictionaryParser brazilProvincesParser = new
+			TermValueParser(new InputStream[] {
+					this.getClass().getResourceAsStream("/dictionaries/geography/BR_StateProvinceName.txt")
+			});
+
+    DictionaryBackedProcessor brasilProvincesProcessor = new DictionaryBackedProcessor(brazilProvincesParser);
+    assertEquals("BR-PB", brasilProvincesProcessor.processValue("ParaÌba	"));
+    assertEquals("BR-RR", brasilProvincesProcessor.processValue("Roraima;Amazonas"));
 
 	}
 }
