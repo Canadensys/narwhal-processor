@@ -1,12 +1,11 @@
 package net.canadensys.processor;
 
-import java.io.InputStream;
 import java.util.Map;
 
 import net.canadensys.parser.TermValueParser;
 
-import org.gbif.common.parsers.FileBasedDictionaryParser;
 import org.gbif.common.parsers.ParseResult;
+import org.gbif.common.parsers.ParseResult.CONFIDENCE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,18 +14,22 @@ public class DictionaryBackedProcessor extends AbstractDataProcessor {
 	final Logger logger = LoggerFactory.getLogger(DictionaryBackedProcessor.class);
 
 	protected ErrorHandlingModeEnum errorHandlingMode;
-	private TermValueParser stateProvinceNameParser;
+	private TermValueParser termValueParser;
 
-	public DictionaryBackedProcessor(String fieldToBeChecked, String dictionaryFilePath, FileBasedDictionaryParser dictionary) {
-		stateProvinceNameParser = new TermValueParser(false, new InputStream[] { DictionaryBackedProcessor.class.getResourceAsStream(dictionaryFilePath) });
-		processValue(fieldToBeChecked);
-		
+	public DictionaryBackedProcessor(TermValueParser dictionary) {
+		this.termValueParser = dictionary;
 	}
 
-	public ParseResult<String>processValue(String value) {
-        return stateProvinceNameParser.parse(value);
+	public String processValue(String value) {
+		ParseResult<String> parsingResult = termValueParser.parse(value);
+		if (parsingResult.isSuccessful() && parsingResult.getConfidence().equals(CONFIDENCE.DEFINITE)) {
+			return parsingResult.getPayload();
+		}
+		else {
+			return null;
+		}
 	}
-	
+
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return this.errorHandlingMode;
