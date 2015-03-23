@@ -2,8 +2,7 @@ package net.canadensys.processor;
 
 import java.util.Map;
 
-import net.canadensys.parser.TermValueParser;
-
+import org.gbif.common.parsers.FileBasedDictionaryParser;
 import org.gbif.common.parsers.ParseResult;
 import org.gbif.common.parsers.ParseResult.CONFIDENCE;
 import org.slf4j.Logger;
@@ -14,9 +13,9 @@ public class DictionaryBackedProcessor extends AbstractDataProcessor {
 	final Logger logger = LoggerFactory.getLogger(DictionaryBackedProcessor.class);
 
 	protected ErrorHandlingModeEnum errorHandlingMode;
-	private TermValueParser termValueParser;
+	private FileBasedDictionaryParser termValueParser;
 
-	public DictionaryBackedProcessor(TermValueParser dictionary) {
+	public DictionaryBackedProcessor(FileBasedDictionaryParser dictionary) {
 		this.termValueParser = dictionary;
 	}
 
