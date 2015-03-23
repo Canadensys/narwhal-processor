@@ -13,14 +13,14 @@ public class DictionaryBackedProcessor extends AbstractDataProcessor {
 	final Logger logger = LoggerFactory.getLogger(DictionaryBackedProcessor.class);
 
 	protected ErrorHandlingModeEnum errorHandlingMode;
-	private FileBasedDictionaryParser termValueParser;
+	private FileBasedDictionaryParser fileBasedDisctionaryParser;
 
-	public DictionaryBackedProcessor(FileBasedDictionaryParser dictionary) {
-		this.termValueParser = dictionary;
+	public DictionaryBackedProcessor(FileBasedDictionaryParser fileBasedDictionaryParser) {
+		this.fileBasedDisctionaryParser = fileBasedDictionaryParser;
 	}
 
 	public String processValue(String value) {
-		ParseResult<String> parsingResult = termValueParser.parse(value);
+		ParseResult<String> parsingResult = fileBasedDisctionaryParser.parse(value);
 		if (parsingResult.isSuccessful() && parsingResult.getConfidence().equals(CONFIDENCE.DEFINITE)) {
 			return parsingResult.getPayload();
 		}
