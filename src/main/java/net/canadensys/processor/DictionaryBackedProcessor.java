@@ -1,10 +1,12 @@
 package net.canadensys.processor;
 
+import java.io.InputStream;
 import java.util.Map;
 
 import net.canadensys.parser.TermValueParser;
 
 import org.gbif.common.parsers.FileBasedDictionaryParser;
+import org.gbif.common.parsers.ParseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +17,16 @@ public class DictionaryBackedProcessor extends AbstractDataProcessor {
 	protected ErrorHandlingModeEnum errorHandlingMode;
 	private TermValueParser stateProvinceNameParser;
 
-	public DictionaryBackedProcessor(ErrorHandlingModeEnum errorHandlingMode) {
-		this.errorHandlingMode = errorHandlingMode;
-
+	public DictionaryBackedProcessor(String fieldToBeChecked, String dictionaryFilePath, FileBasedDictionaryParser dictionary) {
+		stateProvinceNameParser = new TermValueParser(false, new InputStream[] { DictionaryBackedProcessor.class.getResourceAsStream(dictionaryFilePath) });
+		processValue(fieldToBeChecked);
+		
 	}
 
-	public DictionaryBackedProcessor(String fieldToBeChecked, FileBasedDictionaryParser dictionary) {
-
+	public ParseResult<String>processValue(String value) {
+        return stateProvinceNameParser.parse(value);
 	}
-
+	
 	@Override
 	public ErrorHandlingModeEnum getErrorHandlingMode() {
 		return this.errorHandlingMode;

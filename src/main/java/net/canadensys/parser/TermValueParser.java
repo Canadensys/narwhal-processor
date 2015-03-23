@@ -18,23 +18,26 @@ public class TermValueParser extends FileBasedDictionaryParser {
 	private static final CharMatcher WHITESPACE_MATCHER = CharMatcher.WHITESPACE.precomputed();
 
 	public TermValueParser(InputStream[] dictionaries) {
-		// Default caseSensitive to false
 		super(false, dictionaries);
+	}
+	
+	public TermValueParser(boolean caseSensitive, InputStream[] dictionaries) {
+		super(caseSensitive, dictionaries);
 	}
 
 	@Override
 	protected String normalize(String value) {
 		if (value != null) {
-			String stateProvince = LETTER_MATCHER.retainFrom(value);
-			stateProvince = WHITESPACE_MATCHER.trimAndCollapseFrom(stateProvince, ' ');
-			stateProvince = StringUtils.stripAccents(stateProvince);
-			stateProvince = Strings.emptyToNull(stateProvince);
+			String processedValue = LETTER_MATCHER.retainFrom(value);
+			processedValue = WHITESPACE_MATCHER.trimAndCollapseFrom(processedValue, ' ');
+			processedValue = StringUtils.stripAccents(processedValue);
+			processedValue = Strings.emptyToNull(processedValue);
 			/**
 			 * Normalisation of a value used both by adding to the internal dictionary and parsing values.
 			 * The default does trim and uppercase the value for Strings, but leaves other types unaltered.
 			 * Override this method to provide specific normalisations for parsers.
 			 */
-			return super.normalize(stateProvince);
+			return super.normalize(processedValue);
 		}
 		return null;
 	}
