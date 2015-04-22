@@ -12,7 +12,7 @@ Estado do Acre	BR-AC
 Territorio do Rio Branco	BR-AC
 TERR. RIO BRANCO	BR-AC
 
-# Alagoas BR-AM
+# Alagoas BR-AL
 Al	BR-AL
 AL	BR-AL
 alagoas	BR-AL

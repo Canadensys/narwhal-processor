@@ -20,7 +20,7 @@ public class TermValueParser extends FileBasedDictionaryParser {
 	public TermValueParser(InputStream[] dictionaries) {
 		super(false, dictionaries);
 	}
-	
+
 	public TermValueParser(boolean caseSensitive, InputStream[] dictionaries) {
 		super(caseSensitive, dictionaries);
 	}
