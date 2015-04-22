@@ -1,0 +1,18 @@
+BR-PB	Paraíba
+BR-PR	Paraná
+BR-PE	Pernambuco
+BR-PI	Piauí
+BR-RJ	Rio de Janeiro
+BR-RS	Rio Grande do Sul
+BR-RN	Rio Grande do Norte
+BR-SP	São Paulo
+BR-SC	Santa Catarina
+BR-RO	Rondônia
+BR-SE	Sergipe
+BR-RR	Roraima
+BR-TO	Tocantins
+
+Estado de São Paulo	BR-SP
+ParaÌba	BR-PB
+Roraima;Amazonas	BR-RR
+Santa Caterina, District Jaraguá	BR-SC

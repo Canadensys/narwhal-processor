@@ -23,16 +23,13 @@ public class DictionaryBackedProcessorTest {
 
 		// Load dictionary for brazillian departments normalization:
 		FileBasedDictionaryParser brazilProvincesParser = new TermValueParser(new InputStream[] { this.getClass().getResourceAsStream(
-				"/dictionaries/geography/BR_StateProvinceName.txt") });
-		// Load dictionary to convert from brazillian department ISO codes to department common name:
-		FileBasedDictionaryParser brazilProvincesISOCommonParser = new TermValueParser(new InputStream[] { this.getClass().getResourceAsStream(
-				"/dictionaries/geography/BR_StateProvinceISOName.txt") });
+				"/dictionary.txt") });
+
 		// Create processor objects for each dictionary:
 		DictionaryBackedProcessor brasilProvincesProcessor = new DictionaryBackedProcessor(brazilProvincesParser);
-		DictionaryBackedProcessor brazilProvincesISOCommonProcessor = new DictionaryBackedProcessor(brazilProvincesISOCommonParser);
 
 		// Process values in 2 steps: 1) map value to ISO Code 2) Map ISO Code to full deparment name:
-		assertEquals("Paraíba", brazilProvincesISOCommonProcessor.processValue(brasilProvincesProcessor.processValue("ParaÌba	")));
-		assertEquals("Roraima", brazilProvincesISOCommonProcessor.processValue(brasilProvincesProcessor.processValue("Roraima;Amazonas")));
+		assertEquals("Paraíba", brasilProvincesProcessor.processValue(brasilProvincesProcessor.processValue("ParaÌba	")));
+		assertEquals("Roraima", brasilProvincesProcessor.processValue(brasilProvincesProcessor.processValue("Roraima;Amazonas")));
 	}
 }
