@@ -10,18 +10,27 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 
-public class TermValueParser extends FileBasedDictionaryParser<String> {
+/**
+ * Based on GBIF parsers, this implementation of FileBasedDictionaryParser is used when we have a dictionary
+ * but we do not have matching enumeration(s) e.g. stateprovince.
+ * Could also be used to parse fields like institutionCode or collectionCode if we have a dictionary.
+ *
+ * @author Pedro
+ * @author cgendreau
+ *
+ */
+public class DictionaryBasedValueParser extends FileBasedDictionaryParser<String> {
 
-	final Logger logger = LoggerFactory.getLogger(TermValueParser.class);
+	final Logger logger = LoggerFactory.getLogger(DictionaryBasedValueParser.class);
 
 	private static final CharMatcher LETTER_MATCHER = CharMatcher.JAVA_LETTER.or(CharMatcher.WHITESPACE).precomputed();
 	private static final CharMatcher WHITESPACE_MATCHER = CharMatcher.WHITESPACE.precomputed();
 
-	public TermValueParser(InputStream[] dictionaries) {
+	public DictionaryBasedValueParser(InputStream[] dictionaries) {
 		this(false, dictionaries);
 	}
 
-	public TermValueParser(boolean caseSensitive, InputStream[] dictionaries) {
+	public DictionaryBasedValueParser(boolean caseSensitive, InputStream[] dictionaries) {
 		super(caseSensitive);
 
 		if (dictionaries != null) {

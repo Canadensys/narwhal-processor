@@ -2,6 +2,7 @@ package net.canadensys.processor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -13,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Processor used to process a property based on a dictionary.
+ *
  * @author Pedro
  * @author cgendreau
  *
@@ -21,17 +24,25 @@ public class DictionaryBackedProcessor extends AbstractDataProcessor {
 
 	final Logger logger = LoggerFactory.getLogger(DictionaryBackedProcessor.class);
 
-	private final ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_ORIGINAL;
+	private final ErrorHandlingModeEnum errorHandlingMode;
 	private final FileBasedDictionaryParser<String> fileBasedDisctionaryParser;
 	private final String beanPropertyName;
 
 	public DictionaryBackedProcessor(FileBasedDictionaryParser<String> fileBasedDictionaryParser) {
-		this(null, fileBasedDictionaryParser);
+		this(null, fileBasedDictionaryParser, ErrorHandlingModeEnum.USE_ORIGINAL);
 	}
 
 	public DictionaryBackedProcessor(String beanPropertyName, FileBasedDictionaryParser<String> fileBasedDictionaryParser) {
+		this(beanPropertyName, fileBasedDictionaryParser, ErrorHandlingModeEnum.USE_ORIGINAL);
+	}
+
+	public DictionaryBackedProcessor(String beanPropertyName, FileBasedDictionaryParser<String> fileBasedDictionaryParser,
+			ErrorHandlingModeEnum errorHandlingMode) {
 		this.fileBasedDisctionaryParser = fileBasedDictionaryParser;
 		this.beanPropertyName = beanPropertyName;
+		this.errorHandlingMode = errorHandlingMode;
+		// always a default Locale
+		setLocale(Locale.ENGLISH);
 	}
 
 	public String process(String value, ProcessingResult result) {
@@ -43,7 +54,7 @@ public class DictionaryBackedProcessor extends AbstractDataProcessor {
 		if (result != null) {
 			// TODO beanPropertyName can be null
 			result.addError(
-					MessageFormat.format(resourceBundle.getString("dictionary.error.notFound"), value, beanPropertyName));
+					MessageFormat.format(resourceBundle.getString("dictionary.error.notFound"), value));
 		}
 		return null;
 	}
