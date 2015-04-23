@@ -6,9 +6,9 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.gbif.common.parsers.FileBasedDictionaryParser;
-import org.gbif.common.parsers.ParseResult;
-import org.gbif.common.parsers.ParseResult.CONFIDENCE;
+import org.gbif.common.parsers.core.FileBasedDictionaryParser;
+import org.gbif.common.parsers.core.ParseResult;
+import org.gbif.common.parsers.core.ParseResult.CONFIDENCE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,14 +22,14 @@ public class DictionaryBackedProcessor extends AbstractDataProcessor {
 	final Logger logger = LoggerFactory.getLogger(DictionaryBackedProcessor.class);
 
 	private final ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_ORIGINAL;
-	private final FileBasedDictionaryParser fileBasedDisctionaryParser;
+	private final FileBasedDictionaryParser<String> fileBasedDisctionaryParser;
 	private final String beanPropertyName;
 
-	public DictionaryBackedProcessor(FileBasedDictionaryParser fileBasedDictionaryParser) {
+	public DictionaryBackedProcessor(FileBasedDictionaryParser<String> fileBasedDictionaryParser) {
 		this(null, fileBasedDictionaryParser);
 	}
 
-	public DictionaryBackedProcessor(String beanPropertyName, FileBasedDictionaryParser fileBasedDictionaryParser) {
+	public DictionaryBackedProcessor(String beanPropertyName, FileBasedDictionaryParser<String> fileBasedDictionaryParser) {
 		this.fileBasedDisctionaryParser = fileBasedDictionaryParser;
 		this.beanPropertyName = beanPropertyName;
 	}

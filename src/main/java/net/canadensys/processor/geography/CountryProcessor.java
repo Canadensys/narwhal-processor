@@ -10,10 +10,10 @@ import net.canadensys.processor.ProcessingResult;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.gbif.api.model.vocabulary.Country;
-import org.gbif.common.parsers.ParseResult;
-import org.gbif.common.parsers.ParseResult.CONFIDENCE;
-import org.gbif.common.parsers.countryname.CountryNameParser;
+import org.gbif.api.vocabulary.Country;
+import org.gbif.common.parsers.CountryParser;
+import org.gbif.common.parsers.core.ParseResult;
+import org.gbif.common.parsers.core.ParseResult.CONFIDENCE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,15 +21,15 @@ import org.slf4j.LoggerFactory;
  * Country processor to handle country names.
  * Parsing a country string into a controlled vocabulary (org.gbif.api.model.vocabulary.Country).
  * You should reuse the same instance to save resources.
- * 
+ *
  * @author canadensys
- * 
+ *
  */
 public class CountryProcessor extends AbstractDataProcessor {
 
 	final Logger logger = LoggerFactory.getLogger(CountryProcessor.class);
 
-	protected static CountryNameParser COUNTRY_NAME_PARSER = CountryNameParser.getInstance();
+	protected static CountryParser COUNTRY_PARSER = CountryParser.getInstance();
 	protected static final String DEFAULT_COUNTRY_NAME = "country";
 
 	protected String countryName = null;
@@ -51,7 +51,7 @@ public class CountryProcessor extends AbstractDataProcessor {
 
 	/**
 	 * Country Bean processing function.
-	 * 
+	 *
 	 * @param in
 	 *            Java bean containing the country as String
 	 * @param out
@@ -133,7 +133,7 @@ public class CountryProcessor extends AbstractDataProcessor {
 	/**
 	 * Country processing function.
 	 * Note that the errorHandlingMode will be ignored by this function.
-	 * 
+	 *
 	 * @param countryStr
 	 *            country string to be processed
 	 * @param result
@@ -145,9 +145,9 @@ public class CountryProcessor extends AbstractDataProcessor {
 			return null;
 		}
 
-		ParseResult<String> parsingResult = COUNTRY_NAME_PARSER.parse(countryStr);
+		ParseResult<Country> parsingResult = COUNTRY_PARSER.parse(countryStr);
 		if (parsingResult.isSuccessful() && parsingResult.getConfidence().equals(CONFIDENCE.DEFINITE)) {
-			return Country.fromIsoCode(parsingResult.getPayload());
+			return parsingResult.getPayload();
 		}
 		else {
 			if (result != null) {

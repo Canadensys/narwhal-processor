@@ -7,7 +7,6 @@ import java.io.InputStream;
 import net.canadensys.parser.TermValueParser;
 import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 
-import org.gbif.common.parsers.FileBasedDictionaryParser;
 import org.junit.Test;
 
 public class DictionaryBackedProcessorTest {
@@ -15,7 +14,7 @@ public class DictionaryBackedProcessorTest {
 	@Test
 	public void testCanadaProvinceState() {
 
-		FileBasedDictionaryParser canadaProvincesParser = new TermValueParser(new InputStream[] { this.getClass().getResourceAsStream(
+		TermValueParser canadaProvincesParser = new TermValueParser(new InputStream[] { this.getClass().getResourceAsStream(
 				"/dictionaries/geography/CA_StateProvinceName.txt") });
 
 		DictionaryBackedProcessor canadaProvincesProcessor = new DictionaryBackedProcessor("stateprovince", canadaProvincesParser);
@@ -29,7 +28,7 @@ public class DictionaryBackedProcessorTest {
 		assertEquals("CA-NT", mockModel.getStateprovince());
 
 		// Load dictionary for brazillian departments normalization:
-		FileBasedDictionaryParser brazilProvincesParser = new TermValueParser(new InputStream[] { this.getClass().getResourceAsStream(
+		TermValueParser brazilProvincesParser = new TermValueParser(new InputStream[] { this.getClass().getResourceAsStream(
 				"/dictionary.txt") });
 
 		// Create processor objects for each dictionary:
