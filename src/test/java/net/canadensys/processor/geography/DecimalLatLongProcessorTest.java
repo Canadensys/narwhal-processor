@@ -11,83 +11,82 @@ import org.junit.Test;
 
 /**
  * Test for the DecimalLatLongProcessor
- * 
  * @author canadensys
- * 
+ *
  */
 public class DecimalLatLongProcessorTest {
 
 	@Test
-	public void testProcessing() {
+	public void testProcessing(){		
 		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
-
+		
 		mockRawModel.setDecimalLatitude("45.8º");
 		mockRawModel.setDecimalLongitude("100.4765 degree");
-
+		
 		NumericPairDataProcessor processor = new DecimalLatLongProcessor();
 		ProcessingResult pr = new ProcessingResult();
 		processor.processBean(mockRawModel, mockModel, null, pr);
-
-		assertEquals(45.8, mockModel.getDecimalLatitude(), 0);
-		assertEquals(100.4765, mockModel.getDecimalLongitude(), 0);
+		
+		assertEquals(45.8, mockModel.getDecimalLatitude(),0);
+		assertEquals(100.4765, mockModel.getDecimalLongitude(),0);
 	}
-
+	
 	@Test
-	public void testProcessingWrongData() {
+	public void testProcessingWrongData(){
 		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
-
-		// we do not set the latitude
+		
+		//we do not set the latitude
 		mockRawModel.setDecimalLongitude("degree");
-
+		
 		ProcessingResult result = new ProcessingResult();
 		NumericPairDataProcessor processor = new DecimalLatLongProcessor();
 		processor.processBean(mockRawModel, mockModel, null, result);
-
+		
 		assertNull(mockModel.getDecimalLatitude());
 		assertNull(mockModel.getDecimalLongitude());
 		assertEquals(1, result.getErrorList().size());
-
-		// test with only one valid coordinate
+		
+		//test with only one valid coordinate
 		mockRawModel = new MockRawOccurrenceModel();
 		mockModel = new MockOccurrenceModel();
 		mockRawModel.setDecimalLatitude("10.5");
 		mockRawModel.setDecimalLongitude("degree");
 		result = new ProcessingResult();
 		processor.processBean(mockRawModel, mockModel, null, result);
-
-		// we expect both to be null since only a latitude is not a valid coordinate
+		
+		//we expect both to be null since only a latitude is not a valid coordinate
 		assertNull(mockModel.getDecimalLatitude());
 		assertNull(mockModel.getDecimalLongitude());
 		assertEquals(1, result.getErrorList().size());
-
-		// test longitude limit
+		
+		//test longitude limit
 		mockRawModel = new MockRawOccurrenceModel();
 		mockModel = new MockOccurrenceModel();
 		mockRawModel.setDecimalLatitude("65");
 		mockRawModel.setDecimalLongitude("180.01");
 		result = new ProcessingResult();
 		processor.processBean(mockRawModel, mockModel, null, result);
-
-		// we expect both to be null since only a latitude is not a valid coordinate
+		
+		//we expect both to be null since only a latitude is not a valid coordinate
 		assertNull(mockModel.getDecimalLatitude());
 		assertNull(mockModel.getDecimalLongitude());
 		assertEquals(1, result.getErrorList().size());
 	}
-
+	
 	@Test
-	public void testOutOfBound() {
+	public void testOutOfBound(){
 		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
-
+		
 		mockRawModel.setDecimalLatitude("45.8º");
 		mockRawModel.setDecimalLongitude("200.4765 degree");
-
+		
 		NumericPairDataProcessor processor = new DecimalLatLongProcessor();
 		ProcessingResult pr = new ProcessingResult();
 		processor.processBean(mockRawModel, mockModel, null, pr);
-
+		
 		assertNull(mockModel.getDecimalLatitude());
 		assertNull(mockModel.getDecimalLongitude());
 	}

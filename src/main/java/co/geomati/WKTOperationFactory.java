@@ -11,7 +11,8 @@ import org.opengis.referencing.operation.CoordinateOperationAuthorityFactory;
  * 
  * @author Oscar Fonts
  */
-public class WKTOperationFactory extends CoordinateOperationFactoryUsingWKT implements CoordinateOperationAuthorityFactory {
+public class WKTOperationFactory extends CoordinateOperationFactoryUsingWKT
+		implements CoordinateOperationAuthorityFactory {
 
 	private String definitions = null;
 
