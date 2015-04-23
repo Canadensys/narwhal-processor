@@ -13,63 +13,64 @@ import org.junit.Test;
 
 /**
  * Tests for the CountryProcessor
+ * 
  * @author canadensys
- *
+ * 
  */
 public class CountryProcessorTest {
-	
+
 	@Test
-	public void testCountryProcessor(){
+	public void testCountryProcessor() {
 		AbstractDataProcessor dataProcessor = new CountryProcessor();
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
-		
+
 		mockRawModel.setCountry("u.s.a");
 		ProcessingResult pr = new ProcessingResult();
 		dataProcessor.processBean(mockRawModel, mockModel, null, pr);
-		assertEquals("United States",mockModel.getCountry());
+		assertEquals("United States", mockModel.getCountry());
 	}
-	
+
 	@Test
-	public void testCountryValidation(){
+	public void testCountryValidation() {
 		AbstractDataProcessor dataProcessor = new CountryProcessor();
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		mockRawModel.setCountry("u.s.a");
 		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
-		
-		//test mandatory flag
+
+		// test mandatory flag
 		mockRawModel.setCountry("");
 		assertFalse(dataProcessor.validateBean(mockRawModel, true, null, null));
 		assertTrue(dataProcessor.validateBean(mockRawModel, false, null, null));
 	}
-	
+
 	@Test
-	public void testWrongCountry(){
+	public void testWrongCountry() {
 		AbstractDataProcessor dataProcessor = new CountryProcessor();
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
-		
+
 		mockRawModel.setCountry("xyz");
 		ProcessingResult pr = new ProcessingResult();
 		dataProcessor.processBean(mockRawModel, mockModel, null, pr);
-		assertEquals("xyz",mockModel.getCountry());
+		assertEquals("xyz", mockModel.getCountry());
 	}
-	
+
 	@Test
-	public void testWrongCountryOtherErrorHandling(){
-		AbstractDataProcessor dataProcessor = new CountryProcessor("country",ErrorHandlingModeEnum.USE_NULL);
+	public void testWrongCountryOtherErrorHandling() {
+		AbstractDataProcessor dataProcessor = new CountryProcessor("country", ErrorHandlingModeEnum.USE_NULL);
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
-		
-		//test null
+
+		// test null
 		mockRawModel.setCountry("xyz");
 		ProcessingResult pr = new ProcessingResult();
 		dataProcessor.processBean(mockRawModel, mockModel, null, pr);
 		assertNull(mockModel.getCountry());
-		
-		//test empty value
-		dataProcessor = new CountryProcessor("country",ErrorHandlingModeEnum.USE_EMPTY);
+
+		// test empty value
+		dataProcessor = new CountryProcessor("country", ErrorHandlingModeEnum.USE_EMPTY);
 		dataProcessor.processBean(mockRawModel, mockModel, null, pr);
-		assertEquals("",mockModel.getCountry());
+		assertEquals("", mockModel.getCountry());
 	}
 }
