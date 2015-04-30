@@ -1,0 +1,5 @@
+#rawText%person1|person2...
+Robert J. Bandoni;;and others%Robert J. Bandoni
+C.M. Boardman; (1970)%C.M. Boardman
+John W. Eastham 1963; stet! E.A. Snyder 2005%John W. Eastham|E.A. Snyder
+U. Laine & T. Lampianinen [?]%U. Laine|T. Lampianinen

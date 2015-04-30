@@ -7,9 +7,9 @@ import java.util.ResourceBundle;
 /**
  * All implementations shall be Thread-Safe once created.
  * Considering this, setters should be avoided.
- * 
+ *
  * @author canadensys
- * 
+ *
  */
 public abstract class AbstractDataProcessor {
 
@@ -24,7 +24,7 @@ public abstract class AbstractDataProcessor {
 	/**
 	 * Set the Locale to used to create the error messages
 	 * Configuration method, should be called at creation time.
-	 * 
+	 *
 	 * @param locale
 	 *            used to record errors in ProcessingResult
 	 */
@@ -32,10 +32,23 @@ public abstract class AbstractDataProcessor {
 		this.resourceBundle = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale);
 	}
 
+	protected String getValueOnError(ErrorHandlingModeEnum errorHandlingMode, String originalValue) {
+		switch (errorHandlingMode) {
+			case USE_ORIGINAL:
+				return originalValue;
+			case USE_NULL:
+				return null;
+			case USE_EMPTY:
+				return "";
+			default:
+				return null;
+		}
+	}
+
 	/**
 	 * Get the current error handling mode.
 	 * What the processor should do when the data can not be processed.
-	 * 
+	 *
 	 * @return current error handling mode
 	 */
 	public abstract ErrorHandlingModeEnum getErrorHandlingMode();
@@ -43,7 +56,7 @@ public abstract class AbstractDataProcessor {
 	/**
 	 * Process a Java bean. Optimistic casting will be tried, it means that the processor will
 	 * cast a property to a specific type.
-	 * 
+	 *
 	 * @param in
 	 *            in Java bean
 	 * @param out
@@ -58,7 +71,7 @@ public abstract class AbstractDataProcessor {
 	/**
 	 * Validates a Java Bean. The validation is not context related. It means that it will only ensure
 	 * that the data can be process without errors.
-	 * 
+	 *
 	 * @param in
 	 * @param isMandatory
 	 *            is a missing value valid or not?

@@ -2,9 +2,9 @@ package net.canadensys.processor.dwc.mock;
 
 /**
  * Mock model representing an OccurrenceModel with processed data.
- * 
+ *
  * @author canandesys
- * 
+ *
  */
 public class MockOccurrenceModel {
 
@@ -22,6 +22,7 @@ public class MockOccurrenceModel {
 	private Integer eventStartDay;
 
 	private String continent;
+	private String recordedBy;
 
 	public Double getMinAltitude() {
 		return minAltitude;
@@ -101,5 +102,13 @@ public class MockOccurrenceModel {
 
 	public void setStateprovince(String stateprovince) {
 		this.stateprovince = stateprovince;
+	}
+
+	public String getRecordedBy() {
+		return recordedBy;
+	}
+
+	public void setRecordedBy(String recordedBy) {
+		this.recordedBy = recordedBy;
 	}
 }
