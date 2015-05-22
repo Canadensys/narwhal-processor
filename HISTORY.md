@@ -1,7 +1,12 @@
 Version History
 ===============
 
+Version 1.5.3 2015-05-22
+ * Introduced new generic DictionaryBased processor
+ * New experimental PersonNameProcessor
+
 Version 1.5.2 2015-01-23
+
 [Details](https://github.com/Canadensys/narwhal-processor/milestones/1.5.2)
 
 Version 1.5.1 2014-01-24

@@ -28,9 +28,9 @@ See our [wiki](https://github.com/Canadensys/narwhal-processor/wiki) for all the
 
 Dependencies
 ------------
- * [GBIF Parsers](http://code.google.com/p/gbif-common-resources/) 0.4 (included by Maven)
- * [Apache Commons BeanUtils](http://commons.apache.org/beanutils/) 1.8.3 (included by Maven)
- * [canadensys-core](https://github.com/Canadensys/canadensys-core) 1.6 (included by Maven)
+ * [GBIF Parsers](https://github.com/gbif/parsers)
+ * [Apache Commons BeanUtils](http://commons.apache.org/beanutils/)
+ * [canadensys-core](https://github.com/Canadensys/canadensys-core)
  * [JSR-310](http://threeten.sourceforge.net/) 0.6.3
 
 Optional

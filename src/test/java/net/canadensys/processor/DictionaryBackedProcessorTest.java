@@ -11,11 +11,19 @@ import net.canadensys.processor.dwc.mock.MockOccurrenceModel;
 
 import org.junit.Test;
 
+/**
+ * Test DictionaryBasedValueParser and DictionaryBackedProcessor behavior.
+ *
+ * @author Pedro
+ * @author cgendreau
+ *
+ */
 public class DictionaryBackedProcessorTest {
 
 	@Test
 	public void testCanadaProvinceState() {
 
+		// Dictionary CA_StateProvinceName.txt to be removed in favor of WingLongitude shared dictionary
 		DictionaryBasedValueParser canadaProvincesParser = new DictionaryBasedValueParser(new InputStream[] { this.getClass().getResourceAsStream(
 				"/dictionaries/geography/CA_StateProvinceName.txt") });
 
@@ -29,7 +37,7 @@ public class DictionaryBackedProcessorTest {
 		processor.processBean(mockRawModel, mockModel, null, null);
 		assertEquals("CA-NT", mockModel.getStateprovince());
 
-		// Load dictionary for brazillian departments normalization:
+		// Load test dictionary dictionary (Brazilian departments)
 		DictionaryBasedValueParser brazilProvincesParser = new DictionaryBasedValueParser(new InputStream[] { this.getClass().getResourceAsStream(
 				"/dictionary.txt") });
 
