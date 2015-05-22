@@ -21,40 +21,35 @@ import org.junit.Test;
 public class DictionaryBackedProcessorTest {
 
 	@Test
-	public void testCanadaProvinceState() {
-
-		// Dictionary CA_StateProvinceName.txt to be removed in favor of WingLongitude shared dictionary
-		DictionaryBasedValueParser canadaProvincesParser = new DictionaryBasedValueParser(new InputStream[] { this.getClass().getResourceAsStream(
-				"/dictionaries/geography/CA_StateProvinceName.txt") });
-
-		DictionaryBackedProcessor processor = new DictionaryBackedProcessor("stateprovince", canadaProvincesParser);
-		assertEquals("CA-NL", processor.process("Labrador", null));
-
-		// Test bean processing
-		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
-		MockOccurrenceModel mockModel = new MockOccurrenceModel();
-		mockRawModel.setStateprovince("The Northwest Territories");
-		processor.processBean(mockRawModel, mockModel, null, null);
-		assertEquals("CA-NT", mockModel.getStateprovince());
+	public void testProvinceStateDictionary() {
 
 		// Load test dictionary dictionary (Brazilian departments)
 		DictionaryBasedValueParser brazilProvincesParser = new DictionaryBasedValueParser(new InputStream[] { this.getClass().getResourceAsStream(
 				"/dictionary.txt") });
 
 		// Create processor objects for each dictionary:
-		DictionaryBackedProcessor brasilProvincesProcessor = new DictionaryBackedProcessor(brazilProvincesParser);
+		DictionaryBackedProcessor processor = new DictionaryBackedProcessor("stateprovince", brazilProvincesParser);
+
+		// Test bean processing
+		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
+		MockOccurrenceModel mockModel = new MockOccurrenceModel();
+		mockRawModel.setStateprovince("Estado de Sao Paulo");
+		processor.processBean(mockRawModel, mockModel, null, null);
+		assertEquals("BR-SP", mockModel.getStateprovince());
 
 		// Process values in 2 steps: 1) map value to ISO Code 2) Map ISO Code to full deparment name:
-		assertEquals("Paraíba", brasilProvincesProcessor.process(brasilProvincesProcessor.process("ParaÌba	", null), null));
-		assertEquals("Roraima", brasilProvincesProcessor.process(brasilProvincesProcessor.process("Roraima;Amazonas", null), null));
+		assertEquals("Paraíba", processor.process(processor.process("ParaÌba	", null), null));
+		assertEquals("Roraima", processor.process(processor.process("Roraima;Amazonas", null), null));
 	}
 
 	@Test
 	public void testWrongValueErrorHandling() {
-		DictionaryBasedValueParser canadaProvincesParser = new DictionaryBasedValueParser(new InputStream[] { this.getClass().getResourceAsStream(
-				"/dictionaries/geography/CA_StateProvinceName.txt") });
+		// Load test dictionary dictionary (Brazilian departments)
+		DictionaryBasedValueParser brazilProvincesParser = new DictionaryBasedValueParser(new InputStream[] { this.getClass().getResourceAsStream(
+				"/dictionary.txt") });
 
-		AbstractDataProcessor processor = new DictionaryBackedProcessor("stateprovince", canadaProvincesParser, ErrorHandlingModeEnum.USE_NULL);
+		// Create processor objects for each dictionary:
+		DictionaryBackedProcessor processor = new DictionaryBackedProcessor("stateprovince", brazilProvincesParser, ErrorHandlingModeEnum.USE_NULL);
 
 		MockOccurrenceModel mockRawModel = new MockOccurrenceModel();
 		MockOccurrenceModel mockModel = new MockOccurrenceModel();
@@ -66,7 +61,7 @@ public class DictionaryBackedProcessorTest {
 		assertNull(mockModel.getStateprovince());
 
 		// test empty value
-		processor = new DictionaryBackedProcessor("stateprovince", canadaProvincesParser, ErrorHandlingModeEnum.USE_EMPTY);
+		processor = new DictionaryBackedProcessor("stateprovince", brazilProvincesParser, ErrorHandlingModeEnum.USE_EMPTY);
 		processor.processBean(mockRawModel, mockModel, null, pr);
 		assertEquals("", mockModel.getStateprovince());
 	}
