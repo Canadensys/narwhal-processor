@@ -37,7 +37,7 @@ public class DictionaryBackedProcessorTest {
 		processor.processBean(mockRawModel, mockModel, null, null);
 		assertEquals("BR-SP", mockModel.getStateprovince());
 
-		// Process values in 2 steps: 1) map value to ISO Code 2) Map ISO Code to full deparment name:
+		// Process values in 2 steps: 1) map value to ISO Code 2) Map ISO Code to full department name:
 		assertEquals("Paraíba", processor.process(processor.process("ParaÌba	", null), null));
 		assertEquals("Roraima", processor.process(processor.process("Roraima;Amazonas", null), null));
 	}
@@ -64,5 +64,16 @@ public class DictionaryBackedProcessorTest {
 		processor = new DictionaryBackedProcessor("stateprovince", brazilProvincesParser, ErrorHandlingModeEnum.USE_EMPTY);
 		processor.processBean(mockRawModel, mockModel, null, pr);
 		assertEquals("", mockModel.getStateprovince());
+	}
+
+	@Test
+	public void testCommentLine() {
+		// Load test dictionary dictionary (Brazilian departments)
+		DictionaryBasedValueParser brazilProvincesParser = new DictionaryBasedValueParser(new InputStream[] { this.getClass().getResourceAsStream(
+				"/dictionary.txt") });
+
+		// Create processor objects for each dictionary:
+		DictionaryBackedProcessor processor = new DictionaryBackedProcessor("stateprovince", brazilProvincesParser, ErrorHandlingModeEnum.USE_NULL);
+		assertNull(processor.process("BR-TST", null));
 	}
 }

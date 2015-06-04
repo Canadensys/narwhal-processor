@@ -22,7 +22,7 @@ import com.google.common.base.Strings;
 public class DictionaryBasedValueParser extends FileBasedDictionaryParser<String> {
 
 	final Logger logger = LoggerFactory.getLogger(DictionaryBasedValueParser.class);
-
+	private static final String COMMENT_MARKER = "#";
 	private static final CharMatcher LETTER_MATCHER = CharMatcher.JAVA_LETTER.or(CharMatcher.WHITESPACE).precomputed();
 	private static final CharMatcher WHITESPACE_MATCHER = CharMatcher.WHITESPACE.precomputed();
 
@@ -35,7 +35,7 @@ public class DictionaryBasedValueParser extends FileBasedDictionaryParser<String
 
 		if (dictionaries != null) {
 			for (InputStream input : dictionaries) {
-				init(input);
+				init(input, COMMENT_MARKER);
 			}
 		}
 	}
@@ -48,9 +48,8 @@ public class DictionaryBasedValueParser extends FileBasedDictionaryParser<String
 			processedValue = StringUtils.stripAccents(processedValue);
 			processedValue = Strings.emptyToNull(processedValue);
 			/**
-			 * Normalisation of a value used both by adding to the internal dictionary and parsing values.
+			 * Normalization of a value used both by adding to the internal dictionary and parsing values.
 			 * The default does trim and uppercase the value for Strings, but leaves other types unaltered.
-			 * Override this method to provide specific normalisations for parsers.
 			 */
 			return super.normalize(processedValue);
 		}
