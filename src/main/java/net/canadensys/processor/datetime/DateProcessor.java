@@ -24,6 +24,7 @@ import org.threeten.bp.Year;
 import org.threeten.bp.YearMonth;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.DateTimeFormatterBuilder;
+import org.threeten.bp.format.ResolverStyle;
 import org.threeten.bp.temporal.TemporalAccessor;
 
 /**
@@ -64,13 +65,15 @@ public class DateProcessor extends AbstractDataProcessor {
 	private static final DateTimeFormatter LE_D_MMMM_YYYY_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive()
 			.appendPattern("d-MMMM-yyyy").toFormatter(Locale.US);
 	// Could bring conflicts with middle-endian like in 13-10-2012
-	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("d-M-yyyy").toFormatter(Locale.US);
+	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("d-M-yyyy").toFormatter(Locale.US)
+			.withResolverStyle(ResolverStyle.STRICT);
 
 	// Gregorian big-endian, starting with year
 	// ISO 8601
-	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = new DateTimeFormatterBuilder().appendPattern("yyyyMMdd").toFormatter(Locale.US);
+	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = new DateTimeFormatterBuilder().appendPattern("yyyyMMdd").toFormatter(Locale.US)
+			.withResolverStyle(ResolverStyle.STRICT);
 	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = new DateTimeFormatterBuilder().appendPattern("yyyy[-M[-d]]")
-			.toFormatter(Locale.US);
+			.toFormatter(Locale.US).withResolverStyle(ResolverStyle.STRICT);
 	private static final DateTimeFormatter BE_YYYY_MMM_D_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("yyyy-MMM-d")
 			.toFormatter(Locale.US);
 	private static final DateTimeFormatter BE_YYYY_MMMM_D_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive()
@@ -84,7 +87,8 @@ public class DateProcessor extends AbstractDataProcessor {
 			.appendPattern("MMMM-d-yyyy").toFormatter(Locale.US);
 
 	// Could bring conflicts with little-endian like in 13-10-2012
-	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("M-d-yyyy").toFormatter(Locale.US);
+	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("M-d-yyyy").toFormatter(Locale.US)
+			.withResolverStyle(ResolverStyle.STRICT);
 	// Not sure this one is safe to implement
 	// private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M-d-yy", Locale.US);
 

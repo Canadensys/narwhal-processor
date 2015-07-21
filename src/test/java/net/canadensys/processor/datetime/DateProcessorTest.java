@@ -19,9 +19,9 @@ import org.junit.Test;
 
 /**
  * Unit tests for the DateProcessor
- * 
+ *
  * @author canadensys
- * 
+ *
  */
 public class DateProcessorTest {
 
@@ -129,6 +129,33 @@ public class DateProcessorTest {
 		// roman numeral for day
 		mockRawModel.setEventDate("X-05-2010");
 		pr.getErrorList().clear();
+		dateProcessor.processBean(mockRawModel, mockModel, null, pr);
+
+		assertNull(mockModel.getEventStartYear());
+		assertNull(mockModel.getEventStartMonth());
+		assertNull(mockModel.getEventStartDay());
+		assertTrue(pr.getErrorList().size() >= 1);
+	}
+
+	@Test
+	public void testInvalidDates() {
+		assertInvalidDate("2014-02-30");
+		assertInvalidDate("20140230");
+	}
+
+	/**
+	 * Assert that the provided date can not be processed.
+	 * 
+	 * @param date
+	 */
+	private void assertInvalidDate(String date) {
+		DateProcessor dateProcessor = new DateProcessor("eventDate", "eventStartYear", "eventStartMonth", "eventStartDay");
+
+		MockRawOccurrenceModel mockRawModel = new MockRawOccurrenceModel();
+		MockOccurrenceModel mockModel = new MockOccurrenceModel();
+
+		mockRawModel.setEventDate(date);
+		ProcessingResult pr = new ProcessingResult();
 		dateProcessor.processBean(mockRawModel, mockModel, null, pr);
 
 		assertNull(mockModel.getEventStartYear());
