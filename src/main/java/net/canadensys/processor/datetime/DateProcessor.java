@@ -29,12 +29,15 @@ import org.threeten.bp.temporal.TemporalAccessor;
 
 /**
  * Data processor to handle dates including partial dates.
- * Some DateTimeFormatter/pattern documentation :
- * - http://threeten.sourceforge.net/apidocs-2012-10-25/javax/time/format/DateTimeFormatter.html#parseBest(java.lang.CharSequence,%20java.lang.Class
- * ...)
- * - http://threeten.sourceforge.net/apidocs-2012-10-25/javax/time/format/DateTimeFormatters.html#pattern(java.lang.String)
+ * Some DateTimeFormatter documentation :
+ * - http://www.threeten.org/threetenbp/apidocs/org/threeten/bp/format/DateTimeFormatter.html#parseBest-java.lang.CharSequence-org.threeten.bp.
+ * temporal.TemporalQuery...-
+ *
  * Good to know :
- * - http://threeten.sourceforge.net/apidocs/javax/time/calendar/LocalDate.html
+ * - http://www.threeten.org/threetenbp/apidocs/org/threeten/bp/LocalDate.html
+ *
+ * Note: 'uuuu' in patterns represents ChronoField.YEAR as opposed to 'yyyy' that represents ChronoField.YEAR_OF_ERA.
+ * This is important when withResolverStyle(ResolverStyle.STRICT) is used.
  *
  * @author canadensys
  *
@@ -65,14 +68,14 @@ public class DateProcessor extends AbstractDataProcessor {
 	private static final DateTimeFormatter LE_D_MMMM_YYYY_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive()
 			.appendPattern("d-MMMM-yyyy").toFormatter(Locale.US);
 	// Could bring conflicts with middle-endian like in 13-10-2012
-	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("d-M-yyyy").toFormatter(Locale.US)
+	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("d-M-uuuu").toFormatter(Locale.US)
 			.withResolverStyle(ResolverStyle.STRICT);
 
 	// Gregorian big-endian, starting with year
 	// ISO 8601
-	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = new DateTimeFormatterBuilder().appendPattern("yyyyMMdd").toFormatter(Locale.US)
+	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = new DateTimeFormatterBuilder().appendPattern("uuuuMMdd").toFormatter(Locale.US)
 			.withResolverStyle(ResolverStyle.STRICT);
-	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = new DateTimeFormatterBuilder().appendPattern("yyyy[-M[-d]]")
+	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = new DateTimeFormatterBuilder().appendPattern("uuuu[-M[-d]]")
 			.toFormatter(Locale.US).withResolverStyle(ResolverStyle.STRICT);
 	private static final DateTimeFormatter BE_YYYY_MMM_D_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("yyyy-MMM-d")
 			.toFormatter(Locale.US);
@@ -87,7 +90,7 @@ public class DateProcessor extends AbstractDataProcessor {
 			.appendPattern("MMMM-d-yyyy").toFormatter(Locale.US);
 
 	// Could bring conflicts with little-endian like in 13-10-2012
-	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("M-d-yyyy").toFormatter(Locale.US)
+	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("M-d-uuuu").toFormatter(Locale.US)
 			.withResolverStyle(ResolverStyle.STRICT);
 	// Not sure this one is safe to implement
 	// private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M-d-yy", Locale.US);
@@ -108,10 +111,10 @@ public class DateProcessor extends AbstractDataProcessor {
 
 	// keep a reference on the complete (non partial) date patterns list
 	private static DateTimeFormatter[] COMPLETE_DATE_PATTERNS = new DateTimeFormatter[] { BE_ISO8601_BASIC_PATTERN, ME_MMM_D_YYYY_PATTERN,
-		ME_MMMM_D_YYYY_PATTERN, BE_YYYY_MMM_D_PATTERN, BE_YYYY_MMMM_D_PATTERN, LE_D_MMM_YYYY_PATTERN, LE_D_MMMM_YYYY_PATTERN };
+			ME_MMMM_D_YYYY_PATTERN, BE_YYYY_MMM_D_PATTERN, BE_YYYY_MMMM_D_PATTERN, LE_D_MMM_YYYY_PATTERN, LE_D_MMMM_YYYY_PATTERN };
 	// keep a reference on the non-numerical month (using a word to express the month) complete (non partial) date patterns list
 	private static DateTimeFormatter[] NON_NUMERICAL_MONTH_COMPLETE_DATE_PATTERNS = new DateTimeFormatter[] { LE_D_MMM_YYYY_PATTERN,
-		LE_D_MMMM_YYYY_PATTERN, ME_MMM_D_YYYY_PATTERN, ME_MMMM_D_YYYY_PATTERN, BE_YYYY_MMM_D_PATTERN, BE_YYYY_MMMM_D_PATTERN };
+			LE_D_MMMM_YYYY_PATTERN, ME_MMM_D_YYYY_PATTERN, ME_MMMM_D_YYYY_PATTERN, BE_YYYY_MMM_D_PATTERN, BE_YYYY_MMMM_D_PATTERN };
 
 	protected List<Locale> supportedLocale;
 
