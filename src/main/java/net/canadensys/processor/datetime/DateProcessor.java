@@ -9,16 +9,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.time.LocalDate;
-import javax.time.MonthOfYear;
-import javax.time.calendrical.Calendrical;
-import javax.time.extended.Year;
-import javax.time.extended.YearMonth;
-import javax.time.format.CalendricalParseException;
-import javax.time.format.DateTimeFormatter;
-import javax.time.format.DateTimeFormatterBuilder;
-import javax.time.format.DateTimeFormatters;
-
 import net.canadensys.lang.RomanNumeral;
 import net.canadensys.processor.AbstractDataProcessor;
 import net.canadensys.processor.ProcessingResult;
@@ -27,6 +17,14 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.threeten.bp.DateTimeException;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.Month;
+import org.threeten.bp.Year;
+import org.threeten.bp.YearMonth;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.DateTimeFormatterBuilder;
+import org.threeten.bp.temporal.TemporalAccessor;
 
 /**
  * Data processor to handle dates including partial dates.
@@ -36,9 +34,9 @@ import org.slf4j.LoggerFactory;
  * - http://threeten.sourceforge.net/apidocs-2012-10-25/javax/time/format/DateTimeFormatters.html#pattern(java.lang.String)
  * Good to know :
  * - http://threeten.sourceforge.net/apidocs/javax/time/calendar/LocalDate.html
- * 
+ *
  * @author canadensys
- * 
+ *
  */
 public class DateProcessor extends AbstractDataProcessor {
 
@@ -57,7 +55,7 @@ public class DateProcessor extends AbstractDataProcessor {
 	protected String dateName, yearName, monthName, dayName;
 
 	// Only USE_NULL make sense here
-	private ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
+	private final ErrorHandlingModeEnum errorHandlingMode = ErrorHandlingModeEnum.USE_NULL;
 
 	// All patterns are using dash(-) as separator, all other separators will be replaced
 	// Gregorian little-endian, starting with day
@@ -66,12 +64,13 @@ public class DateProcessor extends AbstractDataProcessor {
 	private static final DateTimeFormatter LE_D_MMMM_YYYY_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive()
 			.appendPattern("d-MMMM-yyyy").toFormatter(Locale.US);
 	// Could bring conflicts with middle-endian like in 13-10-2012
-	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = DateTimeFormatters.pattern("d-M-yyyy", Locale.US);
+	private static final DateTimeFormatter LE_D_M_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("d-M-yyyy").toFormatter(Locale.US);
 
 	// Gregorian big-endian, starting with year
 	// ISO 8601
-	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = DateTimeFormatters.pattern("yyyyMMdd", Locale.US);
-	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = DateTimeFormatters.pattern("yyyy[-M[-d]]", Locale.US);
+	private static final DateTimeFormatter BE_ISO8601_BASIC_PATTERN = new DateTimeFormatterBuilder().appendPattern("yyyyMMdd").toFormatter(Locale.US);
+	private static final DateTimeFormatter BE_ISO8601_PARTIAL_DATE_PATTERN = new DateTimeFormatterBuilder().appendPattern("yyyy[-M[-d]]")
+			.toFormatter(Locale.US);
 	private static final DateTimeFormatter BE_YYYY_MMM_D_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("yyyy-MMM-d")
 			.toFormatter(Locale.US);
 	private static final DateTimeFormatter BE_YYYY_MMMM_D_PATTERN = new DateTimeFormatterBuilder().parseCaseInsensitive()
@@ -85,7 +84,7 @@ public class DateProcessor extends AbstractDataProcessor {
 			.appendPattern("MMMM-d-yyyy").toFormatter(Locale.US);
 
 	// Could bring conflicts with little-endian like in 13-10-2012
-	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = DateTimeFormatters.pattern("M-d-yyyy", Locale.US);
+	private static final DateTimeFormatter ME_M_D_YYYY_PATTERN = new DateTimeFormatterBuilder().appendPattern("M-d-yyyy").toFormatter(Locale.US);
 	// Not sure this one is safe to implement
 	// private static final DateTimeFormatter ME_MM_DD_YY_PATTERN = DateTimeFormatters.pattern("M-d-yy", Locale.US);
 
@@ -105,10 +104,10 @@ public class DateProcessor extends AbstractDataProcessor {
 
 	// keep a reference on the complete (non partial) date patterns list
 	private static DateTimeFormatter[] COMPLETE_DATE_PATTERNS = new DateTimeFormatter[] { BE_ISO8601_BASIC_PATTERN, ME_MMM_D_YYYY_PATTERN,
-			ME_MMMM_D_YYYY_PATTERN, BE_YYYY_MMM_D_PATTERN, BE_YYYY_MMMM_D_PATTERN, LE_D_MMM_YYYY_PATTERN, LE_D_MMMM_YYYY_PATTERN };
+		ME_MMMM_D_YYYY_PATTERN, BE_YYYY_MMM_D_PATTERN, BE_YYYY_MMMM_D_PATTERN, LE_D_MMM_YYYY_PATTERN, LE_D_MMMM_YYYY_PATTERN };
 	// keep a reference on the non-numerical month (using a word to express the month) complete (non partial) date patterns list
 	private static DateTimeFormatter[] NON_NUMERICAL_MONTH_COMPLETE_DATE_PATTERNS = new DateTimeFormatter[] { LE_D_MMM_YYYY_PATTERN,
-			LE_D_MMMM_YYYY_PATTERN, ME_MMM_D_YYYY_PATTERN, ME_MMMM_D_YYYY_PATTERN, BE_YYYY_MMM_D_PATTERN, BE_YYYY_MMMM_D_PATTERN };
+		LE_D_MMMM_YYYY_PATTERN, ME_MMM_D_YYYY_PATTERN, ME_MMMM_D_YYYY_PATTERN, BE_YYYY_MMM_D_PATTERN, BE_YYYY_MMMM_D_PATTERN };
 
 	protected List<Locale> supportedLocale;
 
@@ -143,7 +142,7 @@ public class DateProcessor extends AbstractDataProcessor {
 
 	/**
 	 * Date and partial date Bean processing function.
-	 * 
+	 *
 	 * @param in
 	 *            Java bean containing the date property as String
 	 * @param out
@@ -178,6 +177,7 @@ public class DateProcessor extends AbstractDataProcessor {
 	 * Validates a date with partial date support. It means that if only one field can be parsed, this is
 	 * considered valid.
 	 */
+	@Override
 	public boolean validateBean(Object in, boolean isMandatory, Map<String, Object> params, ProcessingResult result) {
 		Integer[] output = null;
 		String textDate = null;
@@ -212,7 +212,7 @@ public class DateProcessor extends AbstractDataProcessor {
 
 	/**
 	 * Date processing function
-	 * 
+	 *
 	 * @param dateText
 	 *            a test representing the date or partial-date
 	 * @param result
@@ -229,10 +229,10 @@ public class DateProcessor extends AbstractDataProcessor {
 
 		try {
 			// try ISO 8601 (with partial date like 2008 or 2008-12)
-			setPartialDate(output, BE_ISO8601_PARTIAL_DATE_PATTERN.parseBest(dateText, LocalDate.rule(), YearMonth.rule(), Year.rule()));
+			setPartialDate(output, BE_ISO8601_PARTIAL_DATE_PATTERN.parseBest(dateText, LocalDate.FROM, YearMonth.FROM, Year.FROM));
 			return output;
 		}
-		catch (CalendricalParseException cpe) {
+		catch (DateTimeException cpe) {
 		}
 
 		// Try to find a complete date
@@ -245,33 +245,33 @@ public class DateProcessor extends AbstractDataProcessor {
 		// PARTIAL DATE
 		try {
 			// try format like Jun 1895
-			setPartialDate(output, PARTIAL_MONTH_YEAR_PATTERN.parse(dateText, YearMonth.rule()));
+			setPartialDate(output, PARTIAL_MONTH_YEAR_PATTERN.parse(dateText, YearMonth.FROM));
 			return output;
 		}
-		catch (CalendricalParseException cpe) {
+		catch (DateTimeException cpe) {
 		}
 
 		try {
 			// try format like Jun
-			setPartialDate(output, PARTIAL_MONTH_PATTERN.parse(dateText, MonthOfYear.rule()));
+			setPartialDate(output, PARTIAL_MONTH_PATTERN.parse(dateText, Month.FROM));
 			return output;
 		}
-		catch (CalendricalParseException cpe) {
+		catch (DateTimeException cpe) {
 		}
 
 		// Warning - Fuzzy dates handling
 		LocalDate le_d_m_yyyy_date = null;
 		LocalDate me_m_d_yyyy_date = null;
 		try {
-			le_d_m_yyyy_date = LE_D_M_YYYY_PATTERN.parse(dateText, LocalDate.rule());
+			le_d_m_yyyy_date = LE_D_M_YYYY_PATTERN.parse(dateText, LocalDate.FROM);
 		}
-		catch (CalendricalParseException cpe) {
+		catch (DateTimeException cpe) {
 		}
 
 		try {
-			me_m_d_yyyy_date = ME_M_D_YYYY_PATTERN.parse(dateText, LocalDate.rule());
+			me_m_d_yyyy_date = ME_M_D_YYYY_PATTERN.parse(dateText, LocalDate.FROM);
 		}
-		catch (CalendricalParseException cpe) {
+		catch (DateTimeException cpe) {
 		}
 
 		// make sure the date can't be parsed into the 2 different patterns
@@ -311,28 +311,28 @@ public class DateProcessor extends AbstractDataProcessor {
 
 	/**
 	 * Fill the partialDate array according to the content of the Calendrical object.
-	 * 
+	 *
 	 * @param partialDate
 	 *            initialized array of size 3
 	 * @param cal
 	 */
-	protected void setPartialDate(Integer[] partialDate, Calendrical cal) {
+	protected void setPartialDate(Integer[] partialDate, TemporalAccessor cal) {
 		if (cal instanceof LocalDate) {
 			LocalDate lc = (LocalDate) cal;
 			partialDate[DAY_IDX] = lc.getDayOfMonth();
-			partialDate[MONTH_IDX] = lc.getMonthOfYear().getValue();
+			partialDate[MONTH_IDX] = lc.getMonth().getValue();
 			partialDate[YEAR_IDX] = lc.getYear();
 		}
 		else if (cal instanceof YearMonth) {
 			YearMonth ym = (YearMonth) cal;
-			partialDate[MONTH_IDX] = ym.getMonthOfYear().getValue();
+			partialDate[MONTH_IDX] = ym.getMonth().getValue();
 			partialDate[YEAR_IDX] = ym.getYear();
 		}
 		else if (cal instanceof Year) {
 			partialDate[YEAR_IDX] = ((Year) cal).getValue();
 		}
-		else if (cal instanceof MonthOfYear) {
-			partialDate[MONTH_IDX] = ((MonthOfYear) cal).getValue();
+		else if (cal instanceof Month) {
+			partialDate[MONTH_IDX] = ((Month) cal).getValue();
 		}
 		else {
 			throw new UnsupportedOperationException();
@@ -341,7 +341,7 @@ public class DateProcessor extends AbstractDataProcessor {
 
 	/**
 	 * This function will replace all dots (.), space ( ), slashes(/) and coma(,) characters by a dash(-).
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 */
@@ -352,7 +352,7 @@ public class DateProcessor extends AbstractDataProcessor {
 	/**
 	 * This function will parse a date with a Roman numeral as the month.
 	 * e.g. 8/xi/2003, 8.xi.2003, 8-xi.2003, or 8.XI.2003
-	 * 
+	 *
 	 * @param dateText
 	 * @param output
 	 * @param result
@@ -369,18 +369,18 @@ public class DateProcessor extends AbstractDataProcessor {
 				newTextDate = standardizeDatePunctuation(newTextDate);
 				// We only support Roman numeral for the month
 				try {
-					LocalDate le_d_m_yyyy_date = LE_D_M_YYYY_PATTERN.parse(newTextDate, LocalDate.rule());
+					LocalDate le_d_m_yyyy_date = LE_D_M_YYYY_PATTERN.parse(newTextDate, LocalDate.FROM);
 					setPartialDate(output, le_d_m_yyyy_date);
 					return true;
 				}
-				catch (CalendricalParseException e) {
+				catch (DateTimeException e) {
 				}
 				try {
-					LocalDate le_d_m_yyyy_date = BE_ISO8601_PARTIAL_DATE_PATTERN.parse(newTextDate, LocalDate.rule());
+					LocalDate le_d_m_yyyy_date = BE_ISO8601_PARTIAL_DATE_PATTERN.parse(newTextDate, LocalDate.FROM);
 					setPartialDate(output, le_d_m_yyyy_date);
 					return true;
 				}
-				catch (CalendricalParseException e) {
+				catch (DateTimeException e) {
 				}
 			}
 			catch (NumberFormatException ex) {
@@ -400,7 +400,7 @@ public class DateProcessor extends AbstractDataProcessor {
 	/**
 	 * Try to parse a complete date from dateText.
 	 * Partial dates are not supported since LocalDate.rule() is used.
-	 * 
+	 *
 	 * @param dateTimeFormatterList
 	 * @param dateText
 	 * @return the LocalDate or null
@@ -409,10 +409,10 @@ public class DateProcessor extends AbstractDataProcessor {
 		LocalDate localDate = null;
 		for (DateTimeFormatter currDateTimeFormatter : dateTimeFormatterList) {
 			try {
-				localDate = currDateTimeFormatter.parse(dateText, LocalDate.rule());
+				localDate = currDateTimeFormatter.parse(dateText, LocalDate.FROM);
 				return localDate;
 			}
-			catch (CalendricalParseException e) {
+			catch (DateTimeException e) {
 			}
 		}
 		return null;
@@ -421,7 +421,7 @@ public class DateProcessor extends AbstractDataProcessor {
 	/**
 	 * Try to parse a dateText with all supported Locale.
 	 * Partial dates are not supported since LocalDate.rule() is used.
-	 * 
+	 *
 	 * @param dateTimeFormatterList
 	 * @param dateText
 	 * @return the LocalDate or null
@@ -431,10 +431,10 @@ public class DateProcessor extends AbstractDataProcessor {
 		for (DateTimeFormatter currDateTimeFormatter : dateTimeFormatterList) {
 			for (Locale currLocale : supportedLocale) {
 				try {
-					localDate = currDateTimeFormatter.withLocale(currLocale).parse(dateText, LocalDate.rule());
+					localDate = currDateTimeFormatter.withLocale(currLocale).parse(dateText, LocalDate.FROM);
 					return localDate;
 				}
-				catch (CalendricalParseException e) {
+				catch (DateTimeException e) {
 				}
 			}
 		}
