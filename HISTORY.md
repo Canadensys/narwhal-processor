@@ -1,6 +1,9 @@
 Version History
 ===============
 
+Version 1.6.0 2015-08-17
+ * Use ThreeTen Backport library from Maven
+
 Version 1.5.3 2015-05-22
  * Introduced new generic DictionaryBased processor
  * New experimental PersonNameProcessor

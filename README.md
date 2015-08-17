@@ -31,15 +31,10 @@ Dependencies
  * [GBIF Parsers](https://github.com/gbif/parsers)
  * [Apache Commons BeanUtils](http://commons.apache.org/beanutils/)
  * [canadensys-core](https://github.com/Canadensys/canadensys-core)
- * [JSR-310](http://threeten.sourceforge.net/) 0.6.3
+ * [ThreeTen Backport](http://www.threeten.org/threetenbp/)
 
 Optional
  * [GeoTools](http://www.geotools.org/) 10.0
-
-To include JSR-310 into your Maven local repo
-```
-mvn install:install-file -DgroupId=threeten -DartifactId=threeten -Dversion=0.6.3 -Dpackaging=jar -Dfile=lib/threeten/threeten/0.6.3/threeten-0.6.3.jar
-```
 
 __Tested with Maven 3__
 
@@ -60,7 +55,6 @@ Setup in Eclipse
 ----------------
 After a git clone
 ```
-mvn install:install-file -DgroupId=threeten -DartifactId=threeten -Dversion=0.6.3 -Dpackaging=jar -Dfile=lib/threeten/threeten/0.6.3/threeten-0.6.3.jar
 mvn eclipse:eclipse
 ```
 In Eclipse : File/Import/Existing Projects into Workspace
