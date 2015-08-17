@@ -46,14 +46,14 @@ __Tested with Maven 3__
 Build
 -----
 ```
-mvn package
+mvn clean package
 ```
 
 Tests
 -----
 Unit tests
 ```
-mvn test
+mvn clean test
 ```
 
 Setup in Eclipse
